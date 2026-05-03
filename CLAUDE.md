@@ -154,6 +154,45 @@ Cada fragmento es parcial — sin `<html>`, `<head>` ni `<body>`. El AssemblerAg
 
 ---
 
+## Internacionalización (i18n)
+
+El CV es **bilingüe ES/EN** con un toggle de idioma en el header (junto al toggle dark/light). El idioma activo vive en `window.__cvLang` (`"es"` o `"en"`). Sin `localStorage` — al cargar se detecta vía `navigator.language` con `"es"` como fallback. La PrintAgent fuerza siempre el idioma activo en el momento de imprimir.
+
+### Estructura en CV_DATA
+
+Los campos traducibles son **objetos** `{ es, en }`. Los campos que no varían entre idiomas (nombres propios, fechas, tech names, números) se mantienen como **strings planos**.
+
+```js
+// Traducible:
+summary: { es: "Ingeniero...", en: "Software engineer..." }
+role:    { es: "Programador Web", en: "Web Developer" }
+// Plano:
+name: "Toni Wang"
+stack: ["Snowflake", "Python"]
+```
+
+`CV_DATA.ui` agrupa **todas** las labels de UI (nav, KPI, botones, categorías de skill, formato de tooltips, meses) en pares `{ es, en }`. Ningún agente puede hardcodear texto en la UI — todo viene de `CV_DATA.ui.*` vía el helper `t()`.
+
+### Helper `t(value, lang?)`
+
+Definido al final de `fragments/00-cv-data.js`. Acepta tanto strings planos como objetos `{es, en}`. Usa `window.__cvLang` cuando se omite `lang`. Fallback a `es` si la traducción de `en` no existe.
+
+```js
+t(CV_DATA.profile.summary)        // texto traducido del idioma actual
+t(CV_DATA.ui.nav.experience)      // "Experiencia" / "Experience"
+t(experience.role)                // funciona con string plano o {es,en}
+```
+
+### Cambio de idioma en runtime
+
+Toggle dispara un evento custom `cv:languagechange` con `detail: { lang }`. El **LayoutAgent** posee:
+- la función `setLanguage(lang)` que actualiza `window.__cvLang`, ejecuta `applyStaticLabels()` (recorre elementos con `data-i18n` y reemplaza su `textContent`) y dispara el evento
+- el atributo `data-i18n="path.to.key"` en cada elemento de UI estática
+
+**TimelineAgent**, **SkillsAgent** y **ContentAgent** suscriben `window.addEventListener('cv:languagechange', () => render())` para repintar contenido dinámico (D3 timeline, drilldown, skill tooltips, etc.).
+
+---
+
 ## CDNs autorizados
 
 ```
@@ -179,6 +218,7 @@ JetBrains:     https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;
 8. **Touch targets** ≥ 44px · Sin texto < 12px
 9. **Un agente, un fragmento** — nadie escribe fuera de su scope asignado
 10. **DesignGuardian antes de validar** — ningún paso que genere CSS se marca `validated` sin pasar el guardián
+11. **Bilingüe ES/EN** — todo texto visible en la UI pasa por `t()`. Nada hardcodeado en HTML/JS — siempre desde `CV_DATA.ui.*` o campos `{es, en}`
 
 ---
 

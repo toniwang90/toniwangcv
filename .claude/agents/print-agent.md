@@ -53,6 +53,9 @@ Creas el stylesheet de impresión que permite exportar el CV como PDF limpio des
 ### Forzar light mode en impresión
 - Override variables a valores light incluso si `[data-theme="dark"]`
 
+### i18n en impresión
+El PDF generado refleja el **idioma activo en el momento de imprimir** (no fuerza ningún idioma). El AssemblerAgent llama a `applyStaticLabels()` antes de cualquier inicialización para asegurar que los `data-i18n` estén renderizados antes de que el navegador abra el diálogo de impresión.
+
 ## Instrucciones
 
 1. Lee fragmentos `02-layout.html` hasta `05-content.html` para identificar selectores

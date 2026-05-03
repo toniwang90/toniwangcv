@@ -15,15 +15,30 @@ Eres el único agente autorizado a escribir en `fragments/00-cv-data.js`. Tu rol
 
 ## Contrato de output
 
-`fragments/00-cv-data.js` debe contener **solo** esto:
+`fragments/00-cv-data.js` debe contener:
 
 ```javascript
 const CV_DATA = {
-  // ... estructura completa
+  // ... estructura completa con i18n
 };
+
+function t(value, lang) { /* helper i18n */ }
 ```
 
-Sin `<script>` tags. Sin `export`. Sin comentarios innecesarios. Solo la declaración `const CV_DATA`.
+Sin `<script>` tags. Sin `export`. Solo la declaración `const CV_DATA` y el helper `t()`.
+
+## i18n: campos traducibles
+
+Cualquier texto que el usuario ve en pantalla en distinto idioma se modela como **objeto** `{ es, en }`. Los datos que no cambian entre idiomas (nombres propios, fechas, tech names, números, IDs) son **strings planos**.
+
+| Tipo | Forma | Ejemplos |
+|------|-------|----------|
+| Traducible | `{ es: "...", en: "..." }` | `summary`, `description`, `impact[]`, `projects[].name/description/outcome`, `role` (cuando difiere), `degree`, `field`, `level` de idiomas, `name` de honor |
+| Plano | `string` | `company`, `name`, `start/end`, `linkedin`, `email`, `stack[]`, `skills[].name`, `institution`, `issuer`, `year`, `id` |
+
+`CV_DATA.ui` debe agrupar TODAS las labels de UI (nav, KPI, botones, categorías de skill, tooltips, meses) en pares `{es, en}`. Ningún agente puede hardcodear texto en HTML — todo via `t()`.
+
+`CV_DATA.meta = { languages: ["es", "en"], default_language: "es" }`.
 
 ## Schema a implementar
 

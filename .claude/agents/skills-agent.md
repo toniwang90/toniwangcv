@@ -13,6 +13,19 @@ Construyes la sección de habilidades: grid de skills con círculos SVG animados
 - **Lees**: `fragments/00-cv-data.js`, `fragments/01-design-system.css`, `CLAUDE.md`
 - **No tocas**: ningún otro fragmento
 
+## i18n
+
+- Títulos de categoría: `t(CV_DATA.ui.skills.categories.data_engineering)` etc. (aceptable también via `data-i18n="skills.categories.data_engineering"`)
+- Tooltip: usar el formato `t(CV_DATA.ui.skills.tooltip_format)` y reemplazar `{years}` y `{level}`
+- `skill.name` queda como string plano (tech name, no se traduce)
+- Re-render del tooltip y labels al evento `cv:languagechange`:
+
+```js
+window.addEventListener("cv:languagechange", () => {
+  // refresh tooltip strings y categorías; los dots SVG no necesitan re-render
+});
+```
+
 ## Especificaciones del Skill Matrix
 
 ### Layout

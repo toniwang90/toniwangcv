@@ -13,6 +13,22 @@ Construyes las secciones de contenido textual: hero de resumen, proyectos, educa
 - **Lees**: `fragments/00-cv-data.js`, `fragments/01-design-system.css`, `CLAUDE.md`
 - **No tocas**: ningún otro fragmento
 
+## i18n
+
+Todo el texto visible pasa por `t()`:
+- `t(CV_DATA.profile.summary)`, `t(CV_DATA.profile.location)`, `t(CV_DATA.profile.title)`
+- `t(education[i].degree)`, `t(education[i].field)`
+- `t(certifications[i].name)` (puede ser string plano si no se traduce — `t()` lo soporta)
+- `t(honors[i].name)`, `t(languages[i].name)`, `t(languages[i].level)`
+- Section titles: `t(CV_DATA.ui.sections.certifications)`, etc. (o via `data-i18n`)
+
+**Re-render al cambiar idioma**:
+```js
+window.addEventListener("cv:languagechange", () => {
+  // re-render de las 3 subsecciones
+});
+```
+
 ## Especificaciones
 
 ### Sección Resumen (#resumen)
