@@ -3,15 +3,14 @@ const CV_DATA = {
     name: "Toni Wang",
     title: "Lead Data Engineer",
     location: "Madrid, España (residencia: Molina de Segura, Murcia)",
-    summary: "Ingeniero informático apasionado por los datos, con +11 años de experiencia en business intelligence, big data y machine learning. He liderado proyectos de data analysis, integration, discovery y visualisation, construyendo data warehouses desde cero e integrando múltiples fuentes para convertir datos en producto.",
+    summary: "Ingeniero informático apasionado por los datos, con +14 años de experiencia en business intelligence, big data y machine learning. He liderado proyectos de data analysis, integration, discovery y visualisation, construyendo data warehouses desde cero e integrando múltiples fuentes para convertir datos en producto.",
     contact: {
       linkedin: "https://www.linkedin.com/in/tonywangchen",
-      github: "[Tu URL de GitHub — no aparece en LinkedIn]",
       email: "tony.wang@um.es"
     },
     kpis: {
-      years_experience: 11,
-      companies: 8,
+      years_experience: 14,
+      companies: 9,
       projects: 9,
       technologies: 32
     }
@@ -24,21 +23,32 @@ const CV_DATA = {
       start: "2025-01",
       end: null,
       current: true,
-      description: "Liderazgo técnico y humano del equipo de Data Engineering, alineando la estrategia de datos con departamentos clave (Marketing, Finanzas, Operaciones).",
+      description: "Liderazgo técnico y humano de un equipo de 8 Analytics Engineers, con foco en Partner Reporting y Finanzas. Alineo la estrategia de datos con departamentos clave de la compañía (Marketing, Finanzas y Operaciones).",
       impact: [
-        "[Logro cuantificado: nº de personas lideradas en el equipo de Data Engineering]",
-        "[Logro cuantificado: ej. nº de departamentos servidos / nº de stakeholders gestionados]",
+        "Lidero un equipo de 8 Analytics Engineers, principalmente en las verticales de Partner Reporting y Finanzas",
         "Supervisión y gestión del proceso de contrataciones y crecimiento del equipo",
         "Creación y mantenimiento de una fuente de datos única y real, eligiendo las tecnologías que mejor se adaptan a cada problema de negocio",
-        "Recolección de requisitos de Stakeholders para construir productos data-driven"
+        "Recolección y priorización de requisitos de Stakeholders para construir productos data-driven"
       ],
       stack: ["Snowflake", "Python", "Airflow", "dbt", "AWS", "Metabase", "Pandas", "Spark", "Fivetran"],
       projects: [
         {
-          name: "[Nombre del proyecto principal liderado en Fever]",
-          description: "[Descripción del proyecto y tu rol como lead]",
-          stack: ["Snowflake", "Python", "Airflow"],
-          outcome: "[Resultado medible: ej. impacto en negocio, ahorro, mejora de SLA]"
+          name: "Evolución de la plataforma de datos corporativa",
+          description: "Liderazgo de la evolución continua del data warehouse y la plataforma de datos de Fever, sirviendo a Marketing, Finanzas y Operaciones como única fuente de verdad.",
+          stack: ["Snowflake", "Python", "Airflow", "dbt", "AWS"],
+          outcome: "Plataforma consolidada como única fuente de verdad para los departamentos clave de la compañía"
+        },
+        {
+          name: "Modernización del stack de datos",
+          description: "Modernización progresiva del stack: introducción de nuevas tecnologías de orquestación, transformación y calidad de datos para escalar el equipo y los casos de uso.",
+          stack: ["dbt", "Airflow", "Fivetran", "Snowflake"],
+          outcome: "Stack actualizado para soportar el crecimiento del equipo y la complejidad creciente de los casos de uso"
+        },
+        {
+          name: "Productos de datos para stakeholders",
+          description: "Construcción de productos data-driven para Marketing, Finanzas y Operaciones: dashboards estratégicos, modelos de attribution y métricas de negocio en producción.",
+          stack: ["Snowflake", "Metabase", "Python"],
+          outcome: "Reporting estratégico productivo que sirve como base de decisión a Partner Reporting y Finanzas"
         }
       ]
     },
@@ -51,10 +61,10 @@ const CV_DATA = {
       current: false,
       description: "Análisis y desarrollo de un data warehouse desde cero (ingesta, modelado, transformaciones, capa de presentación y visualización), integrando múltiples fuentes de datos de marketing y producto.",
       impact: [
-        "Construcción end-to-end de data warehouse en Snowflake desde cero",
-        "Integración de fuentes de datos: Google Analytics, Facebook, Mixpanel, Adwords, funnel.io",
-        "[Logro cuantificado: ej. nº de tablas/modelos productivos, volumen de datos procesados]",
-        "[Logro cuantificado: ej. mejora de tiempos de carga / reducción de coste cloud]"
+        "Construcción end-to-end del data warehouse de Fever en Snowflake desde cero",
+        "Escala alcanzada: +50 fuentes integradas y +1.000 tablas productivas",
+        "Crecimiento del departamento de datos de 2 ingenieros a más de 30 personas",
+        "Integración de fuentes clave: Google Analytics, Facebook, Mixpanel, Adwords, funnel.io"
       ],
       stack: ["Snowflake", "Python", "Pandas", "Spark", "Airflow", "Fivetran", "Metabase", "Microstrategy", "PostgreSQL", "AWS", "JQL", "funnel.io"],
       projects: [
@@ -62,13 +72,13 @@ const CV_DATA = {
           name: "Data Warehouse corporativo en Snowflake",
           description: "Diseño, construcción y mantenimiento del data warehouse central de la compañía sobre Snowflake, sirviendo a Marketing, Producto y Finanzas.",
           stack: ["Snowflake", "Python", "Airflow", "Fivetran"],
-          outcome: "[Resultado medible: ej. tiempo de respuesta a stakeholders, fiabilidad de datos]"
+          outcome: "+1.000 tablas productivas; soporte al crecimiento del departamento de 2 a 30+ ingenieros de datos"
         },
         {
           name: "Integración multi-fuente de marketing",
           description: "Ingesta y normalización de datos de plataformas (Google Analytics, Facebook, Mixpanel, Adwords) para análisis unificado de adquisición y conversión.",
           stack: ["funnel.io", "Fivetran", "Python", "Airflow"],
-          outcome: "[Resultado: ej. visión 360° del funnel de marketing en un único dashboard]"
+          outcome: "+50 fuentes integradas en el data warehouse para análisis cross-canal"
         }
       ]
     },
@@ -82,16 +92,15 @@ const CV_DATA = {
       description: "Análisis y desarrollo de un sistema nuevo de BI utilizando tecnologías Big Data, integrando múltiples fuentes vía API en un único data warehouse.",
       impact: [
         "Diseño e implementación de un stack Big Data sobre Cloudera (HDFS, Spark, Hive, Sqoop, Flume)",
-        "Integración API de fuentes externas: Google Analytics, Facebook, Shopify",
-        "[Logro cuantificado: ej. volumen de datos procesados / tiempo de carga reducido]"
+        "Integración API de fuentes externas: Google Analytics, Facebook, Shopify"
       ],
       stack: ["Apache Hadoop", "HDFS", "Spark", "Hive", "Sqoop", "Flume", "Cloudera", "PostgreSQL", "Scala", "Shell", "Pentaho", "Microstrategy"],
       projects: [
         {
           name: "Plataforma BI Big Data e-commerce",
-          description: "Construcción de un sistema de BI sobre stack Cloudera para alimentar reporting de e-commerce en tiempo casi-real.",
+          description: "Construcción de un sistema de BI sobre stack Cloudera para alimentar reporting de e-commerce.",
           stack: ["Hadoop", "Spark", "Hive", "Microstrategy"],
-          outcome: "[Resultado: ej. visión unificada de ventas online + offline]"
+          outcome: "Visión unificada de las distintas fuentes de venta online en un único data warehouse"
         }
       ]
     },
@@ -105,8 +114,7 @@ const CV_DATA = {
       description: "Análisis inteligente de datos para la obtención de conocimiento accionable, resolución de incidencias en reporting y desarrollo de nuevos informes.",
       impact: [
         "Resolución de incidencias y mantenimiento del reporting corporativo",
-        "Desarrollo de nuevos informes y modelos analíticos",
-        "[Logro cuantificado: ej. nº de informes desarrollados]"
+        "Desarrollo de nuevos informes y modelos analíticos"
       ],
       stack: ["Microsoft SQL Server", "RStudio", "Microsoft Analysis Services", "Microsoft Reporting Services"],
       projects: []
@@ -130,7 +138,7 @@ const CV_DATA = {
           name: "Mantenimiento y evolución de datamarts — Gas Natural Fenosa",
           description: "Diseño técnico y funcional de nuevos datamarts y desarrollo de proyectos ETL completos hasta reporting en Microstrategy.",
           stack: ["PL/SQL", "Oracle SQL Developer", "Microstrategy"],
-          outcome: "[Resultado: ej. nº de datamarts entregados / SLA de tickets]"
+          outcome: "Continuidad operativa de los datamarts del cliente y entrega de nuevos desarrollos end-to-end"
         }
       ]
     },
@@ -143,8 +151,7 @@ const CV_DATA = {
       current: false,
       description: "Análisis inteligente de datos y extracción de información y conocimiento a partir de grandes volúmenes de datos.",
       impact: [
-        "Aplicación de técnicas de minería de datos para extracción de conocimiento",
-        "[Logro cuantificado: ej. nº de modelos desarrollados / accuracy alcanzado]"
+        "Aplicación de técnicas de minería de datos para extracción de conocimiento de grandes volúmenes"
       ],
       stack: ["RStudio", "Weka", "Microsoft SQL Management Studio", "Kettle"],
       projects: []
@@ -158,7 +165,7 @@ const CV_DATA = {
       current: false,
       description: "Desarrollo de aplicaciones de escritorio, páginas web y módulos de automatización de trabajo para diversos clientes.",
       impact: [
-        "[Logro cuantificado: ej. nº de proyectos entregados / clientes atendidos]"
+        "Entrega de proyectos a medida combinando frontend, backend y automatización"
       ],
       stack: ["Java", "JavaScript", "PHP", "HTML", "CSS"],
       projects: []
@@ -175,6 +182,21 @@ const CV_DATA = {
         "Diseño y desarrollo de la aplicación STEL Corner"
       ],
       stack: ["HTML", "PHP", "CSS", "JavaScript", "Joomla", "Prestashop"],
+      projects: []
+    },
+    {
+      id: "exp-009",
+      company: "MetaEnlace Sistemas de Información",
+      role: "Prácticas Curriculares",
+      start: "2012-06",
+      end: "2012-07",
+      current: false,
+      description: "Prácticas curriculares de la Universidad de Murcia: desarrollo de macros y plantillas de reporting.",
+      impact: [
+        "Desarrollo de macros en VBA",
+        "Generación de plantillas con JasperReport"
+      ],
+      stack: ["VBA", "C#", "Java", "JasperReport"],
       projects: []
     }
   ],
@@ -243,19 +265,19 @@ const CV_DATA = {
     {
       name: "Oracle Database SQL Expert (1Z0-047)",
       issuer: "Oracle",
-      year: "[Año exacto de obtención]",
+      year: "2015",
       url: null
     },
     {
       name: "Java SE 8 Programmer I (1Z0-803)",
       issuer: "Oracle",
-      year: "[Año exacto de obtención]",
+      year: "2016",
       url: null
     },
     {
       name: "Oracle Database 11g Data Warehousing Certified Implementation Specialist (1Z0-515)",
       issuer: "Oracle",
-      year: "[Año exacto de obtención]",
+      year: "2016",
       url: null
     }
   ],
