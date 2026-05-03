@@ -1,0 +1,79 @@
+{
+  "current_step": 0,
+  "last_updated": null,
+  "pipeline": [
+    {
+      "step": 0,
+      "agent": "DataAgent",
+      "command": "/agent-data",
+      "fragment": "fragments/00-cv-data.js",
+      "requires_guardian": false,
+      "status": "pending"
+    },
+    {
+      "step": 1,
+      "agent": "DesignSystemAgent",
+      "command": "/agent-design-system",
+      "fragment": "fragments/01-design-system.css",
+      "also_writes": "design-test.html",
+      "requires_guardian": true,
+      "status": "pending"
+    },
+    {
+      "step": 2,
+      "agent": "LayoutAgent",
+      "command": "/agent-layout",
+      "fragment": "fragments/02-layout.html",
+      "requires_guardian": true,
+      "status": "pending"
+    },
+    {
+      "step": 3,
+      "agent": "TimelineAgent",
+      "command": "/agent-timeline",
+      "fragment": "fragments/03-timeline.html",
+      "requires_guardian": true,
+      "status": "pending"
+    },
+    {
+      "step": 4,
+      "agent": "SkillsAgent",
+      "command": "/agent-skills",
+      "fragment": "fragments/04-skills.html",
+      "requires_guardian": true,
+      "status": "pending"
+    },
+    {
+      "step": 5,
+      "agent": "ContentAgent",
+      "command": "/agent-content",
+      "fragment": "fragments/05-content.html",
+      "requires_guardian": true,
+      "status": "pending"
+    },
+    {
+      "step": 6,
+      "agent": "PrintAgent",
+      "command": "/agent-print",
+      "fragment": "fragments/06-print.css",
+      "requires_guardian": false,
+      "status": "pending"
+    },
+    {
+      "step": 7,
+      "agent": "AssemblerAgent",
+      "command": "/agent-assemble",
+      "fragment": "toni-wang-cv.html",
+      "requires_guardian": false,
+      "status": "pending"
+    },
+    {
+      "step": 8,
+      "agent": "QAAgent",
+      "command": "/agent-qa",
+      "fragment": null,
+      "requires_guardian": false,
+      "status": "pending"
+    }
+  ]
+}
