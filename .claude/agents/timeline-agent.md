@@ -13,6 +13,22 @@ Construyes la sección de experiencia laboral: timeline interactiva con D3.js + 
 - **Lees**: `fragments/00-cv-data.js`, `fragments/01-design-system.css`, `CLAUDE.md`
 - **No tocas**: ningún otro fragmento
 
+## i18n
+
+Todo el texto que renderizas pasa por `t()`:
+- `t(experience.role)` (puede ser `{es,en}` o string plano)
+- `t(experience.description)`, `t(experience.impact[i])`
+- `t(project.name)`, `t(project.description)`, `t(project.outcome)`
+- Labels de UI: `t(CV_DATA.ui.timeline.today)`, `t(CV_DATA.ui.sections.stack)`, etc.
+- Formato de meses: `CV_DATA.ui.months[window.__cvLang][monthIndex]`
+
+**Re-render al cambiar idioma**: tu `<script>` debe escuchar:
+```js
+window.addEventListener("cv:languagechange", () => {
+  // re-render de timeline SVG, lista móvil, drilldown abierto si hay
+});
+```
+
 ## Especificaciones de la Timeline
 
 ### Desktop (≥ 768px) — SVG con D3.js

@@ -21,8 +21,8 @@ Construyes el esqueleto de la aplicación: header, navegación, KPI bar y el sca
 <!-- HEADER -->
 <header class="site-header" role="banner">
   <!-- Logo SVG con iniciales + nombre -->
-  <!-- Nav: Resumen | Experiencia | Skills | Proyectos | Educación -->
-  <!-- Toggle dark/light + botón Descargar CV -->
+  <!-- Nav: usa data-i18n (ej. data-i18n="nav.experience") -->
+  <!-- Toggle ES/EN + Toggle dark/light + botón Descargar CV -->
   <!-- Menú hamburguesa (visible solo en móvil) -->
 </header>
 
@@ -48,15 +48,50 @@ Construyes el esqueleto de la aplicación: header, navegación, KPI bar y el sca
 ## Especificaciones del header
 
 - **Logo**: SVG inline con iniciales (de `CV_DATA.profile.name`) en `--font-mono`
-- **Nav links**: scroll suave a `#resumen`, `#experiencia`, `#skills`, `#proyectos`, `#educacion`
+- **Nav links**: scroll suave a `#resumen`, `#experiencia`, `#skills`, `#proyectos`, `#educacion`. Cada link tiene `data-i18n="nav.summary"`, `data-i18n="nav.experience"`, etc.
+- **Toggle ES/EN**: pequeño botón pill que muestra el idioma OPUESTO al actual (ej. en modo `es` muestra "EN"). Usa `t(CV_DATA.ui.actions.toggle_language)`. Al click ejecuta `setLanguage(otherLang)`. ≥ 44px.
 - **Toggle dark/light**: icono Lucide `sun`/`moon`, cambia `data-theme` en `<html>`, ≥ 44px
-- **Botón Descargar CV**: icono Lucide `download`, dispara `window.print()`
+- **Botón Descargar CV**: icono Lucide `download`, dispara `window.print()`. Texto via `data-i18n="actions.download"`.
 - **Hamburguesa** (≤ 768px): icono `menu`/`x`, abre/cierra nav vertical, área ≥ 44px
+
+## Sistema i18n (responsabilidad del LayoutAgent)
+
+El LayoutAgent posee la lógica global de idioma. En su `<script>`:
+
+```js
+// 1. Estado global
+window.__cvLang = (navigator.language || "es").startsWith("en") ? "en" : "es";
+document.documentElement.setAttribute("lang", window.__cvLang);
+
+// 2. Aplica labels estáticas a todos los elementos con data-i18n="path.to.key"
+function applyStaticLabels() {
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const path = el.dataset.i18n.split(".");
+    let v = CV_DATA.ui;
+    for (const p of path) v = v?.[p];
+    if (v != null) el.textContent = t(v);
+  });
+}
+
+// 3. Cambio de idioma
+function setLanguage(lang) {
+  window.__cvLang = lang;
+  document.documentElement.setAttribute("lang", lang);
+  applyStaticLabels();
+  window.dispatchEvent(new CustomEvent("cv:languagechange", { detail: { lang } }));
+}
+
+// 4. Inicialización
+applyStaticLabels();
+```
+
+Los demás agentes (timeline, skills, content) **NO duplican** esta lógica — solo escuchan el evento `cv:languagechange` para repintar su contenido dinámico.
 
 ## Especificaciones de la KPI Bar
 
 - Posición: debajo del header, sticky en scroll
-- 4 cards: `⚡ Años exp` · `🏢 Empresas` · `📦 Proyectos` · `🔧 Tecnologías`
+- 4 cards usando labels traducidas: `t(CV_DATA.ui.kpi.years_experience)` etc.
+- Cada label en su `<span data-i18n="kpi.years_experience">…</span>` para auto-update al cambiar idioma
 - Números en `--font-mono`, bold, tamaño grande
 - Labels en `--font-display`, `--color-text-muted`
 - **Count-up animation**: al cargar, números suben desde 0 hasta el valor en `CV_DATA.profile.kpis` en 1.5s con easing
