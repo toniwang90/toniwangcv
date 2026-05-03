@@ -6,53 +6,56 @@ CV interactivo en formato dashboard analítico. Output: un único fichero HTML e
 
 ## Arquitectura de agentes
 
-Patrón **Orchestrator → Workers especializados**, secuencial estricto con validación humana entre cada paso.
+Patrón **Orchestrator → Subagentes especializados**, secuencial estricto con validación humana entre cada paso.
+
+El usuario solo invoca **un slash command**: `/build`. Todos los demás roles son **subagentes** definidos en `.claude/agents/` con scope, herramientas y permisos restringidos vía frontmatter YAML. El Orchestrator los invoca vía Task tool.
 
 ### Roles y responsabilidades
 
-| Agente | Comando | Escribe | Solo lee |
-|--------|---------|---------|----------|
-| Orchestrator | `/build` | `fragments/_state.json` | todo |
-| DataAgent | `/agent-data` | `fragments/00-cv-data.js` | CLAUDE.md |
-| DesignSystemAgent | `/agent-design-system` | `design-test.html` + `fragments/01-design-system.css` | CLAUDE.md |
-| DesignGuardian | `/agent-design-guardian` | — (solo reporta) | fragmentos CSS |
-| LayoutAgent | `/agent-layout` | `fragments/02-layout.html` | 00, 01 |
-| TimelineAgent | `/agent-timeline` | `fragments/03-timeline.html` | 00, 01 |
-| SkillsAgent | `/agent-skills` | `fragments/04-skills.html` | 00, 01 |
-| ContentAgent | `/agent-content` | `fragments/05-content.html` | 00, 01 |
-| PrintAgent | `/agent-print` | `fragments/06-print.css` | 01, 02–05 |
-| AssemblerAgent | `/agent-assemble` | `toni-wang-cv.html` | todos los fragmentos |
-| QAAgent | `/agent-qa` | — (solo reporta) | `toni-wang-cv.html` |
+| Subagente | Tools | Escribe | Lee |
+|-----------|-------|---------|-----|
+| `data-agent` | Read, Write, Edit | `fragments/00-cv-data.js` | CLAUDE.md |
+| `design-system-agent` | Read, Write, Edit, Bash | `design-test.html` + `fragments/01-design-system.css` | CLAUDE.md |
+| `design-guardian` | Read, Grep, Glob | — (solo reporta) | fragmentos CSS |
+| `layout-agent` | Read, Write, Edit | `fragments/02-layout.html` | 00, 01 |
+| `timeline-agent` | Read, Write, Edit | `fragments/03-timeline.html` | 00, 01 |
+| `skills-agent` | Read, Write, Edit | `fragments/04-skills.html` | 00, 01 |
+| `content-agent` | Read, Write, Edit | `fragments/05-content.html` | 00, 01 |
+| `print-agent` | Read, Write, Edit | `fragments/06-print.css` | 01, 02–05 |
+| `assembler-agent` | Read, Write, Edit, Bash | `toni-wang-cv.html` | todos los fragmentos |
+| `qa-agent` | Read, Grep, Glob | — (solo reporta) | `toni-wang-cv.html` |
+
+Los read-only (`design-guardian`, `qa-agent`) no tienen `Write` ni `Edit` — el frontmatter lo impide.
 
 ### Pipeline (secuencial estricto)
 
 ```
-/agent-data          → 00-cv-data.js
+data-agent           → 00-cv-data.js
                        ↓ [validación humana]
-/agent-design-system → design-test.html + 01-design-system.css
-/agent-design-guardian (valida CSS)
+design-system-agent  → design-test.html + 01-design-system.css
+design-guardian (valida CSS)
                        ↓ [validación visual humana]
-/agent-layout        → 02-layout.html
-/agent-design-guardian (valida CSS inline si existe)
+layout-agent         → 02-layout.html
+design-guardian
                        ↓ [validación humana]
-/agent-timeline      → 03-timeline.html
-/agent-design-guardian (valida CSS)
+timeline-agent       → 03-timeline.html
+design-guardian
                        ↓ [validación humana]
-/agent-skills        → 04-skills.html
-/agent-design-guardian (valida CSS)
+skills-agent         → 04-skills.html
+design-guardian
                        ↓ [validación humana]
-/agent-content       → 05-content.html
-/agent-design-guardian (valida CSS)
+content-agent        → 05-content.html
+design-guardian
                        ↓ [validación humana]
-/agent-print         → 06-print.css
+print-agent          → 06-print.css
                        ↓ [validación humana]
-/agent-assemble      → toni-wang-cv.html
+assembler-agent      → toni-wang-cv.html
                        ↓
-/agent-qa            → informe de calidad
+qa-agent             → informe de calidad
                        ↓ [validación humana → DONE]
 ```
 
-El Orchestrator (`/build`) gestiona `_state.json` y siempre indica el siguiente paso.
+El Orchestrator (`/build`) gestiona `_state.json` e invoca al subagente correspondiente al paso actual vía Task tool.
 
 ---
 
@@ -61,17 +64,32 @@ El Orchestrator (`/build`) gestiona `_state.json` y siempre indica el siguiente 
 ```
 toniwangcv/
 ├── CLAUDE.md
-├── design-test.html              ← proof del design system (DesignSystemAgent)
-├── toni-wang-cv.html             ← output final (AssemblerAgent)
+├── design-test.html              ← proof del design system (design-system-agent)
+├── toni-wang-cv.html             ← output final (assembler-agent)
+├── .claude/
+│   ├── settings.json
+│   ├── commands/
+│   │   └── build.md              ← /build (único slash command, el Orchestrator)
+│   └── agents/                   ← subagentes con frontmatter (scope/tools restringidos)
+│       ├── data-agent.md
+│       ├── design-system-agent.md
+│       ├── design-guardian.md
+│       ├── layout-agent.md
+│       ├── timeline-agent.md
+│       ├── skills-agent.md
+│       ├── content-agent.md
+│       ├── print-agent.md
+│       ├── assembler-agent.md
+│       └── qa-agent.md
 ├── fragments/
 │   ├── _state.json               ← estado del pipeline (Orchestrator)
-│   ├── 00-cv-data.js             ← DataAgent
-│   ├── 01-design-system.css      ← DesignSystemAgent
-│   ├── 02-layout.html            ← LayoutAgent
-│   ├── 03-timeline.html          ← TimelineAgent
-│   ├── 04-skills.html            ← SkillsAgent
-│   ├── 05-content.html           ← ContentAgent
-│   └── 06-print.css              ← PrintAgent
+│   ├── 00-cv-data.js             ← data-agent
+│   ├── 01-design-system.css      ← design-system-agent
+│   ├── 02-layout.html            ← layout-agent
+│   ├── 03-timeline.html          ← timeline-agent
+│   ├── 04-skills.html            ← skills-agent
+│   ├── 05-content.html           ← content-agent
+│   └── 06-print.css              ← print-agent
 └── assets/
 ```
 
