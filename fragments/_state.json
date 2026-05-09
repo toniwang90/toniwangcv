@@ -62,7 +62,7 @@
     {
       "step": 7,
       "agent": "assembler-agent",
-      "fragment": "toni-wang-cv.html",
+      "fragment": "index.html",
       "requires_guardian": false,
       "requires_ux_advisor": true,
       "status": "pending"

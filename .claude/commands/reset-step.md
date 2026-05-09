@@ -1,54 +1,54 @@
-# /reset-step [número] — Reinicio de un paso del pipeline
+# /reset-step [number] — Pipeline step reset
 
-Resetea el estado de un paso específico (y opcionalmente los pasos dependientes) en `fragments/_state.json` para permitir su re-ejecución.
+Resets the state of a specific step (and optionally dependent steps) in `fragments/_state.json` to allow re-execution.
 
-## Uso
+## Usage
 
 ```
-/reset-step 3           → resetea solo el paso 3
-/reset-step 3 cascade   → resetea el paso 3 y todos los pasos posteriores (4, 5, 6, 7, 8)
+/reset-step 3           → resets step 3 only
+/reset-step 3 cascade   → resets step 3 and all subsequent steps (4, 5, 6, 7, 8)
 ```
 
-## Comportamiento
+## Behaviour
 
-1. Lee `fragments/_state.json`
-2. Identifica el paso indicado
-3. **Muestra un resumen del impacto** antes de actuar:
+1. Read `fragments/_state.json`
+2. Identify the given step
+3. **Display an impact summary** before acting:
    ```
-   Paso 3 (timeline-agent) → estado actual: validated
-   
-   ⚠️  Dependencias que se verán afectadas:
-   - Paso 4 (skills-agent): validated
-   - Paso 5 (content-agent): validated
-   - Paso 6 (print-agent): pending
-   - Paso 7 (assembler-agent): pending
-   - Paso 8 (qa-agent): pending
-   
-   ¿Resetear solo el paso 3, o también los pasos dependientes?
-   → /reset-step 3          (solo paso 3)
-   → /reset-step 3 cascade  (paso 3 + todos los posteriores)
+   Step 3 (timeline-agent) → current status: validated
+
+   ⚠️  Dependent steps that will be affected:
+   - Step 4 (skills-agent): validated
+   - Step 5 (content-agent): validated
+   - Step 6 (print-agent): pending
+   - Step 7 (assembler-agent): pending
+   - Step 8 (qa-agent): pending
+
+   Reset step 3 only, or also dependent steps?
+   → /reset-step 3          (step 3 only)
+   → /reset-step 3 cascade  (step 3 + all subsequent)
    ```
-4. **Espera confirmación explícita** del usuario antes de modificar `_state.json`
-5. Tras confirmación, actualiza el estado del paso (y dependientes si `cascade`) a `pending`
-6. Actualiza `current_step` al paso reseteado más bajo
-7. Confirma los cambios realizados
+4. **Wait for explicit user confirmation** before modifying `_state.json`
+5. After confirmation, update the step's status (and dependents if `cascade`) to `pending`
+6. Update `current_step` to the lowest reset step
+7. Confirm the changes made
 
-## Estados resultantes tras el reset
+## Resulting states after reset
 
-| Paso reseteado | Estado resultante |
-|----------------|------------------|
-| El paso indicado | `pending` |
-| Pasos posteriores (con `cascade`) | `pending` |
-| Pasos anteriores | Sin cambios |
+| Reset target | Resulting state |
+|--------------|----------------|
+| The specified step | `pending` |
+| Subsequent steps (with `cascade`) | `pending` |
+| Prior steps | Unchanged |
 
-## Casos de uso típicos
+## Typical use cases
 
-- El agente de un paso generó código incorrecto y se quiere re-ejecutar
-- El usuario modificó manualmente un fragmento y quiere que el pipeline lo reconozca como no-validado
-- Se cambió `CV_DATA` (paso 0) y se necesita re-ejecutar todo: `/reset-step 1 cascade`
+- An agent produced incorrect code and needs to be re-run
+- The user manually edited a fragment and wants the pipeline to treat it as unvalidated
+- `CV_DATA` (step 0) was changed and everything needs re-running: `/reset-step 1 cascade`
 
-## Notas
+## Notes
 
-- **No borra** los ficheros de fragmentos — solo cambia el estado en `_state.json`
-- Si se resetea a un paso ya validado, el fragmento físico sigue existiendo — el agente lo sobreescribirá al re-ejecutarse
-- Siempre pide confirmación antes de escribir — nunca resetea sin aprobación explícita del usuario
+- **Does not delete** fragment files — only changes status in `_state.json`
+- If a validated step is reset, the physical fragment still exists — the agent will overwrite it on re-execution
+- Always asks for confirmation before writing — never resets without explicit user approval

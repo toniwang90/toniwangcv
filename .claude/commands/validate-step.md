@@ -1,50 +1,50 @@
-# /validate-step [número] — Validación manual de un paso
+# /validate-step [number] — Manual step validation
 
-Ejecuta los validadores (DesignGuardian y/o UX Advisor) sobre el fragmento de un paso específico sin necesidad de pasar por el flujo completo de `/build`.
+Runs the validators (DesignGuardian and/or UX Advisor) on a specific step's fragment without going through the full `/build` flow.
 
-## Uso
+## Usage
 
 ```
-/validate-step 2        → valida fragments/02-layout.html
-/validate-step 3 ux     → solo UX Advisor sobre fragments/03-timeline.html
-/validate-step 4 css    → solo DesignGuardian sobre fragments/04-skills.html
-/validate-step 1        → DesignGuardian + UX Advisor sobre 01-design-system.css
+/validate-step 2        → validates fragments/02-layout.html
+/validate-step 3 ux     → UX Advisor only on fragments/03-timeline.html
+/validate-step 4 css    → DesignGuardian only on fragments/04-skills.html
+/validate-step 1        → DesignGuardian + UX Advisor on 01-design-system.css
 ```
 
-Si no se especifica modificador, corre **ambos validadores** cuando aplica.
+If no modifier is given, runs **both validators** where applicable.
 
-## Mapa de pasos y validadores
+## Step and validator map
 
-| Paso | Fragmento | DesignGuardian | UX Advisor |
-|------|-----------|:--------------:|:----------:|
+| Step | Fragment | DesignGuardian | UX Advisor |
+|------|----------|:--------------:|:----------:|
 | 0 | `fragments/00-cv-data.js` | No | No |
-| 1 | `fragments/01-design-system.css` | Sí | No |
-| 2 | `fragments/02-layout.html` | Sí | Sí |
-| 3 | `fragments/03-timeline.html` | Sí | Sí |
-| 4 | `fragments/04-skills.html` | Sí | Sí |
-| 5 | `fragments/05-content.html` | Sí | Sí |
-| 6 | `fragments/06-print.css` | Sí | No |
-| 7 | `toni-wang-cv.html` | No | Sí |
+| 1 | `fragments/01-design-system.css` | Yes | No |
+| 2 | `fragments/02-layout.html` | Yes | Yes |
+| 3 | `fragments/03-timeline.html` | Yes | Yes |
+| 4 | `fragments/04-skills.html` | Yes | Yes |
+| 5 | `fragments/05-content.html` | Yes | Yes |
+| 6 | `fragments/06-print.css` | Yes | No |
+| 7 | `index.html` | No | Yes |
 | 8 | — | No | No |
 
-## Comportamiento
+## Behaviour
 
-1. Lee `fragments/_state.json` para identificar el fragmento del paso indicado
-2. Verifica que el fragmento existe en disco — si no existe, informa y detiene
-3. Invoca los validadores correspondientes vía Task tool:
-   - `design-guardian` con instrucción de revisar el fragmento específico
-   - `ux-advisor` con instrucción de revisar el fragmento específico
-4. Muestra los informes de ambos validadores
-5. **No modifica `_state.json`** — este comando es de solo lectura
+1. Read `fragments/_state.json` to identify the fragment for the given step
+2. Verify the fragment exists on disk — if not, report and stop
+3. Invoke the appropriate validators via Task tool:
+   - `design-guardian` with instruction to review the specific fragment
+   - `ux-advisor` with instruction to review the specific fragment
+4. Display reports from both validators
+5. **Does not modify `_state.json`** — this command is read-only
 
-## Casos de uso típicos
+## Typical use cases
 
-- Re-validar un fragmento tras corregir un problema detectado por el DesignGuardian
-- Pedir una segunda opinión de UX antes de avanzar al siguiente paso
-- Verificar que una corrección manual no introdujo nuevas violaciones
+- Re-validate a fragment after fixing an issue flagged by DesignGuardian
+- Request a second UX opinion before advancing to the next step
+- Verify that a manual correction did not introduce new violations
 
-## Notas
+## Notes
 
-- No avanza el pipeline — solo valida
-- El estado en `_state.json` no cambia tras ejecutar este comando
-- Para marcar un paso como `validated`, el usuario debe confirmarlo explícitamente en el flujo de `/build`
+- Does not advance the pipeline — validation only
+- The state in `_state.json` does not change after running this command
+- To mark a step as `validated`, the user must explicitly confirm it in the `/build` flow
