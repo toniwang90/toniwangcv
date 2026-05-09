@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor artifacts
+.vscode/
+*.swp
+*.swo
+
+# Local Claude Code settings (contains machine-specific paths)
+.claude/settings.local.json
+
+# LinkedIn PDF (keep out of version control)
+*.pdf
+
+# Node (only used for fragment syntax validation)
+node_modules/

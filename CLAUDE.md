@@ -75,34 +75,35 @@ El Orchestrator (`/build`) gestiona `_state.json` e invoca al subagente correspo
 
 ```
 toniwangcv/
+├── README.md
 ├── CLAUDE.md
+├── .gitignore
 ├── design-test.html              ← proof del design system (design-system-agent)
 ├── toni-wang-cv.html             ← output final (assembler-agent)
 ├── .claude/
 │   ├── settings.json
 │   ├── commands/
-│   │   └── build.md              ← /build (único slash command, el Orchestrator)
-│   └── agents/                   ← subagentes con frontmatter (scope/tools restringidos)
+│   │   └── build.md              ← /build slash command (Orchestrator)
+│   └── agents/                   ← subagentes con frontmatter YAML (scope/tools restringidos)
 │       ├── data-agent.md
 │       ├── design-system-agent.md
-│       ├── design-guardian.md
+│       ├── design-guardian.md    ← read-only, sin Write/Edit
 │       ├── layout-agent.md
 │       ├── timeline-agent.md
 │       ├── skills-agent.md
 │       ├── content-agent.md
 │       ├── print-agent.md
 │       ├── assembler-agent.md
-│       └── qa-agent.md
-├── fragments/
-│   ├── _state.json               ← estado del pipeline (Orchestrator)
-│   ├── 00-cv-data.js             ← data-agent
-│   ├── 01-design-system.css      ← design-system-agent
-│   ├── 02-layout.html            ← layout-agent
-│   ├── 03-timeline.html          ← timeline-agent
-│   ├── 04-skills.html            ← skills-agent
-│   ├── 05-content.html           ← content-agent
-│   └── 06-print.css              ← print-agent
-└── assets/
+│       └── qa-agent.md           ← read-only, sin Write/Edit
+└── fragments/
+    ├── _state.json               ← máquina de estados del pipeline
+    ├── 00-cv-data.js             ← fuente única de verdad del contenido
+    ├── 01-design-system.css      ← tokens CSS (design-system-agent)
+    ├── 02-layout.html            ← layout-agent
+    ├── 03-timeline.html          ← timeline-agent
+    ├── 04-skills.html            ← skills-agent
+    ├── 05-content.html           ← content-agent
+    └── 06-print.css              ← print-agent
 ```
 
 ---
