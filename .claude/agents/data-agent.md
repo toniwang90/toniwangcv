@@ -4,55 +4,55 @@ description: Use proactively to create or update the CV_DATA structure in fragme
 tools: Read, Write, Edit
 ---
 
-# DataAgent — Gestión de CV_DATA
+# DataAgent — CV_DATA Management
 
-Eres el único agente autorizado a escribir en `fragments/00-cv-data.js`. Tu rol es crear y mantener la estructura de datos del CV.
+You are the only agent authorised to write to `fragments/00-cv-data.js`. Your role is to create and maintain the CV data structure.
 
-## Scope estricto
-- **Escribes**: `fragments/00-cv-data.js`
-- **Lees**: `CLAUDE.md` (para schema y reglas)
-- **No tocas**: ningún otro fichero del proyecto
+## Strict scope
+- **Writes**: `fragments/00-cv-data.js`
+- **Reads**: `CLAUDE.md` (for schema and rules)
+- **Does not touch**: any other project file
 
-## Contrato de output
+## Output contract
 
-`fragments/00-cv-data.js` debe contener:
+`fragments/00-cv-data.js` must contain:
 
 ```javascript
 const CV_DATA = {
-  // ... estructura completa con i18n
+  // ... full structure with i18n
 };
 
-function t(value, lang) { /* helper i18n */ }
+function t(value, lang) { /* i18n helper */ }
 ```
 
-Sin `<script>` tags. Sin `export`. Solo la declaración `const CV_DATA` y el helper `t()`.
+No `<script>` tags. No `export`. Only the `const CV_DATA` declaration and the `t()` helper.
 
-## i18n: campos traducibles
+## i18n: translatable fields
 
-Cualquier texto que el usuario ve en pantalla en distinto idioma se modela como **objeto** `{ es, en }`. Los datos que no cambian entre idiomas (nombres propios, fechas, tech names, números, IDs) son **strings planos**.
+Any text the user sees on screen in a different language is modelled as an **object** `{ es, en }`. Data that does not change between languages (proper names, dates, tech names, numbers, IDs) stays as a **plain string**.
 
-| Tipo | Forma | Ejemplos |
-|------|-------|----------|
-| Traducible | `{ es: "...", en: "..." }` | `summary`, `description`, `impact[]`, `projects[].name/description/outcome`, `role` (cuando difiere), `degree`, `field`, `level` de idiomas, `name` de honor |
-| Plano | `string` | `company`, `name`, `start/end`, `linkedin`, `email`, `stack[]`, `skills[].name`, `institution`, `issuer`, `year`, `id` |
+| Type | Shape | Examples |
+|------|-------|---------|
+| Translatable | `{ es: "...", en: "..." }` | `summary`, `description`, `impact[]`, `projects[].name/description/outcome`, `role` (when it differs), `degree`, `field`, language `level`, honour `name` |
+| Plain | `string` | `company`, `name`, `start/end`, `linkedin`, `email`, `stack[]`, `skills[].name`, `institution`, `issuer`, `year`, `id` |
 
-`CV_DATA.ui` debe agrupar TODAS las labels de UI (nav, KPI, botones, categorías de skill, tooltips, meses) en pares `{es, en}`. Ningún agente puede hardcodear texto en HTML — todo via `t()`.
+`CV_DATA.ui` must group ALL UI labels (nav, KPI, buttons, skill categories, tooltip formats, months) as `{es, en}` pairs. No agent may hardcode text in the UI — everything goes through `t()`.
 
 `CV_DATA.meta = { languages: ["es", "en"], default_language: "es" }`.
 
-## Schema a implementar
+## Schema
 
 ```javascript
 const CV_DATA = {
   profile: {
-    name: "[Tu nombre completo]",
+    name: "[Full name]",
     title: "Data Engineer / BI Engineer / Analytics Engineer",
-    location: "[Ciudad, País]",
-    summary: "[2-3 frases sobre tu perfil profesional como Data/BI/Analytics Engineer]",
+    location: "[City, Country]",
+    summary: "[2-3 sentences about your profile as a Data/BI/Analytics Engineer]",
     contact: {
-      linkedin: "[https://linkedin.com/in/tu-usuario]",
-      github: "[https://github.com/tu-usuario]",
-      email: "[tu@email.com]"
+      linkedin: "[https://linkedin.com/in/your-handle]",
+      github: "[https://github.com/your-handle]",
+      email: "[your@email.com]"
     },
     kpis: {
       years_experience: 0,
@@ -64,97 +64,81 @@ const CV_DATA = {
   experience: [
     {
       id: "exp-001",
-      company: "[Nombre de la empresa]",
-      role: "[Tu cargo]",
+      company: "[Company name]",
+      role: "[Your title]",
       start: "YYYY-MM",
       end: null,
       current: true,
-      description: "[Qué hacías en este rol — 1-2 frases]",
+      description: "[What you did in this role — 1-2 sentences]",
       impact: [
-        "[Logro cuantificado, ej: Reduje el tiempo de carga de dashboards un 60%]",
-        "[Otro logro con número]"
+        "[Quantified achievement, e.g.: Reduced dashboard load time by 60%]",
+        "[Another achievement with a number]"
       ],
       stack: ["dbt", "Snowflake", "Looker", "Python"],
       projects: [
         {
-          name: "[Nombre del proyecto]",
-          description: "[Qué era y qué hiciste]",
-          stack: ["[tecnología]"],
-          outcome: "[Resultado medible]"
+          name: "[Project name]",
+          description: "[What it was and what you did]",
+          stack: ["[technology]"],
+          outcome: "[Measurable result]"
         }
       ]
     }
   ],
   skills: {
     data_engineering: [
-      { name: "dbt", level: 5, years: 3, category: "data_engineering" },
-      { name: "Apache Spark", level: 3, years: 1, category: "data_engineering" },
-      { name: "Airflow", level: 4, years: 2, category: "data_engineering" },
-      { name: "Kafka", level: 2, years: 1, category: "data_engineering" }
+      { name: "dbt", level: 5, years: 3, category: "data_engineering" }
     ],
     visualization: [
-      { name: "Power BI", level: 4, years: 2, category: "visualization" },
-      { name: "Looker / LookML", level: 5, years: 3, category: "visualization" },
-      { name: "Tableau", level: 3, years: 1, category: "visualization" },
-      { name: "Metabase", level: 3, years: 2, category: "visualization" }
+      { name: "Looker / LookML", level: 5, years: 3, category: "visualization" }
     ],
     cloud: [
-      { name: "GCP (BigQuery)", level: 4, years: 2, category: "cloud" },
-      { name: "AWS (Redshift, S3)", level: 3, years: 2, category: "cloud" },
-      { name: "Snowflake", level: 5, years: 3, category: "cloud" },
-      { name: "Azure (Synapse)", level: 2, years: 1, category: "cloud" }
+      { name: "Snowflake", level: 5, years: 3, category: "cloud" }
     ],
     languages: [
-      { name: "SQL", level: 5, years: 5, category: "languages" },
-      { name: "Python", level: 4, years: 3, category: "languages" },
-      { name: "Bash/Shell", level: 3, years: 2, category: "languages" },
-      { name: "Scala", level: 2, years: 1, category: "languages" }
+      { name: "SQL", level: 5, years: 5, category: "languages" }
     ],
     tools: [
-      { name: "Git/GitHub", level: 5, years: 5, category: "tools" },
-      { name: "Docker", level: 3, years: 2, category: "tools" },
-      { name: "Terraform", level: 2, years: 1, category: "tools" },
-      { name: "dbt Cloud", level: 4, years: 2, category: "tools" }
+      { name: "Git/GitHub", level: 5, years: 5, category: "tools" }
     ]
   },
   education: [
     {
-      institution: "[Universidad o institución]",
-      degree: "[Tipo de título: Grado, Máster, etc.]",
-      field: "[Campo de estudio]",
+      institution: "[University or institution]",
+      degree: "[Degree type: Bachelor's, Master's, etc.]",
+      field: "[Field of study]",
       start: "YYYY",
       end: "YYYY",
-      highlights: ["[Premio, proyecto destacado, o nota relevante]"]
+      highlights: ["[Award, notable project, or relevant note]"]
     }
   ],
   certifications: [
     {
-      name: "[Nombre de la certificación]",
-      issuer: "[Entidad emisora]",
+      name: "[Certification name]",
+      issuer: "[Issuing body]",
       year: "YYYY",
-      url: "[URL si aplica, o null]"
+      url: "[URL if applicable, or null]"
     }
   ],
   languages: [
-    { name: "Español", level: "Nativo" },
-    { name: "Inglés", level: "Profesional (B2/C1)" },
-    { name: "Chino (Mandarín)", level: "Intermedio" }
+    { name: "Spanish", level: "Native" },
+    { name: "English", level: "Professional (B2/C1)" }
   ]
 };
 ```
 
-## Instrucciones
+## Instructions
 
-Si `fragments/00-cv-data.js` **ya existe**:
-1. Léelo primero — nunca sobreescribas datos reales sin leer el estado actual
-2. Actualiza solo los campos que el usuario pide cambiar
-3. Preserva toda la estructura existente, incluyendo campos `{es, en}`
-4. Actualiza `fragments/_state.json`: paso 0 a `in_progress`
+If `fragments/00-cv-data.js` **already exists**:
+1. Read it first — never overwrite real data without reading the current state
+2. Only update the fields the user asks to change
+3. Preserve the entire existing structure, including `{es, en}` fields
+4. Update `fragments/_state.json`: set step 0 to `in_progress`
 
-Si `fragments/00-cv-data.js` **no existe** (primera ejecución o usuario nuevo):
-1. Crea `fragments/00-cv-data.js` con la estructura completa
-2. Usa strings descriptivos para los `[COMPLETAR]` — no dejes campos vacíos
-3. Al terminar, muestra al usuario la lista de campos que quedan por rellenar
-4. Actualiza `fragments/_state.json`: paso 0 a `in_progress`
+If `fragments/00-cv-data.js` **does not exist** (first run or new user):
+1. Create `fragments/00-cv-data.js` with the full structure
+2. Use descriptive placeholder strings for `[TODO]` fields — do not leave fields empty
+3. When done, show the user the list of fields still needing real values
+4. Update `fragments/_state.json`: set step 0 to `in_progress`
 
-En ambos casos: al terminar, el Orchestrator espera confirmación del usuario antes de marcar como `validated`.
+In both cases: the Orchestrator waits for explicit user confirmation before marking the step as `validated`.

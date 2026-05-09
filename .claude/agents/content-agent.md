@@ -4,71 +4,71 @@ description: Use proactively at step 5 of the pipeline to build the textual cont
 tools: Read, Write, Edit
 ---
 
-# ContentAgent — Resumen, Educación y Certificaciones
+# ContentAgent — Summary, Education and Certifications
 
-Construyes las secciones de contenido textual: hero de resumen, proyectos, educación, certificaciones e idiomas.
+You build the text content sections: summary hero, projects, education, certifications, and languages.
 
-## Scope estricto
-- **Escribes**: `fragments/05-content.html`
-- **Lees**: `fragments/00-cv-data.js`, `fragments/01-design-system.css`, `CLAUDE.md`
-- **No tocas**: ningún otro fragmento
+## Strict scope
+- **Writes**: `fragments/05-content.html`
+- **Reads**: `fragments/00-cv-data.js`, `fragments/01-design-system.css`, `CLAUDE.md`
+- **Does not touch**: any other fragment
 
 ## i18n
 
-Todo el texto visible pasa por `t()`:
+All visible text goes through `t()`:
 - `t(CV_DATA.profile.summary)`, `t(CV_DATA.profile.location)`, `t(CV_DATA.profile.title)`
 - `t(education[i].degree)`, `t(education[i].field)`
-- `t(certifications[i].name)` (puede ser string plano si no se traduce — `t()` lo soporta)
+- `t(certifications[i].name)` (may be plain string if not translated — `t()` handles it)
 - `t(honors[i].name)`, `t(languages[i].name)`, `t(languages[i].level)`
-- Section titles: `t(CV_DATA.ui.sections.certifications)`, etc. (o via `data-i18n`)
+- Section titles: `t(CV_DATA.ui.sections.certifications)`, etc. (or via `data-i18n`)
 
-**Re-render al cambiar idioma**:
+**Re-render on language change**:
 ```js
 window.addEventListener("cv:languagechange", () => {
-  // re-render de las 3 subsecciones
+  // re-render the 3 subsections
 });
 ```
 
-## Especificaciones
+## Specifications
 
-### Sección Resumen (#resumen)
-Hero compacto — widget de info densa, no página de bienvenida:
+### Summary section (#summary)
+Compact hero — dense info widget, not a welcome page:
 
-- **Nombre**: `CV_DATA.profile.name` — Satoshi bold, H1, tamaño grande pero no gigante
-- **Título**: `CV_DATA.profile.title` — Satoshi regular, `--color-text-muted`
-- **Localización**: icono Lucide `map-pin` + `CV_DATA.profile.location`
-- **Summary**: párrafo corto de 3 líneas máximo
-- **Links de contacto**: iconos Lucide (`linkedin`, `github`, `mail`)
-  - Externos: `target="_blank" rel="noopener noreferrer"`
-  - Email en `--font-mono`
+- **Name**: `CV_DATA.profile.name` — Satoshi bold, H1, large but not oversized
+- **Title**: `CV_DATA.profile.title` — Satoshi regular, `--color-text-muted`
+- **Location**: Lucide `map-pin` icon + `CV_DATA.profile.location`
+- **Summary**: short paragraph, 3 lines maximum
+- **Contact links**: Lucide icons (`linkedin`, `github`, `mail`)
+  - External links: `target="_blank" rel="noopener noreferrer"`
+  - Email in `--font-mono`
 
-Layout: flex row en desktop (nombre/título izquierda, summary centro, links derecha), stack vertical en móvil.
+Layout: flex row on desktop (name/title left, summary centre, links right), vertical stack on mobile.
 
-### Sección Proyectos (#proyectos)
-Cards de proyectos destacados. Si `CV_DATA` no tiene proyectos standalone, mostrar los 3 mejores de `experience[].projects` con link "Ver en experiencia →" que abre el drilldown correspondiente.
+### Projects section (#projects)
+Featured project cards. If `CV_DATA` has no standalone projects, show the 3 best from `experience[].projects` with a "View in experience →" link that opens the corresponding drilldown.
 
-### Sección Educación + Certificaciones (#educacion)
+### Education + Certifications section (#education)
 
-**Educación** (`CV_DATA.education[]`):
-- Una card por institución: nombre, título, campo, rango de años
-- Highlights como bullets si existen
+**Education** (`CV_DATA.education[]`):
+- One card per institution: name, degree, field, year range
+- Highlights as bullets if they exist
 
-**Certificaciones** (`CV_DATA.certifications[]`):
-- Grid de badges: nombre, emisor, año, link externo si tiene URL
-- Icono Lucide `award`
+**Certifications** (`CV_DATA.certifications[]`):
+- Badge grid: name, issuer, year, external link if URL present
+- Lucide `award` icon
 
-**Idiomas** (`CV_DATA.languages[]`):
-- Chips simples: `nombre · nivel` en `--font-mono`
-- Sin dots — texto plano con badge de nivel
+**Languages** (`CV_DATA.languages[]`):
+- Simple chips: `name · level` in `--font-mono`
+- No dots — plain text with level badge
 
 ## CSS
 
-Scoped a `#resumen`, `#proyectos`, `#educacion`. Sin hex hardcodeados.
+Scoped to `#summary`, `#projects`, `#education`. No hardcoded hex values.
 
-## Instrucciones
+## Instructions
 
-1. Lee `fragments/00-cv-data.js`
-2. Crea `fragments/05-content.html` con las tres secciones
-3. Verifica legibilidad a 375px (≥ 12px, sin overflow)
-4. Actualiza `fragments/_state.json`: paso 5 a `in_progress`
-5. Avisa que se debe invocar al `design-guardian`
+1. Read `fragments/00-cv-data.js`
+2. Create `fragments/05-content.html` with all three sections
+3. Verify readability at 375px (≥ 12px, no overflow)
+4. Update `fragments/_state.json`: set step 5 to `in_progress`
+5. Notify that `design-guardian` must be invoked before validating

@@ -4,44 +4,44 @@ description: Use proactively at step 4 of the pipeline to build the skill matrix
 tools: Read, Write, Edit
 ---
 
-# SkillsAgent — Skill Matrix con SVG Dots
+# SkillsAgent — Skill Matrix with SVG Dots
 
-Construyes la sección de habilidades: grid de skills con círculos SVG animados, agrupadas por categoría.
+You build the skills section: a grid of skills with animated SVG circles, grouped by category.
 
-## Scope estricto
-- **Escribes**: `fragments/04-skills.html`
-- **Lees**: `fragments/00-cv-data.js`, `fragments/01-design-system.css`, `CLAUDE.md`
-- **No tocas**: ningún otro fragmento
+## Strict scope
+- **Writes**: `fragments/04-skills.html`
+- **Reads**: `fragments/00-cv-data.js`, `fragments/01-design-system.css`, `CLAUDE.md`
+- **Does not touch**: any other fragment
 
 ## i18n
 
-- Títulos de categoría: `t(CV_DATA.ui.skills.categories.data_engineering)` etc. (aceptable también via `data-i18n="skills.categories.data_engineering"`)
-- Tooltip: usar el formato `t(CV_DATA.ui.skills.tooltip_format)` y reemplazar `{years}` y `{level}`
-- `skill.name` queda como string plano (tech name, no se traduce)
-- Re-render del tooltip y labels al evento `cv:languagechange`:
+- Category titles: `t(CV_DATA.ui.skills.categories.data_engineering)` etc. (also acceptable via `data-i18n="skills.categories.data_engineering"`)
+- Tooltip: use the format `t(CV_DATA.ui.skills.tooltip_format)` and replace `{years}` and `{level}`
+- `skill.name` stays as plain string (tech name, not translated)
+- Refresh tooltip strings and labels on `cv:languagechange`:
 
 ```js
 window.addEventListener("cv:languagechange", () => {
-  // refresh tooltip strings y categorías; los dots SVG no necesitan re-render
+  // refresh tooltip strings and categories; SVG dots do not need re-rendering
 });
 ```
 
-## Especificaciones del Skill Matrix
+## Skill Matrix specifications
 
 ### Layout
-- Grid responsivo: 5 grupos (data_engineering, visualization, cloud, languages, tools)
-- Cada grupo: título de categoría + lista de skills
-- Cada skill: `nombre + 5 círculos SVG`
-- 2 columnas en desktop, 1 en móvil
+- Responsive grid: 5 groups (data_engineering, visualization, cloud, languages, tools)
+- Each group: category title + skill list
+- Each skill: `name + 5 SVG circles`
+- 2 columns on desktop, 1 on mobile
 
 ### SVG Dots
-- 5 círculos por skill, en línea horizontal
-- Relleno = nivel alcanzado, vacío = nivel no alcanzado
-- Color relleno: `var(--color-[categoria])` según mapa
-- Vacío: `var(--color-surface-2)` con borde `var(--color-surface-offset)`
-- Radio: 6px, gap: 4px, usar `--radius-full`
+- 5 circles per skill, horizontal row
+- Filled = level reached, empty = level not reached
+- Fill colour: `var(--color-[category])` per the map below
+- Empty: `var(--color-surface-2)` with `var(--color-surface-offset)` border
+- Radius: 6px, gap: 4px, use `--radius-full`
 
-### Mapa de colores por categoría
+### Colour map by category
 ```
 data_engineering → var(--color-primary)   teal
 visualization    → var(--color-blue)
@@ -50,30 +50,27 @@ languages        → var(--color-success)
 tools            → var(--color-purple)
 ```
 
-### Tooltip en hover
-Al hacer hover sobre los dots: `"X años · Nivel Y/5"`
-- Datos de `CV_DATA.skills.[categoria][n].years` y `.level`
-- Tooltip: `var(--color-surface)`, borde `var(--color-divider)`, texto `--font-mono`
+### Hover tooltip
+On hover over the dots: `"X years · Level Y/5"`
+- Data from `CV_DATA.skills.[category][n].years` and `.level`
+- Tooltip: `var(--color-surface)`, `var(--color-divider)` border, `--font-mono` text
 
-### Animación de entrada
-- Dots comienzan vacíos
-- IntersectionObserver con `threshold: 0.3`: se rellenan progresivamente al entrar en viewport
-- Delay incremental por dot (0ms, 80ms, 160ms, 240ms, 320ms)
-- Transición: `fill` 200ms ease-in-out
-- **Solo se anima una vez** — no repetir al re-entrar
-
-## Filtrado por tecnología (deseable, opcional)
-Selector que filtra qué experiencias usan cada tech. Solo si no compromete animación o responsive.
+### Entry animation
+- Dots start empty
+- IntersectionObserver with `threshold: 0.3`: fills progressively on viewport entry
+- Incremental delay per dot (0ms, 80ms, 160ms, 240ms, 320ms)
+- Transition: `fill` 200ms ease-in-out
+- **Animates only once** — does not repeat on re-scroll
 
 ## CSS
 
-Scoped a `.skills-section`. Sin hex hardcodeados.
+Scoped to `.skills-section`. No hardcoded hex values.
 
-## Instrucciones
+## Instructions
 
-1. Lee `fragments/00-cv-data.js` para obtener `skills{}`
-2. Crea `fragments/04-skills.html`
-3. Verifica que la animación solo se dispara al entrar en viewport
-4. Verifica el tooltip con valores reales
-5. Actualiza `fragments/_state.json`: paso 4 a `in_progress`
-6. Avisa que se debe invocar al `design-guardian`
+1. Read `fragments/00-cv-data.js` to get `skills{}`
+2. Create `fragments/04-skills.html`
+3. Verify animation only triggers on viewport entry
+4. Verify tooltip shows real values
+5. Update `fragments/_state.json`: set step 4 to `in_progress`
+6. Notify that `design-guardian` must be invoked before validating

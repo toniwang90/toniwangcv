@@ -1,104 +1,108 @@
 # CV Dashboard — Toni Wang
 
-CV interactivo en formato dashboard analítico. Output: un único fichero HTML estático (`toni-wang-cv.html`) deployable en GitHub Pages/Netlify/Vercel sin configuración adicional.
+Interactive CV in analytic dashboard format. Output: a single static HTML file (`index.html`) deployable on GitHub Pages/Netlify/Vercel with no additional configuration.
 
 ---
 
-## Arquitectura de agentes
+## Agent architecture
 
-Patrón **Orchestrator → Subagentes especializados**, secuencial estricto con validación humana entre cada paso.
+Pattern **Orchestrator → Specialised subagents**, strictly sequential with human validation between each step.
 
-El usuario solo invoca **un slash command**: `/build`. Todos los demás roles son **subagentes** definidos en `.claude/agents/` con scope, herramientas y permisos restringidos vía frontmatter YAML. El Orchestrator los invoca vía Task tool.
+The user only invokes **one slash command**: `/build`. All other roles are **subagents** defined in `.claude/agents/` with scope, tools, and permissions restricted via YAML frontmatter. The Orchestrator invokes them via the Task tool.
 
-### Roles y responsabilidades
+### Roles and responsibilities
 
-| Subagente | Tools | Escribe | Lee |
-|-----------|-------|---------|-----|
+| Subagent | Tools | Writes | Reads |
+|----------|-------|--------|-------|
 | `data-agent` | Read, Write, Edit | `fragments/00-cv-data.js` | CLAUDE.md |
 | `design-system-agent` | Read, Write, Edit, Bash | `design-test.html` + `fragments/01-design-system.css` | CLAUDE.md |
-| `design-guardian` | Read, Grep, Glob | — (solo reporta) | fragmentos CSS |
-| `ux-advisor` | Read, Grep, Glob | — (solo reporta) | fragmentos HTML visuales |
+| `design-guardian` | Read, Grep, Glob | — (reports only) | CSS fragments |
+| `ux-advisor` | Read, Grep, Glob | — (reports only) | Visual HTML fragments |
 | `layout-agent` | Read, Write, Edit | `fragments/02-layout.html` | 00, 01 |
 | `timeline-agent` | Read, Write, Edit | `fragments/03-timeline.html` | 00, 01 |
 | `skills-agent` | Read, Write, Edit | `fragments/04-skills.html` | 00, 01 |
 | `content-agent` | Read, Write, Edit | `fragments/05-content.html` | 00, 01 |
 | `print-agent` | Read, Write, Edit | `fragments/06-print.css` | 01, 02–05 |
-| `assembler-agent` | Read, Write, Edit, Bash | `toni-wang-cv.html` | todos los fragmentos |
-| `qa-agent` | Read, Grep, Glob | — (solo reporta) | `toni-wang-cv.html` |
+| `assembler-agent` | Read, Write, Edit, Bash | `index.html` | all fragments |
+| `qa-agent` | Read, Grep, Glob | — (reports only) | `index.html` |
 
-Los read-only (`design-guardian`, `ux-advisor`, `qa-agent`) no tienen `Write` ni `Edit` — el frontmatter lo impide.
+Read-only agents (`design-guardian`, `ux-advisor`, `qa-agent`) have no `Write` or `Edit` — the frontmatter enforces this.
 
-### Pipeline (secuencial estricto)
+### Pipeline (strictly sequential)
 
 ```
 data-agent           → 00-cv-data.js
-                       ↓ [validación humana]
+                       ↓ [human validation]
 design-system-agent  → design-test.html + 01-design-system.css
-design-guardian (valida CSS)
-                       ↓ [validación visual humana]
+design-guardian (validates CSS)
+                       ↓ [human visual validation]
 layout-agent         → 02-layout.html
 design-guardian + ux-advisor
-                       ↓ [validación humana]
+                       ↓ [human validation]
 timeline-agent       → 03-timeline.html
 design-guardian + ux-advisor
-                       ↓ [validación humana]
+                       ↓ [human validation]
 skills-agent         → 04-skills.html
 design-guardian + ux-advisor
-                       ↓ [validación humana]
+                       ↓ [human validation]
 content-agent        → 05-content.html
 design-guardian + ux-advisor
-                       ↓ [validación humana]
+                       ↓ [human validation]
 print-agent          → 06-print.css
 design-guardian
-                       ↓ [validación humana]
-assembler-agent      → toni-wang-cv.html
-ux-advisor (revisión final del CV completo)
+                       ↓ [human validation]
+assembler-agent      → index.html
+ux-advisor (final full CV review)
                        ↓
-qa-agent             → informe de calidad
-                       ↓ [validación humana → DONE]
+qa-agent             → quality report
+                       ↓ [human validation → DONE]
 ```
 
-El Orchestrator (`/build`) gestiona `_state.json` e invoca al subagente correspondiente al paso actual vía Task tool.
+The Orchestrator (`/build`) manages `_state.json` and invokes the subagent for the current step via the Task tool.
 
-### Slash commands disponibles
+### Available slash commands
 
-| Comando | Descripción |
+| Command | Description |
 |---------|-------------|
-| `/build` | Orquestador principal — gestiona el pipeline completo |
-| `/preview` | Sirve el artefacto más avanzado en un servidor local y lo abre en el browser |
-| `/validate-step [N]` | Re-ejecuta DesignGuardian y/o UX Advisor sobre el paso N sin avanzar el pipeline |
-| `/reset-step [N]` | Resetea el estado del paso N (y opcionalmente dependientes con `cascade`) |
+| `/build` | Main orchestrator — manages the full pipeline |
+| `/preview` | Serves the most advanced artefact on a local server and opens it in the browser |
+| `/validate-step [N]` | Re-runs DesignGuardian and/or UX Advisor on step N without advancing the pipeline |
+| `/reset-step [N]` | Resets step N status (and optionally dependents with `cascade`) |
 
 ---
 
-## Estructura de ficheros
+## File structure
 
 ```
 toniwangcv/
 ├── README.md
 ├── CLAUDE.md
 ├── .gitignore
-├── design-test.html              ← proof del design system (design-system-agent)
-├── toni-wang-cv.html             ← output final (assembler-agent)
+├── index.html                    ← final CV output (assembler-agent) — served by GitHub Pages
+├── design-test.html              ← design system proof (design-system-agent)
 ├── .claude/
 │   ├── settings.json
 │   ├── commands/
-│   │   └── build.md              ← /build slash command (Orchestrator)
-│   └── agents/                   ← subagentes con frontmatter YAML (scope/tools restringidos)
+│   │   ├── build.md              ← /build slash command (Orchestrator)
+│   │   ├── preview.md            ← /preview
+│   │   ├── validate-step.md      ← /validate-step
+│   │   └── reset-step.md         ← /reset-step
+│   └── agents/                   ← subagents with YAML frontmatter (scope/tools restricted)
 │       ├── data-agent.md
 │       ├── design-system-agent.md
-│       ├── design-guardian.md    ← read-only, sin Write/Edit
+│       ├── design-guardian.md    ← read-only, no Write/Edit
+│       ├── ux-advisor.md         ← read-only, no Write/Edit
 │       ├── layout-agent.md
 │       ├── timeline-agent.md
 │       ├── skills-agent.md
 │       ├── content-agent.md
 │       ├── print-agent.md
 │       ├── assembler-agent.md
-│       └── qa-agent.md           ← read-only, sin Write/Edit
+│       └── qa-agent.md           ← read-only, no Write/Edit
 └── fragments/
-    ├── _state.json               ← máquina de estados del pipeline
-    ├── 00-cv-data.js             ← fuente única de verdad del contenido
-    ├── 01-design-system.css      ← tokens CSS (design-system-agent)
+    ├── _state.json               ← pipeline state machine
+    ├── 00-cv-data.js             ← single source of truth for all CV content
+    ├── 01-design-system.css      ← CSS tokens (design-system-agent)
     ├── 02-layout.html            ← layout-agent
     ├── 03-timeline.html          ← timeline-agent
     ├── 04-skills.html            ← skills-agent
@@ -108,21 +112,21 @@ toniwangcv/
 
 ---
 
-## Contrato de fragmentos
+## Fragment contract
 
-Cada fragmento es parcial — sin `<html>`, `<head>` ni `<body>`. El AssemblerAgent los inyecta en el HTML final.
+Each fragment is partial — no `<html>`, `<head>` or `<body>`. The AssemblerAgent injects them into the final HTML.
 
-| Fragmento | Contiene | No contiene |
-|-----------|----------|-------------|
-| `00-cv-data.js` | solo `const CV_DATA = {...}` | `<script>` tags, exports |
-| `01-design-system.css` | variables CSS + reset + utilidades base | `<style>` tags |
-| `02-layout.html` | HTML del header/nav/KPI + `<script>` de su lógica | variables CSS ya definidas en 01 |
-| `03-timeline.html` | HTML sección timeline + `<script>` con D3.js | referencias a CV_DATA fuera de su script |
-| `04-skills.html` | HTML sección skills + `<script>` de animaciones | CSS ya definido en 01 |
-| `05-content.html` | HTML resumen + educación + certificaciones | lógica de otras secciones |
-| `06-print.css` | solo `@media print { ... }` | `<style>` tags |
+| Fragment | Contains | Does not contain |
+|----------|----------|-----------------|
+| `00-cv-data.js` | only `const CV_DATA = {...}` | `<script>` tags, exports |
+| `01-design-system.css` | CSS variables + reset + base utilities | `<style>` tags |
+| `02-layout.html` | Header/nav/KPI HTML + `<script>` with its logic | CSS variables already defined in 01 |
+| `03-timeline.html` | Timeline section HTML + `<script>` with D3.js | References to CV_DATA outside its script |
+| `04-skills.html` | Skills section HTML + `<script>` with animations | CSS already defined in 01 |
+| `05-content.html` | Summary + education + certifications HTML | Logic from other sections |
+| `06-print.css` | only `@media print { ... }` | `<style>` tags |
 
-**Regla de fragmentos**: cada agente escribe **solo su fragmento asignado**. Ningún agente modifica ficheros de otros agentes.
+**Fragment rule**: each agent writes **only its assigned fragment**. No agent modifies files owned by other agents.
 
 ---
 
@@ -130,7 +134,7 @@ Cada fragmento es parcial — sin `<html>`, `<head>` ni `<body>`. El AssemblerAg
 
 ```css
 /* === DARK MODE (default) === */
---color-primary:        #4f98a3;   /* teal — acento y data_engineering */
+--color-primary:        #4f98a3;   /* teal — accent and data_engineering */
 --color-bg:             #0d1117;
 --color-surface:        #161b22;
 --color-surface-2:      #21262d;
@@ -139,7 +143,7 @@ Cada fragmento es parcial — sin `<html>`, `<head>` ni `<body>`. El AssemblerAg
 --color-text-muted:     #8b949e;
 --color-divider:        #21262d;
 
-/* Colores de categoría (skill matrix) */
+/* Category colours (skill matrix) */
 --color-blue:           #58a6ff;   /* visualization */
 --color-orange:         #f0883e;   /* cloud */
 --color-success:        #3fb950;   /* languages */
@@ -154,59 +158,59 @@ Cada fragmento es parcial — sin `<html>`, `<head>` ni `<body>`. El AssemblerAg
 --color-text-muted:     #656d76;
 --color-divider:        #d0d7de;
 
-/* === TIPOGRAFÍA === */
+/* === TYPOGRAPHY === */
 --font-display: 'Satoshi', sans-serif;        /* UI, headings, labels */
---font-mono:    'JetBrains Mono', monospace;  /* datos, KPIs, stack tech */
+--font-mono:    'JetBrains Mono', monospace;  /* data, KPIs, tech stack */
 
-/* === FORMA === */
+/* === SHAPE === */
 --radius-md:   8px;
 --radius-full: 9999px;
 ```
 
-**Regla del DesignGuardian**: ningún fragmento debe contener colores hex hardcodeados ni valores de tipografía fuera de las variables. El DesignGuardian valida esto antes de marcar un paso como `validated`.
+**DesignGuardian rule**: no fragment may contain hardcoded hex colours or typography values outside the variables. The DesignGuardian validates this before any step can be marked `validated`.
 
 ---
 
-## Internacionalización (i18n)
+## Internationalisation (i18n)
 
-El CV es **bilingüe ES/EN** con un toggle de idioma en el header (junto al toggle dark/light). El idioma activo vive en `window.__cvLang` (`"es"` o `"en"`). Sin `localStorage` — al cargar se detecta vía `navigator.language` con `"es"` como fallback. La PrintAgent fuerza siempre el idioma activo en el momento de imprimir.
+The CV is **bilingual ES/EN** with a language toggle in the header (next to the dark/light toggle). The active language lives in `window.__cvLang` (`"es"` or `"en"`). No `localStorage` — on load it is detected via `navigator.language` with `"es"` as fallback. The PrintAgent always uses the language active at the time of printing.
 
-### Estructura en CV_DATA
+### Structure in CV_DATA
 
-Los campos traducibles son **objetos** `{ es, en }`. Los campos que no varían entre idiomas (nombres propios, fechas, tech names, números) se mantienen como **strings planos**.
+Translatable fields are **objects** `{ es, en }`. Fields that do not vary between languages (proper names, dates, tech names, numbers) stay as **plain strings**.
 
 ```js
-// Traducible:
+// Translatable:
 summary: { es: "Ingeniero...", en: "Software engineer..." }
 role:    { es: "Programador Web", en: "Web Developer" }
-// Plano:
+// Plain:
 name: "Toni Wang"
 stack: ["Snowflake", "Python"]
 ```
 
-`CV_DATA.ui` agrupa **todas** las labels de UI (nav, KPI, botones, categorías de skill, formato de tooltips, meses) en pares `{ es, en }`. Ningún agente puede hardcodear texto en la UI — todo viene de `CV_DATA.ui.*` vía el helper `t()`.
+`CV_DATA.ui` groups **all** UI labels (nav, KPI, buttons, skill categories, tooltip formats, months) as `{ es, en }` pairs. No agent may hardcode text in the UI — everything comes from `CV_DATA.ui.*` via the `t()` helper.
 
-### Helper `t(value, lang?)`
+### `t(value, lang?)` helper
 
-Definido al final de `fragments/00-cv-data.js`. Acepta tanto strings planos como objetos `{es, en}`. Usa `window.__cvLang` cuando se omite `lang`. Fallback a `es` si la traducción de `en` no existe.
+Defined at the end of `fragments/00-cv-data.js`. Accepts both plain strings and `{es, en}` objects. Uses `window.__cvLang` when `lang` is omitted. Falls back to `es` if the `en` translation does not exist.
 
 ```js
-t(CV_DATA.profile.summary)        // texto traducido del idioma actual
+t(CV_DATA.profile.summary)        // translated text for the current language
 t(CV_DATA.ui.nav.experience)      // "Experiencia" / "Experience"
-t(experience.role)                // funciona con string plano o {es,en}
+t(experience.role)                // works with plain string or {es,en}
 ```
 
-### Cambio de idioma en runtime
+### Runtime language change
 
-Toggle dispara un evento custom `cv:languagechange` con `detail: { lang }`. El **LayoutAgent** posee:
-- la función `setLanguage(lang)` que actualiza `window.__cvLang`, ejecuta `applyStaticLabels()` (recorre elementos con `data-i18n` y reemplaza su `textContent`) y dispara el evento
-- el atributo `data-i18n="path.to.key"` en cada elemento de UI estática
+The toggle fires a custom `cv:languagechange` event with `detail: { lang }`. The **LayoutAgent** owns:
+- the `setLanguage(lang)` function that updates `window.__cvLang`, runs `applyStaticLabels()` (iterates elements with `data-i18n` and replaces their `textContent`), and fires the event
+- the `data-i18n="path.to.key"` attribute on each static UI element
 
-**TimelineAgent**, **SkillsAgent** y **ContentAgent** suscriben `window.addEventListener('cv:languagechange', () => render())` para repintar contenido dinámico (D3 timeline, drilldown, skill tooltips, etc.).
+**TimelineAgent**, **SkillsAgent** and **ContentAgent** subscribe to `window.addEventListener('cv:languagechange', () => render())` to re-paint dynamic content (D3 timeline, drilldown, skill tooltips, etc.).
 
 ---
 
-## CDNs autorizados
+## Authorised CDNs
 
 ```
 D3.js:         https://cdn.jsdelivr.net/npm/d3@7
@@ -219,25 +223,25 @@ JetBrains:     https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;
 
 ---
 
-## Reglas globales (no negociables)
+## Global rules (non-negotiable)
 
-1. **Un único fichero HTML final** — todo CSS y JS embebido, ensamblado por AssemblerAgent
-2. **CV_DATA primero** — siempre el primer `<script>` del HTML ensamblado
-3. **Vanilla JS** — sin React, Vue, Alpine, Svelte ni ningún framework
-4. **Sin localStorage ni sessionStorage** — estado solo en variables JS en memoria
-5. **Links externos** — siempre `target="_blank" rel="noopener noreferrer"`
-6. **No inventar datos** — los `[COMPLETAR]` son placeholders descriptivos hasta que el usuario los rellene
-7. **Mobile-first** — diseñar a 375px y expandir con breakpoints 768px y 1440px
-8. **Touch targets** ≥ 44px · Sin texto < 12px
-9. **Un agente, un fragmento** — nadie escribe fuera de su scope asignado
-10. **DesignGuardian antes de validar** — ningún paso que genere CSS se marca `validated` sin pasar el guardián
-11. **Bilingüe ES/EN** — todo texto visible en la UI pasa por `t()`. Nada hardcodeado en HTML/JS — siempre desde `CV_DATA.ui.*` o campos `{es, en}`
+1. **Single final HTML file** — all CSS and JS embedded, assembled by AssemblerAgent into `index.html`
+2. **CV_DATA first** — always the first `<script>` in the assembled HTML
+3. **Vanilla JS** — no React, Vue, Alpine, Svelte or any framework
+4. **No localStorage or sessionStorage** — state only in in-memory JS variables
+5. **External links** — always `target="_blank" rel="noopener noreferrer"`
+6. **No invented data** — `[TODO]` are descriptive placeholders until the user fills them in
+7. **Mobile-first** — design at 375px and expand with breakpoints 768px and 1440px
+8. **Touch targets** ≥ 44px · No text < 12px
+9. **One agent, one fragment** — no one writes outside their assigned scope
+10. **DesignGuardian before validating** — no CSS-producing step can be marked `validated` without passing the guardian
+11. **Bilingual ES/EN** — all visible UI text goes through `t()`. Nothing hardcoded in HTML/JS — always from `CV_DATA.ui.*` or `{es, en}` fields
 
 ---
 
-## Referencia visual
+## Visual reference
 
 - **Feel**: precision analytics — Hex.tech, Linear.app, Retool
-- **Evitar**: gradientes decorativos, iconos en círculos de colores, `text-align: center` masivo
-- **Buscar**: densidad de información controlada, jerarquía clara, color solo para datos, whitespace intencional
-- **Tipografía de datos**: números y stack tech siempre en `--font-mono`
+- **Avoid**: decorative gradients, icons in coloured circles, excessive `text-align: center`
+- **Seek**: controlled information density, clear hierarchy, colour only for data, intentional whitespace
+- **Data typography**: numbers and tech stack always in `--font-mono`

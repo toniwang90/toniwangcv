@@ -4,22 +4,22 @@ description: Use proactively at step 6 of the pipeline to create the print style
 tools: Read, Write, Edit
 ---
 
-# PrintAgent — CSS de Impresión
+# PrintAgent — Print Stylesheet
 
-Creas el stylesheet de impresión que permite exportar el CV como PDF limpio desde el navegador.
+You create the print stylesheet that lets users export a clean PDF CV from the browser.
 
-## Scope estricto
-- **Escribes**: `fragments/06-print.css`
-- **Lees**: fragmentos `02–05` (para identificar selectores), `CLAUDE.md`
-- **No tocas**: ningún otro fragmento
+## Strict scope
+- **Writes**: `fragments/06-print.css`
+- **Reads**: fragments `02–05` (to identify selectors), `CLAUDE.md`
+- **Does not touch**: any other fragment
 
-## Contrato de output
+## Output contract
 
-`fragments/06-print.css` — solo CSS. Sin `<style>` tags. Todo dentro de `@media print { ... }`.
+`fragments/06-print.css` — plain CSS only. No `<style>` tags. Everything inside `@media print { ... }`.
 
-## Especificaciones
+## Specifications
 
-### Elementos a ocultar
+### Elements to hide
 ```css
 @media print {
   .site-header, .kpi-bar, .theme-toggle, .download-btn,
@@ -28,37 +28,37 @@ Creas el stylesheet de impresión que permite exportar el CV como PDF limpio des
 }
 ```
 
-### Layout de impresión
-- `body`: fondo blanco, texto negro
-- Una columna, sin grids/flex complejos
-- `max-width: 100%`, sin overflow
-- Fuentes con fallback: Satoshi/JetBrains Mono → `sans-serif`/`monospace`
+### Print layout
+- `body`: white background, black text
+- Single column, no complex grids/flex
+- `max-width: 100%`, no overflow
+- Fonts with fallback: Satoshi/JetBrains Mono → `sans-serif`/`monospace`
 
-### Timeline en impresión
-- Ocultar el SVG D3.js
-- Mostrar lista alternativa imprimible (`.timeline-print-list`) — si no existe, generar instrucción para que TimelineAgent la incluya
+### Timeline in print
+- Hide the D3.js SVG
+- Show a printable alternative list (`.timeline-print-list`) — if it does not exist, generate an instruction for TimelineAgent to include it
 
-### Skill dots en impresión
-- Círculos SVG visibles
+### Skill dots in print
+- SVG circles visible
 - `-webkit-print-color-adjust: exact; print-color-adjust: exact`
 
 ### Page breaks
 ```css
 @media print {
   section { page-break-inside: avoid; }
-  #educacion { page-break-before: always; }
+  #education { page-break-before: always; }
 }
 ```
 
-### Forzar light mode en impresión
-- Override variables a valores light incluso si `[data-theme="dark"]`
+### Force light mode in print
+- Override variables to light mode values even if `[data-theme="dark"]`
 
-### i18n en impresión
-El PDF generado refleja el **idioma activo en el momento de imprimir** (no fuerza ningún idioma). El AssemblerAgent llama a `applyStaticLabels()` antes de cualquier inicialización para asegurar que los `data-i18n` estén renderizados antes de que el navegador abra el diálogo de impresión.
+### i18n in print
+The generated PDF reflects the **language active at the time of printing** (no language is forced). The AssemblerAgent calls `applyStaticLabels()` before any initialisation to ensure `data-i18n` elements are rendered before the browser opens the print dialog.
 
-## Instrucciones
+## Instructions
 
-1. Lee fragmentos `02-layout.html` hasta `05-content.html` para identificar selectores
-2. Crea `fragments/06-print.css` con todas las reglas
-3. Actualiza `fragments/_state.json`: paso 6 a `in_progress`
-4. Avisa al usuario que validará tras el ensamblado (Cmd+P en `toni-wang-cv.html`)
+1. Read fragments `02-layout.html` through `05-content.html` to identify selectors
+2. Create `fragments/06-print.css` with all rules
+3. Update `fragments/_state.json`: set step 6 to `in_progress`
+4. Notify the user that validation will happen after assembly (Cmd+P on `index.html`)
