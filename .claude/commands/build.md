@@ -11,11 +11,14 @@ Eres el agente coordinador del CV Dashboard. Tu única responsabilidad es gestio
 
 ```
 PASO | SUBAGENTE             | FRAGMENTO                         | ESTADO
------|-----------------------|-----------------------------------|----------
+-----|-----------------------|-----------------------------------|-------------
   0  | data-agent            | fragments/00-cv-data.js           | ✅ validated
-  1  | design-system-agent   | fragments/01-design-system.css    | 🔄 in_progress
+  1  | design-system-agent   | fragments/01-design-system.css    | ⏳ pending
+  2  | layout-agent          | fragments/02-layout.html          | ⏳ pending
   ...
 ```
+
+Iconos de estado: ✅ validated · 🔄 in_progress · 🛡️ guardian_pending · ⏳ pending
 
 3. Identifica el paso actual (`current_step`) y su estado
 4. Pregunta al usuario si quiere proceder con el siguiente paso
@@ -23,13 +26,13 @@ PASO | SUBAGENTE             | FRAGMENTO                         | ESTADO
 ### Invocación de subagentes
 
 Cuando el usuario confirma proceder, **invoca el subagente correspondiente vía Task tool** con:
-- `subagent_type`: el `name` del subagente (ej. `data-agent`, `design-system-agent`)
+- `subagent_type`: el valor del campo `agent` en `_state.json` (ej. `data-agent`, `design-system-agent`)
 - `description`: 3-5 palabras describiendo el paso
 - `prompt`: instrucción concreta indicando que ejecute su rol según su definición
 
 Después de que el subagente termine:
-1. Si el paso requiere DesignGuardian (`requires_guardian: true`), invocar `design-guardian`
-2. Si el paso requiere UX Advisor (`requires_ux_advisor: true`), invocar `ux-advisor`
+1. Si el paso tiene `requires_guardian: true`, invocar `design-guardian`
+2. Si el paso tiene `requires_ux_advisor: true`, invocar `ux-advisor`
 3. Mostrar al usuario los informes de validación y pedir validación humana
 4. Esperar confirmación explícita ("ok", "validado", "aprobado")
 5. Tras validación, actualizar `fragments/_state.json` y mostrar el siguiente paso
@@ -45,8 +48,8 @@ Después de que el subagente termine:
 
 ### Mapa de subagentes
 
-| Paso | Subagente | Fragmento | DesignGuardian | UX Advisor |
-|------|-----------|-----------|:--------------:|:----------:|
+| Paso | `subagent_type` | Fragmento | DesignGuardian | UX Advisor |
+|------|-----------------|-----------|:--------------:|:----------:|
 | 0 | `data-agent` | `fragments/00-cv-data.js` | No | No |
 | 1 | `design-system-agent` | `design-test.html` + `01-design-system.css` | Sí | No |
 | 2 | `layout-agent` | `fragments/02-layout.html` | Sí | Sí |
@@ -55,7 +58,7 @@ Después de que el subagente termine:
 | 5 | `content-agent` | `fragments/05-content.html` | Sí | Sí |
 | 6 | `print-agent` | `fragments/06-print.css` | Sí | No |
 | 7 | `assembler-agent` | `toni-wang-cv.html` | No | Sí |
-| 8 | `qa-agent` | — (read-only checklist) | No | No |
+| 8 | `qa-agent` | — (read-only) | No | No |
 
 ## Reglas del Orchestrator
 

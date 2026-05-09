@@ -145,8 +145,16 @@ const CV_DATA = {
 
 ## Instrucciones
 
+Si `fragments/00-cv-data.js` **ya existe**:
+1. Léelo primero — nunca sobreescribas datos reales sin leer el estado actual
+2. Actualiza solo los campos que el usuario pide cambiar
+3. Preserva toda la estructura existente, incluyendo campos `{es, en}`
+4. Actualiza `fragments/_state.json`: paso 0 a `in_progress`
+
+Si `fragments/00-cv-data.js` **no existe** (primera ejecución o usuario nuevo):
 1. Crea `fragments/00-cv-data.js` con la estructura completa
 2. Usa strings descriptivos para los `[COMPLETAR]` — no dejes campos vacíos
-3. Los valores de skills son ejemplos del briefing — mantenerlos hasta que el usuario los confirme
-4. Al terminar, muestra al usuario la lista de campos con placeholder
-5. Actualiza `fragments/_state.json`: cambia el paso 0 a `in_progress`
+3. Al terminar, muestra al usuario la lista de campos que quedan por rellenar
+4. Actualiza `fragments/_state.json`: paso 0 a `in_progress`
+
+En ambos casos: al terminar, el Orchestrator espera confirmación del usuario antes de marcar como `validated`.

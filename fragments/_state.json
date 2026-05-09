@@ -1,20 +1,18 @@
 {
-  "current_step": 0,
-  "last_updated": "2026-05-03",
+  "current_step": 1,
+  "last_updated": "2026-05-09",
   "pipeline": [
     {
       "step": 0,
-      "agent": "DataAgent",
-      "command": "/agent-data",
+      "agent": "data-agent",
       "fragment": "fragments/00-cv-data.js",
       "requires_guardian": false,
       "requires_ux_advisor": false,
-      "status": "in_progress"
+      "status": "validated"
     },
     {
       "step": 1,
-      "agent": "DesignSystemAgent",
-      "command": "/agent-design-system",
+      "agent": "design-system-agent",
       "fragment": "fragments/01-design-system.css",
       "also_writes": "design-test.html",
       "requires_guardian": true,
@@ -23,8 +21,7 @@
     },
     {
       "step": 2,
-      "agent": "LayoutAgent",
-      "command": "/agent-layout",
+      "agent": "layout-agent",
       "fragment": "fragments/02-layout.html",
       "requires_guardian": true,
       "requires_ux_advisor": true,
@@ -32,8 +29,7 @@
     },
     {
       "step": 3,
-      "agent": "TimelineAgent",
-      "command": "/agent-timeline",
+      "agent": "timeline-agent",
       "fragment": "fragments/03-timeline.html",
       "requires_guardian": true,
       "requires_ux_advisor": true,
@@ -41,8 +37,7 @@
     },
     {
       "step": 4,
-      "agent": "SkillsAgent",
-      "command": "/agent-skills",
+      "agent": "skills-agent",
       "fragment": "fragments/04-skills.html",
       "requires_guardian": true,
       "requires_ux_advisor": true,
@@ -50,8 +45,7 @@
     },
     {
       "step": 5,
-      "agent": "ContentAgent",
-      "command": "/agent-content",
+      "agent": "content-agent",
       "fragment": "fragments/05-content.html",
       "requires_guardian": true,
       "requires_ux_advisor": true,
@@ -59,8 +53,7 @@
     },
     {
       "step": 6,
-      "agent": "PrintAgent",
-      "command": "/agent-print",
+      "agent": "print-agent",
       "fragment": "fragments/06-print.css",
       "requires_guardian": true,
       "requires_ux_advisor": false,
@@ -68,8 +61,7 @@
     },
     {
       "step": 7,
-      "agent": "AssemblerAgent",
-      "command": "/agent-assemble",
+      "agent": "assembler-agent",
       "fragment": "toni-wang-cv.html",
       "requires_guardian": false,
       "requires_ux_advisor": true,
@@ -77,8 +69,7 @@
     },
     {
       "step": 8,
-      "agent": "QAAgent",
-      "command": "/agent-qa",
+      "agent": "qa-agent",
       "fragment": null,
       "requires_guardian": false,
       "requires_ux_advisor": false,
