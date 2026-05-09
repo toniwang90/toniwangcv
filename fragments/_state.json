@@ -8,6 +8,7 @@
       "command": "/agent-data",
       "fragment": "fragments/00-cv-data.js",
       "requires_guardian": false,
+      "requires_ux_advisor": false,
       "status": "in_progress"
     },
     {
@@ -17,6 +18,7 @@
       "fragment": "fragments/01-design-system.css",
       "also_writes": "design-test.html",
       "requires_guardian": true,
+      "requires_ux_advisor": false,
       "status": "pending"
     },
     {
@@ -25,6 +27,7 @@
       "command": "/agent-layout",
       "fragment": "fragments/02-layout.html",
       "requires_guardian": true,
+      "requires_ux_advisor": true,
       "status": "pending"
     },
     {
@@ -33,6 +36,7 @@
       "command": "/agent-timeline",
       "fragment": "fragments/03-timeline.html",
       "requires_guardian": true,
+      "requires_ux_advisor": true,
       "status": "pending"
     },
     {
@@ -41,6 +45,7 @@
       "command": "/agent-skills",
       "fragment": "fragments/04-skills.html",
       "requires_guardian": true,
+      "requires_ux_advisor": true,
       "status": "pending"
     },
     {
@@ -49,6 +54,7 @@
       "command": "/agent-content",
       "fragment": "fragments/05-content.html",
       "requires_guardian": true,
+      "requires_ux_advisor": true,
       "status": "pending"
     },
     {
@@ -56,7 +62,8 @@
       "agent": "PrintAgent",
       "command": "/agent-print",
       "fragment": "fragments/06-print.css",
-      "requires_guardian": false,
+      "requires_guardian": true,
+      "requires_ux_advisor": false,
       "status": "pending"
     },
     {
@@ -65,6 +72,7 @@
       "command": "/agent-assemble",
       "fragment": "toni-wang-cv.html",
       "requires_guardian": false,
+      "requires_ux_advisor": true,
       "status": "pending"
     },
     {
@@ -73,6 +81,7 @@
       "command": "/agent-qa",
       "fragment": null,
       "requires_guardian": false,
+      "requires_ux_advisor": false,
       "status": "pending"
     }
   ]

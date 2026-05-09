@@ -28,10 +28,11 @@ Cuando el usuario confirma proceder, **invoca el subagente correspondiente vía 
 - `prompt`: instrucción concreta indicando que ejecute su rol según su definición
 
 Después de que el subagente termine:
-1. Si el paso requiere DesignGuardian, recordar invocar `design-guardian` antes de validar
-2. Mostrar al usuario qué se ha producido y pedir validación humana
-3. Esperar confirmación explícita ("ok", "validado", "aprobado")
-4. Tras validación, actualizar `fragments/_state.json` y mostrar el siguiente paso
+1. Si el paso requiere DesignGuardian (`requires_guardian: true`), invocar `design-guardian`
+2. Si el paso requiere UX Advisor (`requires_ux_advisor: true`), invocar `ux-advisor`
+3. Mostrar al usuario los informes de validación y pedir validación humana
+4. Esperar confirmación explícita ("ok", "validado", "aprobado")
+5. Tras validación, actualizar `fragments/_state.json` y mostrar el siguiente paso
 
 ### Estados posibles
 
@@ -44,17 +45,17 @@ Después de que el subagente termine:
 
 ### Mapa de subagentes
 
-| Paso | Subagente | Fragmento | Requiere guardián |
-|------|-----------|-----------|-------------------|
-| 0 | `data-agent` | `fragments/00-cv-data.js` | No |
-| 1 | `design-system-agent` | `design-test.html` + `01-design-system.css` | Sí |
-| 2 | `layout-agent` | `fragments/02-layout.html` | Sí |
-| 3 | `timeline-agent` | `fragments/03-timeline.html` | Sí |
-| 4 | `skills-agent` | `fragments/04-skills.html` | Sí |
-| 5 | `content-agent` | `fragments/05-content.html` | Sí |
-| 6 | `print-agent` | `fragments/06-print.css` | No |
-| 7 | `assembler-agent` | `toni-wang-cv.html` | No |
-| 8 | `qa-agent` | — (read-only checklist) | No |
+| Paso | Subagente | Fragmento | DesignGuardian | UX Advisor |
+|------|-----------|-----------|:--------------:|:----------:|
+| 0 | `data-agent` | `fragments/00-cv-data.js` | No | No |
+| 1 | `design-system-agent` | `design-test.html` + `01-design-system.css` | Sí | No |
+| 2 | `layout-agent` | `fragments/02-layout.html` | Sí | Sí |
+| 3 | `timeline-agent` | `fragments/03-timeline.html` | Sí | Sí |
+| 4 | `skills-agent` | `fragments/04-skills.html` | Sí | Sí |
+| 5 | `content-agent` | `fragments/05-content.html` | Sí | Sí |
+| 6 | `print-agent` | `fragments/06-print.css` | Sí | No |
+| 7 | `assembler-agent` | `toni-wang-cv.html` | No | Sí |
+| 8 | `qa-agent` | — (read-only checklist) | No | No |
 
 ## Reglas del Orchestrator
 
@@ -62,4 +63,5 @@ Después de que el subagente termine:
 - **No avanzas** si el paso actual no está `validated`
 - **No asumes** validación — esperas confirmación explícita del usuario
 - **Siempre** ejecutas el subagente vía Task tool, nunca duplicas su trabajo
-- **Tras cada subagente** que produce CSS, recuerda invocar `design-guardian` antes de validar
+- **Tras cada subagente** que produce CSS, invoca `design-guardian` antes de validar
+- **Tras cada subagente** que produce HTML visual, invoca `ux-advisor` para revisión consultiva

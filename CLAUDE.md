@@ -17,6 +17,7 @@ El usuario solo invoca **un slash command**: `/build`. Todos los demás roles so
 | `data-agent` | Read, Write, Edit | `fragments/00-cv-data.js` | CLAUDE.md |
 | `design-system-agent` | Read, Write, Edit, Bash | `design-test.html` + `fragments/01-design-system.css` | CLAUDE.md |
 | `design-guardian` | Read, Grep, Glob | — (solo reporta) | fragmentos CSS |
+| `ux-advisor` | Read, Grep, Glob | — (solo reporta) | fragmentos HTML visuales |
 | `layout-agent` | Read, Write, Edit | `fragments/02-layout.html` | 00, 01 |
 | `timeline-agent` | Read, Write, Edit | `fragments/03-timeline.html` | 00, 01 |
 | `skills-agent` | Read, Write, Edit | `fragments/04-skills.html` | 00, 01 |
@@ -25,7 +26,7 @@ El usuario solo invoca **un slash command**: `/build`. Todos los demás roles so
 | `assembler-agent` | Read, Write, Edit, Bash | `toni-wang-cv.html` | todos los fragmentos |
 | `qa-agent` | Read, Grep, Glob | — (solo reporta) | `toni-wang-cv.html` |
 
-Los read-only (`design-guardian`, `qa-agent`) no tienen `Write` ni `Edit` — el frontmatter lo impide.
+Los read-only (`design-guardian`, `ux-advisor`, `qa-agent`) no tienen `Write` ni `Edit` — el frontmatter lo impide.
 
 ### Pipeline (secuencial estricto)
 
@@ -36,26 +37,37 @@ design-system-agent  → design-test.html + 01-design-system.css
 design-guardian (valida CSS)
                        ↓ [validación visual humana]
 layout-agent         → 02-layout.html
-design-guardian
+design-guardian + ux-advisor
                        ↓ [validación humana]
 timeline-agent       → 03-timeline.html
-design-guardian
+design-guardian + ux-advisor
                        ↓ [validación humana]
 skills-agent         → 04-skills.html
-design-guardian
+design-guardian + ux-advisor
                        ↓ [validación humana]
 content-agent        → 05-content.html
-design-guardian
+design-guardian + ux-advisor
                        ↓ [validación humana]
 print-agent          → 06-print.css
+design-guardian
                        ↓ [validación humana]
 assembler-agent      → toni-wang-cv.html
+ux-advisor (revisión final del CV completo)
                        ↓
 qa-agent             → informe de calidad
                        ↓ [validación humana → DONE]
 ```
 
 El Orchestrator (`/build`) gestiona `_state.json` e invoca al subagente correspondiente al paso actual vía Task tool.
+
+### Slash commands disponibles
+
+| Comando | Descripción |
+|---------|-------------|
+| `/build` | Orquestador principal — gestiona el pipeline completo |
+| `/preview` | Sirve el artefacto más avanzado en un servidor local y lo abre en el browser |
+| `/validate-step [N]` | Re-ejecuta DesignGuardian y/o UX Advisor sobre el paso N sin avanzar el pipeline |
+| `/reset-step [N]` | Resetea el estado del paso N (y opcionalmente dependientes con `cascade`) |
 
 ---
 
