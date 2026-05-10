@@ -191,9 +191,10 @@
     margin-bottom: var(--space-6);
   }
 
+
   .section-header__title {
     font-family: var(--font-display);
-    font-size: var(--text-xl);
+    font-size: var(--text-2xl);
     font-weight: var(--weight-bold);
     color: var(--color-text);
     margin: 0;
@@ -388,26 +389,32 @@
   }
 
   .edu-card {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-2);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
     padding: var(--space-5);
     background-color: var(--color-surface);
     border: var(--border);
     border-radius: var(--radius-md);
   }
 
-  @media (min-width: 768px) {
-    .edu-card {
-      grid-template-columns: 1fr auto;
-      align-items: start;
-    }
+  .edu-card__icon {
+    flex-shrink: 0;
+    color: var(--color-primary);
+    margin-top: 2px;
+  }
+
+  .edu-card__icon svg {
+    width: 16px;
+    height: 16px;
   }
 
   .edu-card__main {
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
+    min-width: 0;
   }
 
   .edu-card__institution {
@@ -438,17 +445,12 @@
     font-size: var(--text-xs);
     color: var(--color-text-muted);
     white-space: nowrap;
-    margin-top: var(--space-1);
+    flex-shrink: 0;
+    margin-left: auto;
+    padding-left: var(--space-3);
   }
 
-  @media (min-width: 768px) {
-    .edu-card__years {
-      margin-top: 0;
-      text-align: right;
-    }
-  }
-
-  /* Certifications grid — single column inside edu-col to avoid overflow */
+  /* Certifications grid — single column inside edu-col */
   .cert-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -523,11 +525,51 @@
     text-decoration: underline;
   }
 
-  /* Languages list */
-  .lang-chips {
+  /* Languages — segmented cards */
+  .lang-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .lang-card {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-md);
+  }
+
+  .lang-card__name {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-text);
+    line-height: 1.3;
+  }
+
+  .lang-card__segments {
+    display: flex;
+    gap: 3px;
+  }
+
+  .lang-segment {
+    flex: 1;
+    height: 8px;
+    border-radius: 3px;
+    background-color: var(--color-surface-offset);
+  }
+
+  .lang-segment--filled {
+    background-color: var(--color-primary);
+  }
+
+  .lang-card__level {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
   }
 
   /* Honors list */
@@ -628,6 +670,15 @@
       "M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22",
       "M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22",
       "M18 2H6v7a6 6 0 0 0 12 0V2Z"
+    ],
+    "shield-check": [
+      "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z",
+      "M9 12l2 2 4-4"
+    ],
+    "graduation-cap": [
+      "M22 10v6",
+      "M2 10l10-5 10 5-10 5z",
+      "M6 12v5c3 3 9 3 12 0v-5"
     ],
     "star": [
       "M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
@@ -731,7 +782,6 @@
     if (profile.contact.email) {
       contactDiv.appendChild(_makeContactLink("mailto:" + profile.contact.email, "mail", profile.contact.email, "hero__contact-link--email"));
     }
-    // Extra links (extensible)
     if (profile.contact.links && profile.contact.links.length > 0) {
       profile.contact.links.forEach(function (lnk) {
         contactDiv.appendChild(_makeContactLink(lnk.url, lnk.icon || "external-link", lnk.label));
@@ -899,20 +949,12 @@
 
   /* -------------------------------------------------------
      RENDER: EDUCACIÓN + CERTIFICACIONES + IDIOMAS + RECONOCIMIENTOS
-     Two-column layout: left = education + languages, right = certifications + honors
      ------------------------------------------------------- */
   function renderEducacion() {
     var el = document.getElementById("educacion-content");
     if (!el) return;
 
     el.innerHTML = "";
-
-    var grid = document.createElement("div");
-    grid.className = "edu-grid";
-
-    /* ===== LEFT COLUMN: Education + Languages ===== */
-    var leftCol = document.createElement("div");
-    leftCol.className = "edu-col";
 
     /* --- EDUCACIÓN --- */
     var eduBlock = document.createElement("div");
@@ -932,6 +974,11 @@
     CV_DATA.education.forEach(function (edu) {
       var card = document.createElement("div");
       card.className = "edu-card";
+
+      var iconDiv = document.createElement("div");
+      iconDiv.className = "edu-card__icon";
+      iconDiv.appendChild(_makeIcon("graduation-cap", 16));
+      card.appendChild(iconDiv);
 
       var main = document.createElement("div");
       main.className = "edu-card__main";
@@ -962,36 +1009,6 @@
     });
 
     eduBlock.appendChild(eduList);
-    leftCol.appendChild(eduBlock);
-
-    /* --- IDIOMAS --- */
-    var langBlock = document.createElement("div");
-    langBlock.className = "edu-block";
-
-    var langHeader = document.createElement("div");
-    langHeader.className = "section-header";
-    var langTitle = document.createElement("h2");
-    langTitle.className = "section-header__title";
-    langTitle.textContent = t(CV_DATA.ui.sections.languages);
-    langHeader.appendChild(langTitle);
-    langBlock.appendChild(langHeader);
-
-    var langChips = document.createElement("div");
-    langChips.className = "lang-chips";
-
-    CV_DATA.languages.forEach(function (lang) {
-      var chip = document.createElement("span");
-      chip.className = "chip";
-      chip.textContent = t(lang.name) + " · " + t(lang.level);
-      langChips.appendChild(chip);
-    });
-
-    langBlock.appendChild(langChips);
-    leftCol.appendChild(langBlock);
-
-    /* ===== RIGHT COLUMN: Certifications + Honors ===== */
-    var rightCol = document.createElement("div");
-    rightCol.className = "edu-col";
 
     /* --- CERTIFICACIONES --- */
     var certBlock = document.createElement("div");
@@ -1018,7 +1035,7 @@
 
       var iconDiv = document.createElement("div");
       iconDiv.className = "cert-card__icon";
-      iconDiv.appendChild(_makeIcon("award", 16));
+      iconDiv.appendChild(_makeIcon("shield-check", 16));
       card.appendChild(iconDiv);
 
       var body = document.createElement("div");
@@ -1048,11 +1065,72 @@
     });
 
     certBlock.appendChild(certGrid);
-    rightCol.appendChild(certBlock);
+
+    /* --- IDIOMAS --- */
+    var langBlock = document.createElement("div");
+    langBlock.className = "edu-block";
+
+    var langHeader = document.createElement("div");
+    langHeader.className = "section-header";
+    var langTitle = document.createElement("h2");
+    langTitle.className = "section-header__title";
+    langTitle.textContent = t(CV_DATA.ui.sections.languages);
+    langHeader.appendChild(langTitle);
+    langBlock.appendChild(langHeader);
+
+    var langGrid = document.createElement("div");
+    langGrid.className = "lang-grid";
+
+    var LANG_LEVEL_LABELS = {
+      es: ["Elemental", "Básico", "Intermedio", "Profesional", "Nativo"],
+      en: ["Elementary", "Basic", "Intermediate", "Professional", "Native"]
+    };
+
+    function _langScore(levelText) {
+      var text = (levelText || "").toLowerCase();
+      if (text.indexOf("nativo") !== -1 || text.indexOf("native") !== -1) return 5;
+      if (text.indexOf("profesional") !== -1 || text.indexOf("professional") !== -1 || text.indexOf("working") !== -1) return 4;
+      if (text.indexOf("intermedio") !== -1 || text.indexOf("intermediate") !== -1) return 3;
+      if (text.indexOf("básico") !== -1 || text.indexOf("basic") !== -1) return 2;
+      return 1;
+    }
+
+    CV_DATA.languages.forEach(function (lang) {
+      var score = _langScore(t(lang.level));
+      var lang2 = window.__cvLang || CV_DATA.meta.default_language;
+      var levelLabel = (LANG_LEVEL_LABELS[lang2] || LANG_LEVEL_LABELS.es)[score - 1];
+
+      var card = document.createElement("div");
+      card.className = "lang-card";
+
+      var nameEl = document.createElement("span");
+      nameEl.className = "lang-card__name";
+      nameEl.textContent = t(lang.name);
+      card.appendChild(nameEl);
+
+      var segsEl = document.createElement("div");
+      segsEl.className = "lang-card__segments";
+      for (var i = 0; i < 5; i++) {
+        var seg = document.createElement("span");
+        seg.className = "lang-segment" + (i < score ? " lang-segment--filled" : "");
+        segsEl.appendChild(seg);
+      }
+      card.appendChild(segsEl);
+
+      var levelEl = document.createElement("span");
+      levelEl.className = "lang-card__level";
+      levelEl.textContent = levelLabel;
+      card.appendChild(levelEl);
+
+      langGrid.appendChild(card);
+    });
+
+    langBlock.appendChild(langGrid);
 
     /* --- RECONOCIMIENTOS --- */
+    var honorsBlock = null;
     if (CV_DATA.honors && CV_DATA.honors.length > 0) {
-      var honorsBlock = document.createElement("div");
+      honorsBlock = document.createElement("div");
       honorsBlock.className = "edu-block";
 
       var honorsHeader = document.createElement("div");
@@ -1072,7 +1150,7 @@
 
         var iconDiv = document.createElement("div");
         iconDiv.className = "honor-card__icon";
-        iconDiv.appendChild(_makeIcon("star", 16));
+        iconDiv.appendChild(_makeIcon("award", 16));
         card.appendChild(iconDiv);
 
         var body = document.createElement("div");
@@ -1093,12 +1171,25 @@
       });
 
       honorsBlock.appendChild(honorsList);
-      rightCol.appendChild(honorsBlock);
     }
 
-    grid.appendChild(leftCol);
-    grid.appendChild(rightCol);
-    el.appendChild(grid);
+    /* Two-column layout: left = education + languages, right = certifications + honors */
+    var eduGrid = document.createElement("div");
+    eduGrid.className = "edu-grid";
+
+    var leftCol = document.createElement("div");
+    leftCol.className = "edu-col";
+    leftCol.appendChild(eduBlock);
+    leftCol.appendChild(langBlock);
+
+    var rightCol = document.createElement("div");
+    rightCol.className = "edu-col";
+    rightCol.appendChild(certBlock);
+    if (honorsBlock) rightCol.appendChild(honorsBlock);
+
+    eduGrid.appendChild(leftCol);
+    eduGrid.appendChild(rightCol);
+    el.appendChild(eduGrid);
   }
 
   /* -------------------------------------------------------
