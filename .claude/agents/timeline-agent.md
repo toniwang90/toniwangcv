@@ -39,6 +39,12 @@ window.addEventListener("cv:languagechange", () => {
 - **Hover**: tooltip with `company · role · duration`
 - **Click**: opens DrillDown Panel + updates hash URL (`#exp-001`)
 
+### Left-margin labels (company + role)
+Reserve a generous left margin (≥ 200px) so most company/role names fit without truncation. When a label still exceeds the available width:
+- Truncate with `…` (do not let it overflow into the chart area)
+- **Always** append an SVG `<title>` child to the text element with the **full untruncated string** — this gives a free native browser tooltip and is read by screen readers
+- Make the labels interactive: same `cursor: pointer`, hover (rich custom tooltip + colour change), and click (open drilldown) as the bar itself. A 44px transparent hit-rect over the label group keeps it touch-friendly
+
 ### Mobile (< 768px) — Vertical list
 - Companies as vertical cards in reverse chronological order
 - Each card: company, role, dates, stack chips

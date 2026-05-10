@@ -44,6 +44,8 @@ Compact hero — dense info widget, not a welcome page:
 
 Layout: flex row on desktop (name/title left, summary centre, links right), vertical stack on mobile.
 
+**Do not include in the hero**: language chips, tech badges, KPIs, or anything that already renders in another section. Languages live exclusively in `#education` — duplicating them violates the "one piece of information, one place" principle and makes the hero look cluttered.
+
 ### Projects section (#projects)
 Featured project cards. If `CV_DATA` has no standalone projects, show the 3 best from `experience[].projects` with a "View in experience →" link that opens the corresponding drilldown.
 

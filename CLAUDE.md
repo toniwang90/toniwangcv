@@ -23,7 +23,7 @@ The user only invokes **one slash command**: `/build`. All other roles are **sub
 | `skills-agent` | Read, Write, Edit | `fragments/04-skills.html` | 00, 01 |
 | `content-agent` | Read, Write, Edit | `fragments/05-content.html` | 00, 01 |
 | `print-agent` | Read, Write, Edit | `fragments/06-print.css` | 01, 02–05 |
-| `assembler-agent` | Read, Write, Edit, Bash | `index.html` | all fragments |
+| `assembler-agent` | Read, Write, Edit, Bash | `index.html` (via `scripts/assemble.mjs`) | `_state.json` |
 | `qa-agent` | Read, Grep, Glob | — (reports only) | `index.html` |
 
 Read-only agents (`design-guardian`, `ux-advisor`, `qa-agent`) have no `Write` or `Edit` — the frontmatter enforces this.
@@ -235,7 +235,8 @@ JetBrains:     https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;
 8. **Touch targets** ≥ 44px · No text < 12px
 9. **One agent, one fragment** — no one writes outside their assigned scope
 10. **DesignGuardian before validating** — no CSS-producing step can be marked `validated` without passing the guardian
-11. **Bilingual ES/EN** — all visible UI text goes through `t()`. Nothing hardcoded in HTML/JS — always from `CV_DATA.ui.*` or `{es, en}` fields
+11. **Deterministic assembly** — step 7 is performed by `scripts/assemble.mjs` (pure string-stitching). The `assembler-agent` only invokes it; it must never re-emit the final HTML as tokens (~150 KB would otherwise be paid in output tokens and risk timeouts)
+12. **Bilingual ES/EN** — all visible UI text goes through `t()`. Nothing hardcoded in HTML/JS — always from `CV_DATA.ui.*` or `{es, en}` fields
 
 ---
 
