@@ -525,11 +525,12 @@ const CV_DATA = {
   ],
   ui: {
     nav: {
-      summary:    { es: "Resumen",     en: "Summary" },
-      experience: { es: "Experiencia", en: "Experience" },
-      skills:     { es: "Skills",      en: "Skills" },
-      projects:   { es: "Proyectos",   en: "Projects" },
-      education:  { es: "Educación",   en: "Education" }
+      summary:      { es: "Resumen",     en: "Summary" },
+      experience:   { es: "Experiencia", en: "Experience" },
+      skills:       { es: "Skills",      en: "Skills" },
+      projects:     { es: "Proyectos",   en: "Projects" },
+      background:   { es: "Formación",   en: "Education" },
+      achievements: { es: "Logros",      en: "Achievements" }
     },
     kpi: {
       years_experience: { es: "Años de experiencia", en: "Years of experience" },

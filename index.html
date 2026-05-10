@@ -1876,8 +1876,13 @@ ol {
      SECCIÓN EDUCACIÓN (+ CERTS + IDIOMAS + RECONOCIMIENTOS)
      ============================================================ */
 
-  #educacion {
+  #formacion {
     padding-block: var(--space-8);
+  }
+
+  #logros {
+    padding-top: var(--space-6);
+    padding-bottom: var(--space-8);
     margin-bottom: var(--space-10);
   }
 
@@ -2624,7 +2629,8 @@ ol {
       <a class="site-nav__link" href="#experiencia" data-i18n="nav.experience"></a>
       <a class="site-nav__link" href="#skills"      data-i18n="nav.skills"></a>
       <a class="site-nav__link" href="#proyectos"   data-i18n="nav.projects"></a>
-      <a class="site-nav__link" href="#educacion"   data-i18n="nav.education"></a>
+      <a class="site-nav__link" href="#formacion"   data-i18n="nav.background"></a>
+      <a class="site-nav__link" href="#logros"      data-i18n="nav.achievements"></a>
     </nav>
 
     <!-- Header actions -->
@@ -2672,7 +2678,8 @@ ol {
       </button>
 
     </div>
-  </div>
+
+  </div><!-- /.site-header__inner -->
 </header>
 
 <!-- ===================== MOBILE NAV ===================== -->
@@ -2686,7 +2693,8 @@ ol {
   <a class="mobile-nav__link" href="#experiencia" data-i18n="nav.experience"></a>
   <a class="mobile-nav__link" href="#skills"      data-i18n="nav.skills"></a>
   <a class="mobile-nav__link" href="#proyectos"   data-i18n="nav.projects"></a>
-  <a class="mobile-nav__link" href="#educacion"   data-i18n="nav.education"></a>
+  <a class="mobile-nav__link" href="#formacion"   data-i18n="nav.background"></a>
+  <a class="mobile-nav__link" href="#logros"      data-i18n="nav.achievements"></a>
   <button
     class="mobile-nav__download"
     type="button"
@@ -2857,7 +2865,10 @@ ol {
   <section id="proyectos"   aria-label="Proyectos"><div id="proyectos-content">
   <!-- Rendered by JS -->
 </div></section>
-  <section id="educacion"   aria-label="Educación"><div id="educacion-content">
+  <section id="formacion"   aria-label="Formación"><div id="formacion-content">
+  <!-- Rendered by JS -->
+</div></section>
+  <section id="logros"      aria-label="Logros"><div id="logros-content">
   <!-- Rendered by JS -->
 </div></section>
 </main>
@@ -3397,11 +3408,12 @@ const CV_DATA = {
   ],
   ui: {
     nav: {
-      summary:    { es: "Resumen",     en: "Summary" },
-      experience: { es: "Experiencia", en: "Experience" },
-      skills:     { es: "Skills",      en: "Skills" },
-      projects:   { es: "Proyectos",   en: "Projects" },
-      education:  { es: "Educación",   en: "Education" }
+      summary:      { es: "Resumen",     en: "Summary" },
+      experience:   { es: "Experiencia", en: "Experience" },
+      skills:       { es: "Skills",      en: "Skills" },
+      projects:     { es: "Proyectos",   en: "Projects" },
+      background:   { es: "Formación",   en: "Education" },
+      achievements: { es: "Logros",      en: "Achievements" }
     },
     kpi: {
       years_experience: { es: "Años de experiencia", en: "Years of experience" },
@@ -3759,18 +3771,25 @@ try {
   /* -------------------------------------------------------
      9. SCROLL-SPY — activa la clase is-active en nav
      ------------------------------------------------------- */
-  var _sections = ["resumen", "experiencia", "skills", "proyectos", "educacion"];
+  var _sections = ["resumen", "experiencia", "skills", "proyectos", "formacion", "logros"];
 
   function _updateActiveNav() {
-    var scrollY = window.scrollY + 80;
+    var threshold = 120;
     var current = _sections[0];
 
-    _sections.forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el && el.offsetTop <= scrollY) {
-        current = id;
-      }
-    });
+    // If we're at the bottom of the page, mark the last section as active
+    // (handles short last sections that can't reach the threshold)
+    var atBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 4);
+    if (atBottom) {
+      current = _sections[_sections.length - 1];
+    } else {
+      _sections.forEach(function (id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        var top = el.getBoundingClientRect().top;
+        if (top <= threshold) current = id;
+      });
+    }
 
     var navLinks = document.querySelectorAll(".site-nav__link");
     navLinks.forEach(function (link) {
@@ -5355,15 +5374,14 @@ try {
   }
 
   /* -------------------------------------------------------
-     RENDER: EDUCACIÓN + CERTIFICACIONES + IDIOMAS + RECONOCIMIENTOS
+     RENDER: FORMACIÓN (educación izda + idiomas dcha)
      ------------------------------------------------------- */
-  function renderEducacion() {
-    var el = document.getElementById("educacion-content");
+  function renderFormacion() {
+    var el = document.getElementById("formacion-content");
     if (!el) return;
-
     el.innerHTML = "";
 
-    /* --- EDUCACIÓN --- */
+    /* --- EDUCACIÓN (col izda) --- */
     var eduBlock = document.createElement("div");
     eduBlock.className = "edu-block";
 
@@ -5371,7 +5389,7 @@ try {
     eduHeader.className = "section-header";
     var eduTitle = document.createElement("h2");
     eduTitle.className = "section-header__title";
-    eduTitle.textContent = t(CV_DATA.ui.nav.education);
+    eduTitle.textContent = t({ es: "Estudios", en: "Education" });
     eduHeader.appendChild(eduTitle);
     eduBlock.appendChild(eduHeader);
 
@@ -5381,99 +5399,35 @@ try {
     CV_DATA.education.forEach(function (edu) {
       var card = document.createElement("div");
       card.className = "edu-card";
-
       var iconDiv = document.createElement("div");
       iconDiv.className = "edu-card__icon";
       iconDiv.appendChild(_makeIcon("graduation-cap", 16));
       card.appendChild(iconDiv);
-
       var main = document.createElement("div");
       main.className = "edu-card__main";
-
       var instEl = document.createElement("p");
       instEl.className = "edu-card__institution";
       instEl.textContent = edu.institution;
       main.appendChild(instEl);
-
       var degreeEl = document.createElement("p");
       degreeEl.className = "edu-card__degree";
       degreeEl.textContent = t(edu.degree);
       main.appendChild(degreeEl);
-
       var fieldEl = document.createElement("p");
       fieldEl.className = "edu-card__field";
       fieldEl.textContent = t(edu.field);
       main.appendChild(fieldEl);
-
       card.appendChild(main);
-
       var yearsEl = document.createElement("div");
       yearsEl.className = "edu-card__years font-mono";
       yearsEl.textContent = edu.start + " – " + edu.end;
       card.appendChild(yearsEl);
-
       eduList.appendChild(card);
     });
 
     eduBlock.appendChild(eduList);
 
-    /* --- CERTIFICACIONES --- */
-    var certBlock = document.createElement("div");
-    certBlock.className = "edu-block";
-
-    var certHeader = document.createElement("div");
-    certHeader.className = "section-header";
-    var certTitle = document.createElement("h2");
-    certTitle.className = "section-header__title";
-    certTitle.textContent = t(CV_DATA.ui.sections.certifications);
-    certHeader.appendChild(certTitle);
-    var certCount = document.createElement("span");
-    certCount.className = "section-header__count";
-    certCount.textContent = CV_DATA.certifications.length;
-    certHeader.appendChild(certCount);
-    certBlock.appendChild(certHeader);
-
-    var certGrid = document.createElement("div");
-    certGrid.className = "cert-grid";
-
-    CV_DATA.certifications.forEach(function (cert) {
-      var card = document.createElement("div");
-      card.className = "cert-card";
-
-      var iconDiv = document.createElement("div");
-      iconDiv.className = "cert-card__icon";
-      iconDiv.appendChild(_makeIcon("shield-check", 16));
-      card.appendChild(iconDiv);
-
-      var body = document.createElement("div");
-      body.className = "cert-card__body";
-
-      var nameEl;
-      if (cert.url) {
-        nameEl = document.createElement("a");
-        nameEl.href = cert.url;
-        nameEl.target = "_blank";
-        nameEl.rel = "noopener noreferrer";
-        nameEl.className = "cert-card__name cert-link";
-      } else {
-        nameEl = document.createElement("p");
-        nameEl.className = "cert-card__name";
-      }
-      nameEl.textContent = t(cert.name);
-      body.appendChild(nameEl);
-
-      var metaEl = document.createElement("span");
-      metaEl.className = "cert-card__meta";
-      metaEl.textContent = cert.issuer + " · " + cert.year;
-      body.appendChild(metaEl);
-
-      card.appendChild(body);
-      certGrid.appendChild(card);
-    });
-
-    certBlock.appendChild(certGrid);
-
-    /* --- IDIOMAS --- */
+    /* --- IDIOMAS (col dcha) --- */
     var langBlock = document.createElement("div");
     langBlock.className = "edu-block";
 
@@ -5506,15 +5460,12 @@ try {
       var score = _langScore(t(lang.level));
       var lang2 = window.__cvLang || CV_DATA.meta.default_language;
       var levelLabel = (LANG_LEVEL_LABELS[lang2] || LANG_LEVEL_LABELS.es)[score - 1];
-
       var card = document.createElement("div");
       card.className = "lang-card";
-
       var nameEl = document.createElement("span");
       nameEl.className = "lang-card__name";
       nameEl.textContent = t(lang.name);
       card.appendChild(nameEl);
-
       var segsEl = document.createElement("div");
       segsEl.className = "lang-card__segments";
       for (var i = 0; i < 5; i++) {
@@ -5523,80 +5474,138 @@ try {
         segsEl.appendChild(seg);
       }
       card.appendChild(segsEl);
-
       var levelEl = document.createElement("span");
       levelEl.className = "lang-card__level";
       levelEl.textContent = levelLabel;
       card.appendChild(levelEl);
-
       langGrid.appendChild(card);
     });
 
     langBlock.appendChild(langGrid);
 
-    /* --- RECONOCIMIENTOS --- */
-    var honorsBlock = null;
+    /* 2-col grid: izda = estudios, dcha = idiomas */
+    var grid = document.createElement("div");
+    grid.className = "edu-grid";
+    var left = document.createElement("div");
+    left.className = "edu-col";
+    left.appendChild(eduBlock);
+    var right = document.createElement("div");
+    right.className = "edu-col";
+    right.appendChild(langBlock);
+    grid.appendChild(left);
+    grid.appendChild(right);
+    el.appendChild(grid);
+  }
+
+  /* -------------------------------------------------------
+     RENDER: LOGROS (certificaciones izda + reconocimientos dcha)
+     ------------------------------------------------------- */
+  function renderLogros() {
+    var el = document.getElementById("logros-content");
+    if (!el) return;
+    el.innerHTML = "";
+
+    /* --- CERTIFICACIONES (col izda) --- */
+    var certBlock = document.createElement("div");
+    certBlock.className = "edu-block";
+
+    var certHeader = document.createElement("div");
+    certHeader.className = "section-header";
+    var certTitle = document.createElement("h2");
+    certTitle.className = "section-header__title";
+    certTitle.textContent = t(CV_DATA.ui.sections.certifications);
+    certHeader.appendChild(certTitle);
+    var certCount = document.createElement("span");
+    certCount.className = "section-header__count";
+    certCount.textContent = CV_DATA.certifications.length;
+    certHeader.appendChild(certCount);
+    certBlock.appendChild(certHeader);
+
+    var certGrid = document.createElement("div");
+    certGrid.className = "cert-grid";
+
+    CV_DATA.certifications.forEach(function (cert) {
+      var card = document.createElement("div");
+      card.className = "cert-card";
+      var iconDiv = document.createElement("div");
+      iconDiv.className = "cert-card__icon";
+      iconDiv.appendChild(_makeIcon("shield-check", 16));
+      card.appendChild(iconDiv);
+      var body = document.createElement("div");
+      body.className = "cert-card__body";
+      var nameEl;
+      if (cert.url) {
+        nameEl = document.createElement("a");
+        nameEl.href = cert.url;
+        nameEl.target = "_blank";
+        nameEl.rel = "noopener noreferrer";
+        nameEl.className = "cert-card__name cert-link";
+      } else {
+        nameEl = document.createElement("p");
+        nameEl.className = "cert-card__name";
+      }
+      nameEl.textContent = t(cert.name);
+      body.appendChild(nameEl);
+      var metaEl = document.createElement("span");
+      metaEl.className = "cert-card__meta";
+      metaEl.textContent = cert.issuer + " · " + cert.year;
+      body.appendChild(metaEl);
+      card.appendChild(body);
+      certGrid.appendChild(card);
+    });
+
+    certBlock.appendChild(certGrid);
+
+    /* --- RECONOCIMIENTOS (col dcha) --- */
+    var honorsBlock = document.createElement("div");
+    honorsBlock.className = "edu-block";
+
+    var honorsHeader = document.createElement("div");
+    honorsHeader.className = "section-header";
+    var honorsTitle = document.createElement("h2");
+    honorsTitle.className = "section-header__title";
+    honorsTitle.textContent = t(CV_DATA.ui.sections.honors);
+    honorsHeader.appendChild(honorsTitle);
+    honorsBlock.appendChild(honorsHeader);
+
     if (CV_DATA.honors && CV_DATA.honors.length > 0) {
-      honorsBlock = document.createElement("div");
-      honorsBlock.className = "edu-block";
-
-      var honorsHeader = document.createElement("div");
-      honorsHeader.className = "section-header";
-      var honorsTitle = document.createElement("h2");
-      honorsTitle.className = "section-header__title";
-      honorsTitle.textContent = t(CV_DATA.ui.sections.honors);
-      honorsHeader.appendChild(honorsTitle);
-      honorsBlock.appendChild(honorsHeader);
-
       var honorsList = document.createElement("div");
       honorsList.className = "honors-list";
-
       CV_DATA.honors.forEach(function (honor) {
         var card = document.createElement("div");
         card.className = "honor-card";
-
         var iconDiv = document.createElement("div");
         iconDiv.className = "honor-card__icon";
         iconDiv.appendChild(_makeIcon("award", 16));
         card.appendChild(iconDiv);
-
         var body = document.createElement("div");
         body.className = "honor-card__body";
-
         var nameEl = document.createElement("p");
         nameEl.className = "honor-card__name";
         nameEl.textContent = t(honor.name);
         body.appendChild(nameEl);
-
         var metaEl = document.createElement("span");
         metaEl.className = "honor-card__meta";
         metaEl.textContent = honor.issuer + " · " + honor.year;
         body.appendChild(metaEl);
-
         card.appendChild(body);
         honorsList.appendChild(card);
       });
-
       honorsBlock.appendChild(honorsList);
     }
 
-    /* Two-column layout: left = education + languages, right = certifications + honors */
-    var eduGrid = document.createElement("div");
-    eduGrid.className = "edu-grid";
-
-    var leftCol = document.createElement("div");
-    leftCol.className = "edu-col";
-    leftCol.appendChild(eduBlock);
-    leftCol.appendChild(langBlock);
-
-    var rightCol = document.createElement("div");
-    rightCol.className = "edu-col";
-    rightCol.appendChild(certBlock);
-    if (honorsBlock) rightCol.appendChild(honorsBlock);
-
-    eduGrid.appendChild(leftCol);
-    eduGrid.appendChild(rightCol);
-    el.appendChild(eduGrid);
+    /* 2-col grid: izda = certificaciones, dcha = reconocimientos */
+    var grid = document.createElement("div");
+    grid.className = "edu-grid";
+    var left = document.createElement("div");
+    left.className = "edu-col";
+    left.appendChild(certBlock);
+    var right = document.createElement("div");
+    right.className = "edu-col";
+    right.appendChild(honorsBlock);
+    grid.appendChild(left);
+    grid.appendChild(right);
+    el.appendChild(grid);
   }
 
   /* -------------------------------------------------------
@@ -5605,7 +5614,8 @@ try {
   function renderAll() {
     renderResumen();
     renderProyectos();
-    renderEducacion();
+    renderFormacion();
+    renderLogros();
   }
 
   renderAll();
