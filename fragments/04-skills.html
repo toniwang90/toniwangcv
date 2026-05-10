@@ -1,6 +1,6 @@
 <!-- ============================================================
      04-skills.html — SkillsAgent
-     Skill Matrix: SVG dots animados por categoría
+     Skill Matrix: Category tabs + compact SVG dots grid
      Fragmento parcial: sin <html>, <head>, <body>
      ============================================================ -->
 
@@ -19,7 +19,7 @@
     display: flex;
     align-items: baseline;
     gap: var(--space-3);
-    margin-bottom: var(--space-8);
+    margin-bottom: var(--space-6);
     border-bottom: var(--border);
     padding-bottom: var(--space-4);
   }
@@ -38,88 +38,135 @@
     color: var(--color-text-muted);
   }
 
-  /* Categories grid: 1 col mobile, 2 col desktop */
-  .skills-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
+  /* -------------------------------------------------------
+     TABS ROW
+     ------------------------------------------------------- */
+  .skills-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    border-bottom: var(--border);
+    margin-bottom: var(--space-5);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
-  @media (min-width: 768px) {
-    .skills-grid {
+  .skills-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .skills-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: 400;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+    min-height: 44px;
+    position: relative;
+  }
+
+  .skills-tab:hover {
+    color: var(--color-text);
+  }
+
+  .skills-tab[aria-selected="true"] {
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+  }
+
+  /* Active indicator color per category */
+  .skills-tab[aria-selected="true"][data-cat="data_engineering"] {
+    border-bottom-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+  .skills-tab[aria-selected="true"][data-cat="visualization"] {
+    border-bottom-color: var(--color-blue);
+    color: var(--color-blue);
+  }
+  .skills-tab[aria-selected="true"][data-cat="cloud"] {
+    border-bottom-color: var(--color-orange);
+    color: var(--color-orange);
+  }
+  .skills-tab[aria-selected="true"][data-cat="languages"] {
+    border-bottom-color: var(--color-success);
+    color: var(--color-success);
+  }
+  .skills-tab[aria-selected="true"][data-cat="tools"] {
+    border-bottom-color: var(--color-purple);
+    color: var(--color-purple);
+  }
+
+  /* Skill count badge */
+  .skills-tab__badge {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+
+  /* -------------------------------------------------------
+     PANEL
+     ------------------------------------------------------- */
+  .skills-panel {
+    display: none;
+  }
+
+  .skills-panel--active {
+    display: block;
+  }
+
+  /* 3-col on desktop, 2-col on tablet, 1-col on mobile */
+  .skills-panel__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  @media (min-width: 540px) {
+    .skills-panel__grid {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
-  /* Category card */
-  .skill-category {
-    background-color: var(--color-surface);
-    border: var(--border);
-    border-radius: var(--radius-md);
-    padding: var(--space-5);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
+  @media (min-width: 768px) {
+    .skills-panel__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 
-  /* Category header */
-  .skill-category__header {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding-bottom: var(--space-3);
-    border-bottom: var(--border);
-  }
-
-  .skill-category__accent {
-    width: 3px;
-    height: 16px;
-    border-radius: var(--radius-full);
-    flex-shrink: 0;
-  }
-
-  .skill-category__accent--data_engineering { background-color: var(--color-primary); }
-  .skill-category__accent--visualization    { background-color: var(--color-blue); }
-  .skill-category__accent--cloud            { background-color: var(--color-orange); }
-  .skill-category__accent--languages        { background-color: var(--color-success); }
-  .skill-category__accent--tools            { background-color: var(--color-purple); }
-
-  .skill-category__name {
-    font-family: var(--font-display);
-    font-size: var(--text-sm);
-    font-weight: var(--weight-bold);
-    color: var(--color-text);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
-  .skill-category__name--data_engineering { color: var(--color-primary); }
-  .skill-category__name--visualization    { color: var(--color-blue); }
-  .skill-category__name--cloud            { color: var(--color-orange); }
-  .skill-category__name--languages        { color: var(--color-success); }
-  .skill-category__name--tools            { color: var(--color-purple); }
-
-  /* Skill list */
-  .skill-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
-  /* Single skill row */
+  /* -------------------------------------------------------
+     COMPACT SKILL ROW — ~32px height
+     ------------------------------------------------------- */
   .skill-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-3);
-    min-height: 44px;
-    padding-block: var(--space-1);
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-2);
+    min-height: 32px;
+    border-radius: var(--radius-md);
     position: relative;
+    transition: background-color var(--transition-fast);
+  }
+
+  .skill-row:hover {
+    background-color: var(--color-surface-2);
   }
 
   .skill-row__name {
     font-family: var(--font-mono);
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
     color: var(--color-text);
     white-space: nowrap;
     overflow: hidden;
@@ -128,34 +175,32 @@
     min-width: 0;
   }
 
-  /* SVG dot container */
+  /* -------------------------------------------------------
+     SVG DOTS WRAPPER + TOOLTIP
+     ------------------------------------------------------- */
   .skill-dots {
     display: flex;
     align-items: center;
-    gap: 4px;
     flex-shrink: 0;
     position: relative;
     cursor: default;
   }
 
-  /* Individual SVG dot wrapper — used for tooltip target */
-  .skill-dots__dot-wrap {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .skill-dots svg {
+    display: block;
+    overflow: visible;
   }
 
   /* Tooltip */
   .skill-dots__tooltip {
     position: absolute;
-    bottom: calc(100% + 8px);
+    bottom: calc(100% + 6px);
     right: 0;
-    z-index: 20;
+    z-index: 30;
     background-color: var(--color-surface);
     border: 1px solid var(--color-divider);
     border-radius: var(--radius-md);
-    padding: var(--space-2) var(--space-3);
+    padding: var(--space-1) var(--space-2);
     font-family: var(--font-mono);
     font-size: var(--text-xs);
     color: var(--color-text);
@@ -167,16 +212,11 @@
     box-shadow: var(--shadow-md);
   }
 
-  .skill-dots:hover .skill-dots__tooltip,
+  /* Show tooltip on hover over the full row */
+  .skill-row:hover .skill-dots__tooltip,
   .skill-dots:focus-within .skill-dots__tooltip {
     opacity: 1;
     transform: translateY(0);
-  }
-
-  /* SVG dots — SVG circles drawn in JS */
-  .skill-dots svg {
-    display: block;
-    overflow: visible;
   }
 
   /* Transition for fill animation */
@@ -192,8 +232,11 @@
     <span class="skills-section__subtitle" aria-hidden="true">skill matrix</span>
   </div>
 
-  <!-- Grid container — populated by JS -->
-  <div class="skills-grid" id="skills-grid" role="list" aria-label="Skill categories"></div>
+  <!-- Tab bar — populated by JS -->
+  <div class="skills-tabs" role="tablist" id="skills-tabs" aria-label="Skill categories"></div>
+
+  <!-- Panels container — populated by JS -->
+  <div id="skills-panels"></div>
 </section>
 
 <!-- ===================== SCRIPT ===================== -->
@@ -202,18 +245,7 @@
   "use strict";
 
   /* -------------------------------------------------------
-     COLOR MAP — categoria → CSS var (per spec)
-     ------------------------------------------------------- */
-  var CATEGORY_COLORS = {
-    data_engineering: "var(--color-primary)",
-    visualization:    "var(--color-blue)",
-    cloud:            "var(--color-orange)",
-    languages:        "var(--color-success)",
-    tools:            "var(--color-purple)"
-  };
-
-  /* -------------------------------------------------------
-     CATEGORY ORDER (deterministic render order)
+     CONSTANTS
      ------------------------------------------------------- */
   var CATEGORY_ORDER = [
     "data_engineering",
@@ -223,19 +255,51 @@
     "tools"
   ];
 
+  var CATEGORY_COLORS = {
+    data_engineering: "var(--color-primary)",
+    visualization:    "var(--color-blue)",
+    cloud:            "var(--color-orange)",
+    languages:        "var(--color-success)",
+    tools:            "var(--color-purple)"
+  };
+
+  var DEFAULT_TAB = "data_engineering";
+
+  // Dot geometry — radius 4px, gap 3px → 5 dots = 5*8 + 4*3 = 52px wide, 8px tall
+  var DOT_R     = 4;
+  var DOT_GAP   = 3;
+  var DOT_DIAM  = DOT_R * 2;         // 8
+  var DOT_STEP  = DOT_DIAM + DOT_GAP; // 11
+  var DOT_TOTAL = 5;
+  var SVG_W     = DOT_TOTAL * DOT_STEP - DOT_GAP; // 52
+  var SVG_H     = DOT_DIAM;                        // 8
+
+  var ANIM_DELAYS = [0, 80, 160, 240, 320]; // ms per dot
+
+  /* -------------------------------------------------------
+     STATE — tracks which categories have been animated
+     ------------------------------------------------------- */
+  var _animated = {}; // cat → true once animated
+  // Records per category: { cat, circles:[], level, color, animated }
+  var _dotRecords = {}; // cat → [ record, ... ]
+
+  var _activeTab = null;
+  var _observerFired = false;
+
+  /* -------------------------------------------------------
+     TOOLTIP TEXT
+     ------------------------------------------------------- */
+  function _tooltipText(years, level) {
+    var fmt = t(CV_DATA.ui.skills.tooltip_format);
+    return fmt
+      .replace("{years}", years)
+      .replace("{level}", level);
+  }
+
   /* -------------------------------------------------------
      SVG DOT BUILDER
-     Builds a row of 5 SVG circles. Starts all empty.
-     Returns { svg, circles[] } for later animation.
+     All dots start empty; animation fills them later.
      ------------------------------------------------------- */
-  var DOT_R      = 6;   // radius px
-  var DOT_GAP    = 4;   // gap px
-  var DOT_DIAM   = DOT_R * 2;
-  var DOT_STEP   = DOT_DIAM + DOT_GAP;
-  var DOT_TOTAL  = 5;
-  var SVG_W      = DOT_TOTAL * DOT_STEP - DOT_GAP;  // 68px
-  var SVG_H      = DOT_DIAM;                         // 12px
-
   function _buildDotSVG(level, filledColor) {
     var ns = "http://www.w3.org/2000/svg";
     var svg = document.createElementNS(ns, "svg");
@@ -254,8 +318,8 @@
       circle.setAttribute("cx", cx);
       circle.setAttribute("cy", cy);
       circle.setAttribute("r", DOT_R);
+      circle.setAttribute("rx", "var(--radius-full)");
       circle.setAttribute("class", "skill-dot-circle");
-      // All dots start empty — animation fills them
       circle.setAttribute("fill", "var(--color-surface-2)");
       circle.setAttribute("stroke", "var(--color-surface-offset)");
       circle.setAttribute("stroke-width", "1");
@@ -268,163 +332,242 @@
   }
 
   /* -------------------------------------------------------
-     TOOLTIP STRING
+     ANIMATE DOTS — fill left-to-right, once only
      ------------------------------------------------------- */
-  function _buildTooltipText(skill) {
-    var fmt = t(CV_DATA.ui.skills.tooltip_format);
-    return fmt
-      .replace("{years}", skill.years)
-      .replace("{level}", skill.level);
+  function _animateCategory(cat) {
+    if (_animated[cat]) return;
+    _animated[cat] = true;
+
+    var records = _dotRecords[cat] || [];
+    records.forEach(function (record) {
+      for (var i = 0; i < DOT_TOTAL; i++) {
+        (function (circle, idx, level, color) {
+          setTimeout(function () {
+            if (idx < level) {
+              circle.setAttribute("fill", color);
+              circle.setAttribute("stroke", color);
+            }
+          }, ANIM_DELAYS[idx]);
+        })(record.circles[i], i, record.level, record.color);
+      }
+    });
   }
 
   /* -------------------------------------------------------
-     RENDER — builds the full grid DOM
-     Returns array of dot records for the IntersectionObserver
+     BUILD PANEL for a category
      ------------------------------------------------------- */
-  var _allDotRecords = []; // { circles, level, color, animated }
+  function _buildPanel(cat) {
+    var skills = CV_DATA.skills[cat];
+    if (!skills || !skills.length) return null;
 
-  function _renderGrid() {
-    var grid = document.getElementById("skills-grid");
-    if (!grid) return;
+    var color = CATEGORY_COLORS[cat] || "var(--color-primary)";
 
-    grid.innerHTML = "";
-    _allDotRecords = [];
+    var panel = document.createElement("div");
+    panel.className = "skills-panel";
+    panel.setAttribute("role", "tabpanel");
+    panel.setAttribute("id", "skills-panel-" + cat);
+    panel.setAttribute("aria-labelledby", "skills-tab-" + cat);
+    panel.setAttribute("data-cat", cat);
+
+    var grid = document.createElement("ul");
+    grid.className = "skills-panel__grid";
+    grid.style.listStyle = "none";
+    grid.style.margin = "0";
+    grid.style.padding = "0";
+
+    _dotRecords[cat] = [];
+
+    skills.forEach(function (skill) {
+      var li = document.createElement("li");
+      li.className = "skill-row";
+
+      // Skill name
+      var nameSpan = document.createElement("span");
+      nameSpan.className = "skill-row__name";
+      nameSpan.textContent = skill.name;
+
+      // Dots wrapper
+      var dotsWrap = document.createElement("div");
+      dotsWrap.className = "skill-dots";
+      dotsWrap.setAttribute("role", "img");
+      dotsWrap.setAttribute("aria-label", skill.name + " — " + _tooltipText(skill.years, skill.level));
+      dotsWrap.setAttribute("data-years", skill.years);
+      dotsWrap.setAttribute("data-level", skill.level);
+      dotsWrap.setAttribute("data-skill-name", skill.name);
+      dotsWrap.setAttribute("data-cat", cat);
+
+      // Tooltip
+      var tooltip = document.createElement("span");
+      tooltip.className = "skill-dots__tooltip";
+      tooltip.setAttribute("role", "tooltip");
+      tooltip.setAttribute("aria-hidden", "true");
+      tooltip.textContent = _tooltipText(skill.years, skill.level);
+
+      // SVG
+      var dotResult = _buildDotSVG(skill.level, color);
+      _dotRecords[cat].push({
+        circles: dotResult.circles,
+        level:   dotResult.level,
+        color:   dotResult.color
+      });
+
+      dotsWrap.appendChild(dotResult.svg);
+      dotsWrap.appendChild(tooltip);
+
+      li.appendChild(nameSpan);
+      li.appendChild(dotsWrap);
+      grid.appendChild(li);
+    });
+
+    panel.appendChild(grid);
+    return panel;
+  }
+
+  /* -------------------------------------------------------
+     RENDER TABS AND PANELS
+     ------------------------------------------------------- */
+  function _render() {
+    var tabsEl   = document.getElementById("skills-tabs");
+    var panelsEl = document.getElementById("skills-panels");
+    if (!tabsEl || !panelsEl) return;
+
+    tabsEl.innerHTML   = "";
+    panelsEl.innerHTML = "";
+    _dotRecords = {};
+    _animated   = {};
+    _activeTab  = null;
 
     CATEGORY_ORDER.forEach(function (cat) {
       var skills = CV_DATA.skills[cat];
       if (!skills || !skills.length) return;
 
-      var color = CATEGORY_COLORS[cat] || "var(--color-primary)";
-      var categoryLabel = t(CV_DATA.ui.skills.categories[cat]);
+      var label = t(CV_DATA.ui.skills.categories[cat]);
+      var count = skills.length;
 
-      /* --- Category card --- */
-      var card = document.createElement("div");
-      card.className = "skill-category";
-      card.setAttribute("role", "listitem");
-      card.setAttribute("data-category", cat);
+      // Tab button
+      var tab = document.createElement("button");
+      tab.className = "skills-tab";
+      tab.setAttribute("role", "tab");
+      tab.setAttribute("id", "skills-tab-" + cat);
+      tab.setAttribute("aria-controls", "skills-panel-" + cat);
+      tab.setAttribute("aria-selected", "false");
+      tab.setAttribute("data-cat", cat);
+      tab.setAttribute("tabindex", cat === DEFAULT_TAB ? "0" : "-1");
 
-      /* --- Category header --- */
-      var header = document.createElement("div");
-      header.className = "skill-category__header";
+      var labelSpan = document.createElement("span");
+      labelSpan.setAttribute("data-tab-label", cat);
+      labelSpan.textContent = label;
 
-      var accent = document.createElement("span");
-      accent.className = "skill-category__accent skill-category__accent--" + cat;
-      accent.setAttribute("aria-hidden", "true");
+      var badgeSpan = document.createElement("span");
+      badgeSpan.className = "skills-tab__badge";
+      badgeSpan.textContent = "(" + count + ")";
 
-      var nameEl = document.createElement("span");
-      nameEl.className = "skill-category__name skill-category__name--" + cat;
-      nameEl.textContent = categoryLabel;
-      nameEl.setAttribute("data-category-key", cat);
+      tab.appendChild(labelSpan);
+      tab.appendChild(badgeSpan);
+      tabsEl.appendChild(tab);
 
-      header.appendChild(accent);
-      header.appendChild(nameEl);
-      card.appendChild(header);
+      // Panel
+      var panel = _buildPanel(cat);
+      if (panel) panelsEl.appendChild(panel);
 
-      /* --- Skill list --- */
-      var list = document.createElement("ul");
-      list.className = "skill-list";
-
-      skills.forEach(function (skill) {
-        var li = document.createElement("li");
-        li.className = "skill-row";
-
-        /* Skill name */
-        var nameSpan = document.createElement("span");
-        nameSpan.className = "skill-row__name";
-        nameSpan.textContent = skill.name;
-
-        /* Dots container with tooltip */
-        var dotsWrap = document.createElement("div");
-        dotsWrap.className = "skill-dots";
-        dotsWrap.setAttribute("role", "img");
-        dotsWrap.setAttribute("aria-label", skill.name + " — " + _buildTooltipText(skill));
-        dotsWrap.setAttribute("tabindex", "0");
-        dotsWrap.setAttribute("data-skill-name", skill.name);
-        dotsWrap.setAttribute("data-years", skill.years);
-        dotsWrap.setAttribute("data-level", skill.level);
-
-        /* Tooltip element */
-        var tooltip = document.createElement("span");
-        tooltip.className = "skill-dots__tooltip";
-        tooltip.setAttribute("role", "tooltip");
-        tooltip.setAttribute("aria-hidden", "true");
-        tooltip.textContent = _buildTooltipText(skill);
-        tooltip.setAttribute("data-tooltip-skill", skill.name);
-
-        /* SVG dots */
-        var dotRecord = _buildDotSVG(skill.level, color);
-        _allDotRecords.push({ circles: dotRecord.circles, level: dotRecord.level, color: dotRecord.color, animated: false });
-
-        dotsWrap.appendChild(dotRecord.svg);
-        dotsWrap.appendChild(tooltip);
-
-        li.appendChild(nameSpan);
-        li.appendChild(dotsWrap);
-        list.appendChild(li);
+      // Click handler
+      tab.addEventListener("click", function () {
+        _selectTab(cat);
       });
 
-      card.appendChild(list);
-      grid.appendChild(card);
+      // Keyboard navigation (roving tabindex)
+      tab.addEventListener("keydown", function (e) {
+        var tabs = Array.from(tabsEl.querySelectorAll(".skills-tab"));
+        var idx  = tabs.indexOf(tab);
+        if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+          e.preventDefault();
+          var next = tabs[(idx + 1) % tabs.length];
+          next.focus();
+          _selectTab(next.getAttribute("data-cat"));
+        } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+          e.preventDefault();
+          var prev = tabs[(idx - 1 + tabs.length) % tabs.length];
+          prev.focus();
+          _selectTab(prev.getAttribute("data-cat"));
+        }
+      });
     });
+
+    // Activate default tab (no animation yet — wait for IntersectionObserver)
+    _selectTab(DEFAULT_TAB, /* skipAnim */ true);
   }
 
   /* -------------------------------------------------------
-     ANIMATION — fills dots progressively, left to right
-     Only fires once per record (animated flag guard)
+     SELECT TAB
+     skipAnim = true → show panel but don't fire animation
+     (used on init; observer triggers animation separately)
      ------------------------------------------------------- */
-  var DELAYS = [0, 80, 160, 240, 320]; // ms per dot
+  function _selectTab(cat, skipAnim) {
+    var tabsEl = document.getElementById("skills-tabs");
+    if (!tabsEl) return;
 
-  function _animateDotRecord(record) {
-    if (record.animated) return;
-    record.animated = true;
+    // Deactivate all
+    tabsEl.querySelectorAll(".skills-tab").forEach(function (t) {
+      t.setAttribute("aria-selected", "false");
+      t.setAttribute("tabindex", "-1");
+    });
+    document.querySelectorAll(".skills-panel").forEach(function (p) {
+      p.classList.remove("skills-panel--active");
+    });
 
-    for (var i = 0; i < DOT_TOTAL; i++) {
-      (function (circle, idx, level, color) {
-        setTimeout(function () {
-          if (idx < level) {
-            circle.setAttribute("fill", color);
-            circle.setAttribute("stroke", color);
-          }
-          // dots beyond level keep their empty style — no-op
-        }, DELAYS[idx]);
-      })(record.circles[i], i, record.level, record.color);
+    // Activate selected
+    var tab   = document.getElementById("skills-tab-" + cat);
+    var panel = document.getElementById("skills-panel-" + cat);
+    if (!tab || !panel) return;
+
+    tab.setAttribute("aria-selected", "true");
+    tab.setAttribute("tabindex", "0");
+    panel.classList.add("skills-panel--active");
+    _activeTab = cat;
+
+    // Animate if observer already fired (i.e. section is visible)
+    if (!skipAnim && _observerFired) {
+      _animateCategory(cat);
     }
   }
 
   /* -------------------------------------------------------
-     INTERSECTION OBSERVER — triggers on viewport entry
-     threshold: 0.3, fires once (disconnect after animation)
+     INTERSECTION OBSERVER
+     Animates the default (active) tab on first viewport entry.
+     Does NOT re-animate on re-entry.
      ------------------------------------------------------- */
   function _setupObserver() {
-    var grid = document.getElementById("skills-grid");
-    if (!grid) return;
+    var section = document.getElementById("skills");
+    if (!section) return;
 
     if (!("IntersectionObserver" in window)) {
-      // Fallback: animate immediately
-      _allDotRecords.forEach(_animateDotRecord);
+      // Fallback: animate active tab immediately
+      _observerFired = true;
+      if (_activeTab) _animateCategory(_activeTab);
       return;
     }
 
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          _allDotRecords.forEach(_animateDotRecord);
+        if (entry.isIntersecting && !_observerFired) {
+          _observerFired = true;
+          if (_activeTab) _animateCategory(_activeTab);
           observer.disconnect();
         }
       });
     }, { threshold: 0.3 });
 
-    observer.observe(grid);
+    observer.observe(section);
   }
 
   /* -------------------------------------------------------
-     i18n — re-render labels on language change
-     Dot SVGs are NOT re-rendered (color stays, tooltips update)
+     i18n REFRESH — tab labels + tooltips
+     Dots are NOT re-rendered on language change.
      ------------------------------------------------------- */
   function _refreshLabels() {
-    // Category name labels
-    document.querySelectorAll("[data-category-key]").forEach(function (el) {
-      var cat = el.getAttribute("data-category-key");
+    // Tab labels
+    document.querySelectorAll("[data-tab-label]").forEach(function (el) {
+      var cat = el.getAttribute("data-tab-label");
       var label = CV_DATA.ui.skills.categories[cat];
       if (label) el.textContent = t(label);
     });
@@ -434,16 +577,11 @@
       var years = parseInt(wrap.getAttribute("data-years"), 10);
       var level = parseInt(wrap.getAttribute("data-level"), 10);
       var name  = wrap.getAttribute("data-skill-name");
+      var tt    = _tooltipText(years, level);
 
-      var fmt = t(CV_DATA.ui.skills.tooltip_format);
-      var tooltipText = fmt
-        .replace("{years}", years)
-        .replace("{level}", level);
-
-      wrap.setAttribute("aria-label", name + " — " + tooltipText);
-
+      wrap.setAttribute("aria-label", name + " — " + tt);
       var tooltipEl = wrap.querySelector(".skill-dots__tooltip");
-      if (tooltipEl) tooltipEl.textContent = tooltipText;
+      if (tooltipEl) tooltipEl.textContent = tt;
     });
   }
 
@@ -453,11 +591,10 @@
      INIT
      ------------------------------------------------------- */
   function _init() {
-    _renderGrid();
+    _render();
     _setupObserver();
   }
 
-  // Run after current paint (grid scaffold already in DOM)
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", _init);
   } else {

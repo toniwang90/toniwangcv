@@ -41,7 +41,7 @@
       "fragment": "fragments/04-skills.html",
       "requires_guardian": true,
       "requires_ux_advisor": true,
-      "status": "validated"
+      "status": "in_progress"
     },
     {
       "step": 5,
