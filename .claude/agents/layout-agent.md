@@ -32,12 +32,14 @@ You build the application skeleton: header, navigation, KPI bar, and the section
 </div>
 
 <!-- SECTION SCAFFOLD (placeholders for other agents) -->
+<!-- IDs are in Spanish (matching nav hrefs and assemble.mjs extractDiv calls) -->
 <main id="main-content">
-  <section id="summary"><!-- ContentAgent --></section>
-  <section id="experience"><!-- TimelineAgent --></section>
-  <section id="skills"><!-- SkillsAgent --></section>
-  <section id="projects"><!-- ContentAgent --></section>
-  <section id="education"><!-- ContentAgent --></section>
+  <section id="resumen"     aria-label="Resumen"><!-- ContentAgent --></section>
+  <section id="experiencia" aria-label="Experiencia"><!-- TimelineAgent --></section>
+  <section id="skills"      aria-label="Skills"><!-- SkillsAgent --></section>
+  <section id="proyectos"   aria-label="Proyectos"><!-- ContentAgent --></section>
+  <section id="formacion"   aria-label="Formación"><!-- ContentAgent --></section>
+  <section id="logros"      aria-label="Logros"><!-- ContentAgent --></section>
 </main>
 
 <script>
@@ -48,11 +50,11 @@ You build the application skeleton: header, navigation, KPI bar, and the section
 ## Header specifications
 
 - **Logo**: inline SVG with initials (from `CV_DATA.profile.name`) in `--font-mono`
-- **Nav links**: smooth scroll to `#summary`, `#experience`, `#skills`, `#projects`, `#education`. Each link has `data-i18n="nav.summary"`, `data-i18n="nav.experience"`, etc.
+- **Nav links** (6, in this order): smooth scroll to `#resumen`, `#experiencia`, `#skills`, `#proyectos`, `#formacion`, `#logros`. Each link has the matching `data-i18n="nav.{summary|experience|skills|projects|background|achievements}"`.
 - **ES/EN toggle**: small pill button showing the OPPOSITE language to the current one (e.g. in `es` mode shows "EN"). Uses `t(CV_DATA.ui.actions.toggle_language)`. On click executes `setLanguage(otherLang)`. ≥ 44px.
-- **Dark/light toggle**: Lucide `sun`/`moon` icon, changes `data-theme` on `<html>`, ≥ 44px
-- **Download CV button**: Lucide `download` icon, fires `window.print()`. Text via `data-i18n="actions.download"`.
-- **Hamburger** (≤ 768px): `menu`/`x` icon, opens/closes vertical nav, area ≥ 44px
+- **Dark/light toggle**: Lucide `sun`/`moon` icon, changes `data-theme` on `<html>`, ≥ 44px. Uses `data-i18n-aria="actions.toggle_theme"` for the accessible label.
+- **Download CV button**: Lucide `download` icon, fires `downloadCV()` — a function defined in this fragment that **exports `CV_DATA` as a JSON file** (`cv-toni-wang.json`). It is NOT `window.print()` (the print pipeline is owned by `print-agent`). Text via `data-i18n="actions.download"`.
+- **Hamburger** (≤ 768px): `menu`/`x` icon, opens/closes vertical nav, area ≥ 44px. Mobile nav duplicates the 6 nav links and the Download button.
 
 ## i18n system (LayoutAgent's responsibility)
 
@@ -63,13 +65,21 @@ The LayoutAgent owns the global language logic. In its `<script>`:
 window.__cvLang = (navigator.language || "es").startsWith("en") ? "en" : "es";
 document.documentElement.setAttribute("lang", window.__cvLang);
 
-// 2. Apply static labels to all elements with data-i18n="path.to.key"
+// 2. Apply static labels.
+//    - data-i18n="path.to.key"      → element.textContent
+//    - data-i18n-aria="path.to.key" → element.aria-label (icon-only buttons)
 function applyStaticLabels() {
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const path = el.dataset.i18n.split(".");
     let v = CV_DATA.ui;
     for (const p of path) v = v?.[p];
     if (v != null) el.textContent = t(v);
+  });
+  document.querySelectorAll("[data-i18n-aria]").forEach(el => {
+    const path = el.dataset.i18nAria.split(".");
+    let v = CV_DATA.ui;
+    for (const p of path) v = v?.[p];
+    if (v != null) el.setAttribute("aria-label", t(v));
   });
 }
 
@@ -89,12 +99,14 @@ Other agents (timeline, skills, content) **do not duplicate** this logic — the
 
 ## KPI Bar specifications
 
-- Position: below the header, sticky on scroll
+- Position: below the header, sticky on scroll. Element id `#kpi-bar`.
 - 4 cards using translated labels: `t(CV_DATA.ui.kpi.years_experience)` etc.
 - Each label in its `<span data-i18n="kpi.years_experience">…</span>` for auto-update on language change
 - Numbers in `--font-mono`, bold, large size
 - Labels in `--font-display`, `--color-text-muted`
-- **Count-up animation**: on load, numbers rise from 0 to their value in `CV_DATA.profile.kpis` over 1.5s with easing
+- **Values are read at runtime from `CV_DATA.profile.kpis`** (not hardcoded). The `data-agent` keeps them computed; the layout simply consumes them. This guarantees they never drift after data edits.
+- **Count-up animation**: on load, numbers rise from 0 to their value over ~1.5s with easing
+- **Scroll-spy**: highlight the active nav link based on `getBoundingClientRect().top` of each section (NOT `offsetTop` — broken for nested elements). Add a bottom-of-page guard so the last section (`#logros`) gets marked active when scrolling to the end.
 
 ## Allowed CSS
 

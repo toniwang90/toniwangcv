@@ -38,9 +38,11 @@ After the subagent completes:
 5. Wait for explicit confirmation ("ok", "done", "approved", "validated")
 6. After validation, update `fragments/_state.json` and display the next step
 
-### Auto-preview (after every step)
+### Auto-preview (after every step) — opt-in
 
-After each subagent finishes (and after guardian/advisor reports if applicable), automatically rebuild a **best-effort `index.html`** with whatever fragments exist so far and open it in the browser. The user always sees the cumulative CV exactly as it would be assembled at that moment, with pending sections marked clearly. This is mandatory — do NOT skip it.
+After each subagent finishes (and after guardian/advisor reports if applicable), **offer** to rebuild a best-effort `index.html` with whatever fragments exist so far and open it in the browser. **Do not run automatically** — ask the user "Preview now? (y/n)". Skip the question only if the user said "no preview" earlier in the session.
+
+When the user says yes, the assembler runs in `--partial` mode so the preview never fails on missing fragments. Pending sections are marked clearly with the orange banner.
 
 **Server**: a single long-lived `python3 -m http.server` instance serves the project root. Reuse it across steps; only start it once per session.
 
@@ -125,8 +127,10 @@ When the pipeline reaches a terminal state — step 8 validated, or the user exp
 | 4 | `skills-agent` | `fragments/04-skills.html` | Yes | Yes |
 | 5 | `content-agent` | `fragments/05-content.html` | Yes | Yes |
 | 6 | `print-agent` | `fragments/06-print.css` | Yes | No |
-| 7 | `assembler-agent` | `index.html` | No | Yes |
+| 7 | `assembler-agent` | `index.html` | No | No¹ |
 | 8 | `qa-agent` | — (read-only) | No | No |
+
+¹ The `ux-advisor` is **not** run on the assembled CV by default. Each visual fragment was already reviewed individually in steps 2–5. Re-run only if the user explicitly asks for a full-CV UX review.
 
 ## Orchestrator rules
 

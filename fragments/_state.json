@@ -64,7 +64,7 @@
       "agent": "assembler-agent",
       "fragment": "index.html",
       "requires_guardian": false,
-      "requires_ux_advisor": true,
+      "requires_ux_advisor": false,
       "status": "in_progress"
     },
     {

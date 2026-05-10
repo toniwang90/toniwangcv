@@ -15,7 +15,11 @@ Runs **after** agents that produce visual HTML:
 - `timeline-agent` → step 3
 - `skills-agent` → step 4
 - `content-agent` → step 5
-- `assembler-agent` → step 7 (final full CV review)
+
+**Step 7 (assembled `index.html`)**: skipped by default. The fragment-level reviews above already cover every visual section. Only re-run on explicit user request (e.g. "review the full assembled CV") and, when doing so, use sampling — never read the full ~170 KB file:
+- `Read index.html` with `offset` and `limit` to sample 200-line windows from each section
+- `Grep` for specific anti-patterns rather than scanning whole file
+- Skip the `<script>` blocks (visual review is HTML/CSS only)
 
 **Consultive, non-blocking**. The pipeline can advance with recommendations pending, but the user should evaluate them before the next visual step.
 

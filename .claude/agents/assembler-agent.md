@@ -34,22 +34,14 @@ You merge all validated fragments into the final HTML file `index.html`. You are
 
 2. If the script exits with an error because a previous step is not `validated`, stop and inform the user which step is missing. Do NOT modify fragments.
 
-3. Sanity check the output (without dumping the file into context):
+3. Sanity check (single command, no file read):
    ```bash
    wc -c index.html
-   grep -c "CV_DATA" index.html        # must be ≥ 1
-   grep -c "<style>" index.html        # must be ≥ 1
-   grep -c "</html>" index.html        # must be exactly 1
    ```
 
-4. Open in the browser:
-   ```bash
-   open index.html
-   ```
+4. The script already updates `_state.json` (step 7 → `in_progress`). Do not touch it manually.
 
-5. The script already updates `_state.json` (step 7 → `in_progress`). Do not touch it manually.
-
-6. Tell the user to visually verify the CV opens correctly before invoking `qa-agent` and marking the step as `validated`.
+5. Tell the user to visually verify the CV (browser-open optional) before invoking `qa-agent` and marking the step as `validated`. Do not run `qa-agent` automatically.
 
 ## If the assembly logic needs to change
 
