@@ -1,5 +1,5 @@
 {
-  "current_step": 7,
+  "current_step": 0,
   "last_updated": "2026-05-10",
   "pipeline": [
     {
@@ -8,7 +8,7 @@
       "fragment": "fragments/00-cv-data.js",
       "requires_guardian": false,
       "requires_ux_advisor": false,
-      "status": "validated"
+      "status": "pending"
     },
     {
       "step": 1,
@@ -17,7 +17,7 @@
       "also_writes": "design-test.html",
       "requires_guardian": true,
       "requires_ux_advisor": false,
-      "status": "validated"
+      "status": "pending"
     },
     {
       "step": 2,
@@ -25,7 +25,7 @@
       "fragment": "fragments/02-layout.html",
       "requires_guardian": true,
       "requires_ux_advisor": true,
-      "status": "validated"
+      "status": "pending"
     },
     {
       "step": 3,
@@ -33,7 +33,7 @@
       "fragment": "fragments/03-timeline.html",
       "requires_guardian": true,
       "requires_ux_advisor": true,
-      "status": "validated"
+      "status": "pending"
     },
     {
       "step": 4,
@@ -41,7 +41,7 @@
       "fragment": "fragments/04-skills.html",
       "requires_guardian": true,
       "requires_ux_advisor": true,
-      "status": "validated"
+      "status": "pending"
     },
     {
       "step": 5,
@@ -49,7 +49,7 @@
       "fragment": "fragments/05-content.html",
       "requires_guardian": true,
       "requires_ux_advisor": true,
-      "status": "validated"
+      "status": "pending"
     },
     {
       "step": 6,
@@ -57,7 +57,7 @@
       "fragment": "fragments/06-print.css",
       "requires_guardian": true,
       "requires_ux_advisor": false,
-      "status": "validated"
+      "status": "pending"
     },
     {
       "step": 7,
@@ -65,7 +65,7 @@
       "fragment": "index.html",
       "requires_guardian": false,
       "requires_ux_advisor": false,
-      "status": "in_progress"
+      "status": "pending"
     },
     {
       "step": 8,

@@ -108,8 +108,11 @@ Answer each validation prompt as the pipeline progresses. Each step opens the fr
 |---------|-------------|
 | `/build` | Main orchestrator. Shows pipeline state, runs the next step, waits for your approval at each gate. |
 | `/preview` | Serves the most advanced available artefact on a local HTTP server and opens it in the browser. |
+| `/edit-cv <change>` | Edit CV data in natural language without running the full pipeline. |
+| `/fix-step [N] "problem"` | Fix a specific step in-place — targeted subagent edit + re-validate. |
 | `/validate-step [N]` | Re-runs DesignGuardian and/or UX Advisor on step N without advancing the pipeline. |
 | `/reset-step [N]` | Resets a pipeline step (with optional `cascade`) after your confirmation. |
+| `/sync-agent <fragment>` | Detects and resolves drift between a fragment edited directly and its producer agent spec. |
 
 ---
 
@@ -195,6 +198,23 @@ To change any section after the full build is complete:
 1. **Edit `fragments/00-cv-data.js`** if it's a data change (text, dates, skills)
 2. **Re-run the relevant agent** by telling Claude which section to rebuild
 3. **Re-assemble** with `/reset-step 7` then `/build`
+
+---
+
+## Maintenance rules (keep things in sync)
+
+These rules exist because their violations caused real bugs. Follow them whenever editing any project file — especially when vibecoding.
+
+| Rule | What to do | Why |
+|------|-----------|-----|
+| **New command** | Add it to the Commands table above in the same commit | Commands that exist but aren't in the README are invisible to users |
+| **Edit a fragment directly** | Run `/sync-agent <fragment>` to propagate the change to the producer agent's spec | A fresh `/build` would overwrite your fix if the spec doesn't reflect it |
+| **New `Bash(...)` call in an agent or command** | Add `"Bash(command:*)"` to `.claude/settings.json` allow-list | Every unlisted command triggers a permission prompt mid-pipeline |
+| **No hardcoded paths** | Never write `/Users/you/…` in `.claude/` files. Use paths relative to the project root | Breaks for every user who isn't you |
+| **No CV_DATA values hardcoded in fragments** | Use `CATEGORY_ORDER[0]` not `"languages"`, compute KPIs from arrays not from `kpis: { projects: 8 }` | Static values drift the moment the data changes |
+| **`_state.json` before committing** | Reset all steps to `"pending"`, `current_step: 0` | A mid-pipeline state committed to `main` confuses anyone who clones |
+| **Edit `scripts/assemble.mjs`** | Run `node scripts/assemble.mjs --partial` immediately after | Catches syntax errors and broken regex before they reach CI |
+| **Formula in multiple files** | When changing a formula (KPI computation, level mapping…), grep for all copies and update them together | Two files with the same formula that disagree are a silent data bug |
 
 ---
 

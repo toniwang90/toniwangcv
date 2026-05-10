@@ -8,10 +8,6 @@ Interactive CV in analytic dashboard format. Output: a single static HTML file (
 
 Pattern **Orchestrator → Specialised subagents**, strictly sequential with human validation between each step.
 
-The user only invokes **one slash command**: `/build`. All other roles are **subagents** defined in `.claude/agents/` with scope, tools, and permissions restricted via YAML frontmatter. The Orchestrator invokes them via the Task tool.
-
-### Roles and responsibilities
-
 | Subagent | Tools | Writes | Reads |
 |----------|-------|--------|-------|
 | `data-agent` | Read, Write, Edit | `fragments/00-cv-data.js` | CLAUDE.md |
@@ -26,111 +22,35 @@ The user only invokes **one slash command**: `/build`. All other roles are **sub
 | `assembler-agent` | Read, Write, Edit, Bash | `index.html` (via `scripts/assemble.mjs`) | `_state.json` |
 | `qa-agent` | Read, Grep, Glob | — (reports only) | `index.html` |
 
-Read-only agents (`design-guardian`, `ux-advisor`, `qa-agent`) have no `Write` or `Edit` — the frontmatter enforces this.
-
-### Pipeline (strictly sequential)
+### Pipeline
 
 ```
-data-agent           → 00-cv-data.js
-                       ↓ [human validation]
-design-system-agent  → design-test.html + 01-design-system.css
-design-guardian (validates CSS)
-                       ↓ [human visual validation]
-layout-agent         → 02-layout.html
-design-guardian + ux-advisor
-                       ↓ [human validation]
-timeline-agent       → 03-timeline.html
-design-guardian + ux-advisor
-                       ↓ [human validation]
-skills-agent         → 04-skills.html
-design-guardian + ux-advisor
-                       ↓ [human validation]
-content-agent        → 05-content.html
-design-guardian + ux-advisor
-                       ↓ [human validation]
-print-agent          → 06-print.css
-design-guardian
-                       ↓ [human validation]
-assembler-agent      → index.html
-ux-advisor (final full CV review)
-                       ↓
-qa-agent             → quality report
-                       ↓ [human validation → DONE]
-```
-
-The Orchestrator (`/build`) manages `_state.json` and invokes the subagent for the current step via the Task tool.
-
-### Available slash commands
-
-| Command | Description |
-|---------|-------------|
-| `/build` | Main orchestrator — manages the full pipeline |
-| `/edit-cv <change>` | Edit CV data in natural language without running the full pipeline |
-| `/fix-step [N] "problem"` | Fix a specific step in-place — reset + targeted subagent edit + re-validate |
-| `/preview` | Serves the most advanced artefact on a local server and opens it in the browser |
-| `/validate-step [N]` | Re-runs DesignGuardian and/or UX Advisor on step N without advancing the pipeline |
-| `/reset-step [N]` | Resets step N status (and optionally dependents with `cascade`) |
-
----
-
-## File structure
-
-```
-toniwangcv/
-├── README.md
-├── CLAUDE.md
-├── .gitignore
-├── index.html                    ← final CV output (assembler-agent) — served by GitHub Pages
-├── design-test.html              ← design system proof (design-system-agent)
-├── .claude/
-│   ├── settings.json
-│   ├── commands/
-│   │   ├── build.md              ← /build slash command (Orchestrator)
-│   │   ├── edit-cv.md            ← /edit-cv (targeted CV data edits)
-│   │   ├── fix-step.md           ← /fix-step (targeted step fix without full rebuild)
-│   │   ├── preview.md            ← /preview
-│   │   ├── validate-step.md      ← /validate-step
-│   │   └── reset-step.md         ← /reset-step
-│   └── agents/                   ← subagents with YAML frontmatter (scope/tools restricted)
-│       ├── data-agent.md
-│       ├── design-system-agent.md
-│       ├── design-guardian.md    ← read-only, no Write/Edit
-│       ├── ux-advisor.md         ← read-only, no Write/Edit
-│       ├── layout-agent.md
-│       ├── timeline-agent.md
-│       ├── skills-agent.md
-│       ├── content-agent.md
-│       ├── print-agent.md
-│       ├── assembler-agent.md
-│       └── qa-agent.md           ← read-only, no Write/Edit
-└── fragments/
-    ├── _state.json               ← pipeline state machine
-    ├── 00-cv-data.js             ← single source of truth for all CV content
-    ├── 01-design-system.css      ← CSS tokens (design-system-agent)
-    ├── 02-layout.html            ← layout-agent
-    ├── 03-timeline.html          ← timeline-agent
-    ├── 04-skills.html            ← skills-agent
-    ├── 05-content.html           ← content-agent
-    └── 06-print.css              ← print-agent
+data-agent           → 00-cv-data.js          ↓ [human validation]
+design-system-agent  → 01-design-system.css   ↓ design-guardian + [visual validation]
+layout-agent         → 02-layout.html         ↓ design-guardian + ux-advisor + [validation]
+timeline-agent       → 03-timeline.html       ↓ design-guardian + ux-advisor + [validation]
+skills-agent         → 04-skills.html         ↓ design-guardian + ux-advisor + [validation]
+content-agent        → 05-content.html        ↓ design-guardian + ux-advisor + [validation]
+print-agent          → 06-print.css           ↓ design-guardian + [validation]
+assembler-agent      → index.html             ↓ [visual validation]
+qa-agent             → quality report         ↓ [human sign-off → DONE]
 ```
 
 ---
 
 ## Fragment contract
 
-Each fragment is partial — no `<html>`, `<head>` or `<body>`. The AssemblerAgent injects them into the final HTML.
+Each fragment is partial — no `<html>`, `<head>` or `<body>`. The assembler injects them.
 
 | Fragment | Contains | Does not contain |
 |----------|----------|-----------------|
-| `00-cv-data.js` | only `const CV_DATA = {...}` | `<script>` tags, exports |
+| `00-cv-data.js` | only `const CV_DATA = {...}` + `t()` helper | `<script>` tags, exports |
 | `01-design-system.css` | CSS variables + reset + base utilities | `<style>` tags |
-| `02-layout.html` | Header/nav/KPI HTML + `<script>` with its logic | CSS variables already defined in 01 |
+| `02-layout.html` | Header/nav/KPI HTML + `<script>` | CSS variables (defined in 01) |
 | `03-timeline.html` | Timeline section HTML + `<script>` with D3.js | References to CV_DATA outside its script |
-| `04-skills.html` | Skills section HTML + `<script>` with animations | CSS already defined in 01 |
+| `04-skills.html` | Skills section HTML + `<script>` | CSS already defined in 01 |
 | `05-content.html` | Summary + education + certifications HTML | Logic from other sections |
 | `06-print.css` | only `@media print { ... }` | `<style>` tags |
-
-**Fragment rule**: each agent writes **only its assigned fragment**. No agent modifies files owned by other agents.
 
 ---
 
@@ -163,54 +83,25 @@ Each fragment is partial — no `<html>`, `<head>` or `<body>`. The AssemblerAge
 --color-divider:        #d0d7de;
 
 /* === TYPOGRAPHY === */
---font-display: 'Satoshi', sans-serif;        /* UI, headings, labels */
---font-mono:    'JetBrains Mono', monospace;  /* data, KPIs, tech stack */
+--font-display: 'Satoshi', sans-serif;
+--font-mono:    'JetBrains Mono', monospace;
 
 /* === SHAPE === */
 --radius-md:   8px;
 --radius-full: 9999px;
 ```
 
-**DesignGuardian rule**: no fragment may contain hardcoded hex colours or typography values outside the variables. The DesignGuardian validates this before any step can be marked `validated`.
-
 ---
 
 ## Internationalisation (i18n)
 
-The CV is **bilingual ES/EN** with a language toggle in the header (next to the dark/light toggle). The active language lives in `window.__cvLang` (`"es"` or `"en"`). No `localStorage` — on load it is detected via `navigator.language` with `"es"` as fallback. The PrintAgent always uses the language active at the time of printing.
+Bilingual ES/EN. Active language in `window.__cvLang` (`"es"` | `"en"`), detected from `navigator.language`, fallback `"es"`. No localStorage.
 
-### Structure in CV_DATA
-
-Translatable fields are **objects** `{ es, en }`. Fields that do not vary between languages (proper names, dates, tech names, numbers) stay as **plain strings**.
-
-```js
-// Translatable:
-summary: { es: "Ingeniero...", en: "Software engineer..." }
-role:    { es: "Programador Web", en: "Web Developer" }
-// Plain:
-name: "Toni Wang"
-stack: ["Snowflake", "Python"]
-```
-
-`CV_DATA.ui` groups **all** UI labels (nav, KPI, buttons, skill categories, tooltip formats, months) as `{ es, en }` pairs. No agent may hardcode text in the UI — everything comes from `CV_DATA.ui.*` via the `t()` helper.
-
-### `t(value, lang?)` helper
-
-Defined at the end of `fragments/00-cv-data.js`. Accepts both plain strings and `{es, en}` objects. Uses `window.__cvLang` when `lang` is omitted. Falls back to `es` if the `en` translation does not exist.
-
-```js
-t(CV_DATA.profile.summary)        // translated text for the current language
-t(CV_DATA.ui.nav.experience)      // "Experiencia" / "Experience"
-t(experience.role)                // works with plain string or {es,en}
-```
-
-### Runtime language change
-
-The toggle fires a custom `cv:languagechange` event with `detail: { lang }`. The **LayoutAgent** owns:
-- the `setLanguage(lang)` function that updates `window.__cvLang`, runs `applyStaticLabels()` (iterates elements with `data-i18n` and replaces their `textContent`), and fires the event
-- the `data-i18n="path.to.key"` attribute on each static UI element
-
-**TimelineAgent**, **SkillsAgent** and **ContentAgent** subscribe to `window.addEventListener('cv:languagechange', () => render())` to re-paint dynamic content (D3 timeline, drilldown, skill tooltips, etc.).
+- **Translatable fields**: `{ es: "...", en: "..." }` — anything visible in a different language
+- **Plain fields**: names, dates, URLs, stack arrays, numbers — unchanged across languages
+- **`CV_DATA.ui`**: all UI labels (nav, KPI, buttons, categories, tooltips, months) as `{ es, en }` pairs. No agent may hardcode UI text — always via `t()`
+- **`t(value, lang?)`**: defined at end of `00-cv-data.js`. Accepts plain string or `{es,en}`. Falls back to `es`
+- **Language change**: toggle fires `cv:languagechange` custom event. LayoutAgent owns `setLanguage()`. Dynamic agents (timeline, skills, content) listen and re-render
 
 ---
 
@@ -239,10 +130,17 @@ JetBrains:     https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;
 8. **Touch targets** ≥ 44px · No text < 12px
 9. **One agent, one fragment** — no one writes outside their assigned scope
 10. **DesignGuardian before validating** — no CSS-producing step can be marked `validated` without passing the guardian
-11. **Deterministic assembly** — step 7 is performed by `scripts/assemble.mjs` (pure string-stitching). The `assembler-agent` only invokes it; it must never re-emit the final HTML as tokens (~150 KB would otherwise be paid in output tokens and risk timeouts)
-12. **Bilingual ES/EN** — all visible UI text goes through `t()`. Nothing hardcoded in HTML/JS — always from `CV_DATA.ui.*` or `{es, en}` fields
-13. **HTML → agent sync** — when a fragment in `fragments/` or `index.html` is edited directly (manual fix, `/fix-step`, hotfix on a branch), the spec of the agent that produces that fragment **must** be updated in the same change so a fresh `/build` would re-emit the new version. Drift between agent specs and committed fragments is a bug. The fragment→agent map is the table in the "Agent architecture" section above. Use `/sync-agent <fragment>` to surface the diff.
-14. **Token-efficient agents** — read-only agents (`design-guardian`, `ux-advisor`, `qa-agent`) must prefer `Grep` over `Read` and never load `index.html` whole. Generator agents must not re-read sibling fragments to "verify" anything — `scripts/assemble.mjs` and the guardians are the verifiers.
+11. **Deterministic assembly** — step 7 is performed by `scripts/assemble.mjs`. The assembler-agent only invokes it; must never re-emit the final HTML as tokens
+12. **Bilingual ES/EN** — all visible UI text goes through `t()`. Nothing hardcoded in HTML/JS
+13. **HTML → agent sync** — when a fragment is edited directly, update the producer agent's spec in the same change. Use `/sync-agent <fragment>` to surface drift
+14. **Token-efficient agents** — read-only agents must prefer `Grep` over `Read`. Generator agents must not re-read sibling fragments to verify
+15. **New command → README** — adding `.claude/commands/*.md` requires updating the Commands table in `README.md` in the same change
+16. **No hardcoded absolute paths** — agent specs and command files must never contain `/Users/…` paths. Use paths relative to the project root
+17. **New Bash call → settings.json** — when an agent or command adds a new shell invocation, add `"Bash(command:*)"` to `.claude/settings.json` allow-list in the same change
+18. **No CV_DATA keys hardcoded in fragments** — never hardcode values derivable from CV_DATA (category names, KPI values, counts). Always derive dynamically
+19. **`_state.json` always committed as all-pending** — never commit a mid-pipeline state. Reset to `"pending"` / `current_step: 0` before committing
+20. **Verify assemble.mjs after touching it** — run `node scripts/assemble.mjs --partial` before committing any edit to the script
+21. **Single source of truth for formulas** — when a formula appears in more than one file, grep for all copies and update them together
 
 ---
 

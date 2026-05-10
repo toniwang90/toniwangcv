@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Curriculum Vitae — CV de Toni Wang">
+  <meta name="description" content="Lead Data Engineer — CV de Toni Wang">
   <meta property="og:title" content="Toni Wang — CV">
-  <title>Toni Wang — CV</title>
+  <title>Toni Wang — CV (preview)</title>
 
   <link rel="preconnect" href="https://api.fontshare.com">
   <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap">
@@ -3660,6 +3660,7 @@ function t(value, lang) {
 
 /* Each fragment script is wrapped in try/catch in partial mode so a single
    broken/missing reference does not blank the whole preview. */
+try {
 
 (function () {
   "use strict";
@@ -4001,13 +4002,24 @@ function t(value, lang) {
     if (_kpiAnimated) return;
     _kpiAnimated = true;
 
-    // Sync data-kpi-value from CV_DATA so the HTML never goes stale
-    if (typeof CV_DATA !== "undefined" && CV_DATA.profile && CV_DATA.profile.kpis) {
+    // Compute KPIs dynamically from CV_DATA — never rely on the stale static values
+    if (typeof CV_DATA !== "undefined" && CV_DATA.experience && CV_DATA.skills) {
+      var computed = {
+        years_experience: new Date().getFullYear() - Math.min.apply(null,
+          CV_DATA.experience.map(function(e) { return parseInt(e.start); })
+        ),
+        companies: new Set(CV_DATA.experience.map(function(e) { return e.company; })).size,
+        projects: (CV_DATA.personal_projects ? CV_DATA.personal_projects.length : 0) +
+          CV_DATA.experience.reduce(function(sum, e) { return sum + (e.projects ? e.projects.length : 0); }, 0),
+        technologies: new Set(
+          Object.keys(CV_DATA.skills)
+            .filter(function(k) { return k !== "soft_skills"; })
+            .reduce(function(arr, k) { return arr.concat(CV_DATA.skills[k].map(function(s) { return s.name; })); }, [])
+        ).size
+      };
       document.querySelectorAll(".kpi-card[data-kpi]").forEach(function (card) {
         var key = card.dataset.kpi;
-        if (CV_DATA.profile.kpis[key] !== undefined) {
-          card.dataset.kpiValue = CV_DATA.profile.kpis[key];
-        }
+        if (computed[key] !== undefined) card.dataset.kpiValue = computed[key];
       });
     }
 
@@ -4054,6 +4066,8 @@ function t(value, lang) {
 
 })();
 
+} catch (err) { console.warn('[preview] LAYOUT script failed:', err); }
+try {
 
 (function () {
   "use strict";
@@ -4851,6 +4865,8 @@ function t(value, lang) {
 
 })();
 
+} catch (err) { console.warn('[preview] TIMELINE script failed:', err); }
+try {
 
 (function () {
   "use strict";
@@ -4870,7 +4886,7 @@ function t(value, lang) {
     soft_skills:      "var(--color-text-muted)"
   };
 
-  var DEFAULT_TAB = "languages";
+  var DEFAULT_TAB = CATEGORY_ORDER[0];
 
   // Dot geometry — radius 4px, gap 3px → 5 dots = 5*8 + 4*3 = 52px wide, 8px tall
   var DOT_R     = 4;
@@ -5244,6 +5260,8 @@ function t(value, lang) {
 
 })();
 
+} catch (err) { console.warn('[preview] SKILLS script failed:', err); }
+try {
 
 (function () {
   "use strict";
@@ -5809,6 +5827,7 @@ function t(value, lang) {
 
 })();
 
+} catch (err) { console.warn('[preview] CONTENT script failed:', err); }
 
 if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
 </script>

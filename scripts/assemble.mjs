@@ -100,9 +100,16 @@ function pendingPlaceholder(label) {
 
 function extractDiv(html, id) {
   if (!html) return pendingPlaceholder(id);
-  const re = new RegExp(`<div\\s+id=["']${id}["'][^>]*>([\\s\\S]*?)<\\/div>`);
-  const m = html.match(re);
-  return m ? m[0] : pendingPlaceholder(id);
+  const startRe = new RegExp(`<div\\s[^>]*\\bid=["']${id}["'][^>]*>`);
+  const m = startRe.exec(html);
+  if (!m) return pendingPlaceholder(id);
+  let depth = 0, i = m.index;
+  while (i < html.length) {
+    if (/^<div[\s>]/.test(html.slice(i))) depth++;
+    else if (html.startsWith('</div>', i)) { if (--depth === 0) return html.slice(m.index, i + 6); }
+    i++;
+  }
+  return pendingPlaceholder(id);
 }
 
 const resumenDiv    = extractDiv(content.html, 'resumen-content');
@@ -147,7 +154,7 @@ function buildBody() {
 const body = buildBody();
 
 const profileName  = cvData ? (cvData.match(/name:\s*["']([^"']+)["']/) || [, 'CV'])[1] : 'CV';
-const profileTitle = cvData ? (cvData.match(/title:\s*\{\s*es:\s*["']([^"']+)["']/) || [, 'Curriculum Vitae'])[1] : 'Curriculum Vitae';
+const profileTitle = cvData ? (cvData.match(/title:\s*["']([^"']+)["']/) || [, 'Curriculum Vitae'])[1] : 'Curriculum Vitae';
 
 const previewBanner = (PARTIAL && missing.length) ? `
 <div id="preview-banner" role="status" style="position:fixed;top:0;left:0;right:0;z-index:9999;padding:8px 16px;background:#f0883e;color:#0d1117;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;font-weight:600;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.4);">
