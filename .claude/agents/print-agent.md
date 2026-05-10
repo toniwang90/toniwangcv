@@ -58,7 +58,13 @@ The generated PDF reflects the **language active at the time of printing** (no l
 
 ## Instructions
 
-1. Read fragments `02-layout.html` through `05-content.html` to identify selectors
+1. Use targeted `Grep` to extract the selectors you need — do NOT read the full fragment files (they are 50–200 KB each):
+   ```bash
+   grep -o 'class="[^"]*"' fragments/02-layout.html | sort -u | head -40
+   grep -o 'class="[^"]*"' fragments/03-timeline.html | grep -i 'print\|timeline\|drill' | sort -u
+   grep -n 'timeline-print-list\|\.skills-section\|\.drilldown' fragments/03-timeline.html fragments/04-skills.html
+   ```
+   Focus on: nav selectors, KPI bar, drilldown panel, skill filter, timeline SVG, and any existing `.timeline-print-list`.
 2. Create `fragments/06-print.css` with all rules
 3. Update `fragments/_state.json`: set step 6 to `in_progress`
 4. Notify the user that validation will happen after assembly (Cmd+P on `index.html`)

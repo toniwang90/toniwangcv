@@ -52,6 +52,9 @@ var CATEGORY_ORDER = Object.keys(CV_DATA.skills);
 Never hardcode the category list — order and names are owned by `CV_DATA.skills` and will vary per CV.
 
 ### Colour map by category
+
+Categories are dynamic (owned by `CV_DATA.skills`). Map known categories to design-system colours; unknown categories fall back to `var(--color-primary)`.
+
 ```
 data_engineering → var(--color-primary)    teal
 sql_databases    → var(--color-primary)    teal
@@ -60,7 +63,10 @@ visualization    → var(--color-blue)
 devops           → var(--color-purple)
 ai_agentic       → var(--color-primary)    teal
 soft_skills      → var(--color-text-muted)
+// any other key → var(--color-primary)    fallback
 ```
+
+In code, compute the colour with a lookup that defaults to `var(--color-primary)` for any key not in the map above, so the component is robust to any `CV_DATA.skills` shape.
 
 ### soft_skills special handling
 - `skill.name` is `{ es, en }` — use `t(skill.name)` to render, refresh on `cv:languagechange`

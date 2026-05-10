@@ -48,9 +48,9 @@ When the user says yes, the assembler runs in `--partial` mode so the preview ne
 
 1. **First step of the session**: launch the server in the background and **remember the PID and port** so it can be cleaned up later:
    ```bash
-   python3 -m http.server 8765 --directory /Users/tonywang/Documents/GitHub/toniwangcv
+   python3 -m http.server 8765
    ```
-   (try 8766, 8767 if 8765 is busy; remember the chosen port for the rest of the session)
+   (run from the project root; try 8766, 8767 if 8765 is busy; remember the chosen port for the rest of the session)
 
    Capture the background PID immediately after launching so you can offer to kill it at the end of the build (see "Server cleanup" below).
 

@@ -108,8 +108,11 @@ Answer each validation prompt as the pipeline progresses. Each step opens the fr
 |---------|-------------|
 | `/build` | Main orchestrator. Shows pipeline state, runs the next step, waits for your approval at each gate. |
 | `/preview` | Serves the most advanced available artefact on a local HTTP server and opens it in the browser. |
+| `/edit-cv <change>` | Edit CV data in natural language without running the full pipeline. |
+| `/fix-step [N] "problem"` | Fix a specific step in-place — targeted subagent edit + re-validate. |
 | `/validate-step [N]` | Re-runs DesignGuardian and/or UX Advisor on step N without advancing the pipeline. |
 | `/reset-step [N]` | Resets a pipeline step (with optional `cascade`) after your confirmation. |
+| `/sync-agent <fragment>` | Detects and resolves drift between a fragment edited directly and its producer agent spec. |
 
 ---
 

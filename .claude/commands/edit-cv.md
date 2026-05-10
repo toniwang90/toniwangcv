@@ -29,10 +29,10 @@ Invokes the `data-agent` directly to make targeted edits to `fragments/00-cv-dat
    - Respect plain-string fields: names, dates, URLs, stack arrays, numbers stay as plain strings
    - Never invent data — if the user's instruction is ambiguous, ask before writing
 5. **Recalculate KPIs** — after every edit, check if `profile.kpis` needs updating:
-   - `companies` = number of **unique** `company` values in `experience[]` (not entry count)
-   - `projects` = total `projects[]` items across all `experience[]` entries (non-empty) + `personal_projects[]` items with `status === "live"`
-   - `technologies` = total items across all `skills.*` arrays **excluding `soft_skills`**
-   - `years_experience` = manually maintained; only update if the user explicitly asks or if the earliest `start` date changes
+   - `companies` = count of **unique** `experience[].company` values (consulting clients in `client` do NOT add)
+   - `projects` = `personal_projects.length` + sum of `experience[i].projects.length`
+   - `technologies` = count of **unique** skill names across all `skills.*` groups **excluding `soft_skills`**
+   - `years_experience` = current year − earliest `experience[].start` year; only update if start dates change
    - If any KPI value changes, include it in the edit and report it
 6. Write the updated file
 7. Report exactly what changed (field path + old value → new value), including any KPI corrections

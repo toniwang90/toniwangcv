@@ -48,13 +48,14 @@ When invoking the subagent, always include:
 ```
 Fix the existing fragment at [fragment path]. Do NOT rewrite it from scratch.
 
-Current content: [full file contents]
+Read the file first (it already exists on disk), then apply the minimal targeted edit
+that resolves the problem below. Preserve all existing structure, logic, and design tokens.
+Only change what is necessary.
 
 Problem to fix: "[user's description]"
-
-Apply the minimal targeted edit that resolves the problem. Preserve all existing structure,
-logic, and design tokens. Only change what is necessary.
 ```
+
+**Do NOT inline the file contents in the prompt.** Fragments can be 50–200 KB — embedding them wastes tokens and risks timeouts. Let the subagent read the file itself via its Read tool.
 
 ## Step and subagent map
 
