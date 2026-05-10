@@ -105,9 +105,10 @@ function extractDiv(html, id) {
   return m ? m[0] : pendingPlaceholder(id);
 }
 
-const resumenDiv   = extractDiv(content.html, 'resumen-content');
-const proyectosDiv = extractDiv(content.html, 'proyectos-content');
-const educacionDiv = extractDiv(content.html, 'educacion-content');
+const resumenDiv    = extractDiv(content.html, 'resumen-content');
+const proyectosDiv  = extractDiv(content.html, 'proyectos-content');
+const formacionDiv  = extractDiv(content.html, 'formacion-content');
+const logrosDiv     = extractDiv(content.html, 'logros-content');
 
 const timelineHtml = timeline.html || pendingPlaceholder('Timeline (#experience)');
 const skillsHtml   = skills.html   || pendingPlaceholder('Skills (#skills)');
@@ -122,7 +123,8 @@ function buildBody() {
       <section><h2>Experience</h2>${timelineHtml}</section>
       <section><h2>Skills</h2>${skillsHtml}</section>
       <section><h2>Projects</h2>${proyectosDiv}</section>
-      <section><h2>Education</h2>${educacionDiv}</section>
+      <section><h2>Formación</h2>${formacionDiv}</section>
+      <section><h2>Logros</h2>${logrosDiv}</section>
     </main>`;
   }
 
@@ -137,7 +139,8 @@ function buildBody() {
   body = replaceOnce(body, '<!-- TimelineAgent -->', timelineHtml);
   body = replaceOnce(body, '<!-- SkillsAgent -->',   skillsHtml);
   body = replaceOnce(body, '<!-- ContentAgent -->',  proyectosDiv);
-  body = replaceOnce(body, '<!-- ContentAgent -->',  educacionDiv);
+  body = replaceOnce(body, '<!-- ContentAgent -->',  formacionDiv);
+  body = replaceOnce(body, '<!-- ContentAgent -->',  logrosDiv);
   return body;
 }
 

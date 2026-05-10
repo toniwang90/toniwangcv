@@ -410,7 +410,8 @@
       <a class="site-nav__link" href="#experiencia" data-i18n="nav.experience"></a>
       <a class="site-nav__link" href="#skills"      data-i18n="nav.skills"></a>
       <a class="site-nav__link" href="#proyectos"   data-i18n="nav.projects"></a>
-      <a class="site-nav__link" href="#educacion"   data-i18n="nav.education"></a>
+      <a class="site-nav__link" href="#formacion"   data-i18n="nav.background"></a>
+      <a class="site-nav__link" href="#logros"      data-i18n="nav.achievements"></a>
     </nav>
 
     <!-- Header actions -->
@@ -458,7 +459,8 @@
       </button>
 
     </div>
-  </div>
+
+  </div><!-- /.site-header__inner -->
 </header>
 
 <!-- ===================== MOBILE NAV ===================== -->
@@ -472,7 +474,8 @@
   <a class="mobile-nav__link" href="#experiencia" data-i18n="nav.experience"></a>
   <a class="mobile-nav__link" href="#skills"      data-i18n="nav.skills"></a>
   <a class="mobile-nav__link" href="#proyectos"   data-i18n="nav.projects"></a>
-  <a class="mobile-nav__link" href="#educacion"   data-i18n="nav.education"></a>
+  <a class="mobile-nav__link" href="#formacion"   data-i18n="nav.background"></a>
+  <a class="mobile-nav__link" href="#logros"      data-i18n="nav.achievements"></a>
   <button
     class="mobile-nav__download"
     type="button"
@@ -519,7 +522,8 @@
   <section id="experiencia" aria-label="Experiencia"><!-- TimelineAgent --></section>
   <section id="skills"      aria-label="Skills"><!-- SkillsAgent --></section>
   <section id="proyectos"   aria-label="Proyectos"><!-- ContentAgent --></section>
-  <section id="educacion"   aria-label="Educación"><!-- ContentAgent --></section>
+  <section id="formacion"   aria-label="Formación"><!-- ContentAgent --></section>
+  <section id="logros"      aria-label="Logros"><!-- ContentAgent --></section>
 </main>
 
 <!-- ===================== SCRIPT ===================== -->
@@ -790,18 +794,25 @@
   /* -------------------------------------------------------
      9. SCROLL-SPY — activa la clase is-active en nav
      ------------------------------------------------------- */
-  var _sections = ["resumen", "experiencia", "skills", "proyectos", "educacion"];
+  var _sections = ["resumen", "experiencia", "skills", "proyectos", "formacion", "logros"];
 
   function _updateActiveNav() {
-    var scrollY = window.scrollY + 80;
+    var threshold = 120;
     var current = _sections[0];
 
-    _sections.forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el && el.offsetTop <= scrollY) {
-        current = id;
-      }
-    });
+    // If we're at the bottom of the page, mark the last section as active
+    // (handles short last sections that can't reach the threshold)
+    var atBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 4);
+    if (atBottom) {
+      current = _sections[_sections.length - 1];
+    } else {
+      _sections.forEach(function (id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        var top = el.getBoundingClientRect().top;
+        if (top <= threshold) current = id;
+      });
+    }
 
     var navLinks = document.querySelectorAll(".site-nav__link");
     navLinks.forEach(function (link) {
