@@ -36,24 +36,30 @@ window.addEventListener("cv:languagechange", () => {
 - Each company = an SVG rectangle spanning its date range
 - Distinct colours per company (from the design system palette)
 - Dotted vertical line at current date with "Today" label
-- **Hover**: tooltip with `company · role · duration`
+- **Hover**: tooltip with `company · role · duration`. When `exp.client` is set, the company line reads `"Company › Client"` (consulting roles, e.g. `Capgemini › Tempe`)
 - **Click**: opens DrillDown Panel + updates hash URL (`#exp-001`)
 
-### Left-margin labels (company + role)
-Reserve a generous left margin (≥ 200px) so most company/role names fit without truncation. When a label still exceeds the available width:
-- Truncate with `…` (do not let it overflow into the chart area)
-- **Always** append an SVG `<title>` child to the text element with the **full untruncated string** — this gives a free native browser tooltip and is read by screen readers
-- Make the labels interactive: same `cursor: pointer`, hover (rich custom tooltip + colour change), and click (open drilldown) as the bar itself. A 44px transparent hit-rect over the label group keeps it touch-friendly
+### Multi-role grouping
+Consecutive experience entries with the **same `company`** but different `client` and/or `role` (e.g. Capgemini split across Tempe + Gas Natural Fenosa) are visually grouped:
+- One company header above the first bar of the group
+- Each bar shows `role` on the first line and `client` on a second line (smaller, in `var(--color-primary)` at ~75% opacity, `var(--font-display)`)
+- Single-role entries keep the original layout: `company` (bold) + `role` (muted) stacked
+
+### Left-margin labels
+- `MARGIN.left = 240px` (generous so company/role/client labels fit without truncation)
+- Truncation thresholds: company at 28 chars, role/client at 32 chars (with `…` suffix)
+- When a label is truncated, always append an SVG `<title>` child with the **full untruncated string** (native tooltip + screen-reader readable)
+- Labels are interactive: `cursor: pointer`, hover (rich custom tooltip + colour change), click (open drilldown). A 44px transparent hit-rect over the label group keeps it touch-friendly
 
 ### Mobile (< 768px) — Vertical list
 - Companies as vertical cards in reverse chronological order
-- Each card: company, role, dates, stack chips
+- Each card: company, role (`"role · client"` when the entry is multi-role and `exp.client` is set), dates, stack chips
 - Click on card: opens DrillDown Panel
 
 ### DrillDown Panel
 - Position: right lateral panel, 400px wide (mobile: full-width bottom sheet)
 - Animation: `transform: translateX(100%)` → `translateX(0)` in 300ms ease-out
-- **Header**: company + role + formatted date range
+- **Header**: `company` (or `"company › client"` when `exp.client` is set) + role + formatted date range
 - **Stack**: chip per tech in `experience[n].stack`
   - Simple Icons CDN for logos where they exist
   - Fallback: generic badge
