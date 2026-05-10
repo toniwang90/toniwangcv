@@ -16,7 +16,11 @@ const CV_DATA = {
     },
     contact: {
       linkedin: "https://www.linkedin.com/in/tonywangchen",
-      email: "tony.wang@um.es"
+      email: "tony.wang@um.es",
+      github: "https://github.com/tonywang90",
+      links: [
+        /* Add extra links here: { icon: "globe"|"twitter"|"portfolio"|..., label: "...", url: "..." } */
+      ]
     },
     kpis: {
       years_experience: 14,
@@ -381,7 +385,7 @@ const CV_DATA = {
       },
       stack: ["HTML", "CSS", "Vanilla JS", "D3.js", "Claude Code"],
       url: "https://github.com/toniwang90/toniwangcv",
-      year: "2025",
+      year: "2026",
       status: "live"
     },
     {
