@@ -90,10 +90,25 @@ Not verifiable (require browser): N
 [If REJECTED]: Fix failures. Re-invoke the responsible agent for each. After fixing, re-invoke `assembler-agent` and `qa-agent`.
 ```
 
-## Instructions
+## Instructions — token-efficient verification
 
-1. Read `index.html` completely
-2. Run the checklist point by point
-3. Mark as "requires manual browser verification" any points that need a live browser
-4. Emit the structured report
-5. If APPROVED, update `fragments/_state.json`: set step 8 to `validated`
+**DO NOT** read `index.html` whole — it is ~170 KB. Verify with targeted `Grep` queries instead. Only `Read` a small line range when a Grep hit needs context.
+
+Suggested Grep checks (one tool call each, ripgrep mode):
+
+| Check | Command (pattern in `index.html`) | Pass if |
+|---|---|---|
+| No `localStorage`/`sessionStorage` | `localStorage\|sessionStorage` | 0 hits |
+| External links safe | `target="_blank"` followed within 80 chars by `rel="noopener noreferrer"` | every match has rel |
+| No literal `[TODO]` rendered | `\[TODO\]` outside `<script>`/comments | 0 hits |
+| No hardcoded hex outside `:root` | `#[0-9a-fA-F]{3,8}` count vs occurrences inside `:root{…}` | hex count ≈ tokens count |
+| Required IDs present | `id="(experience\|skills\|resumen-content\|proyectos-content\|formacion-content\|logros-content)"` | each appears ≥ 1 |
+| CV_DATA loads first | `grep -n CV_DATA index.html \| head -1` | line < first agent script |
+| Font tokens used | `font-family:\s*var\(--font-(display\|mono)\)` | ≥ 1 each |
+
+For visual/interactive points (toggles, animations, drilldown), mark **"requires manual browser verification"** — they are not derivable from static analysis.
+
+1. Run the Grep checks above
+2. Read `fragments/_state.json` to confirm step 7 is validated
+3. Emit the structured report (browser-only items grouped under "Not verifiable")
+4. If APPROVED, update `fragments/_state.json`: set step 8 to `validated`

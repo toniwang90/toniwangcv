@@ -241,6 +241,8 @@ JetBrains:     https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;
 10. **DesignGuardian before validating** — no CSS-producing step can be marked `validated` without passing the guardian
 11. **Deterministic assembly** — step 7 is performed by `scripts/assemble.mjs` (pure string-stitching). The `assembler-agent` only invokes it; it must never re-emit the final HTML as tokens (~150 KB would otherwise be paid in output tokens and risk timeouts)
 12. **Bilingual ES/EN** — all visible UI text goes through `t()`. Nothing hardcoded in HTML/JS — always from `CV_DATA.ui.*` or `{es, en}` fields
+13. **HTML → agent sync** — when a fragment in `fragments/` or `index.html` is edited directly (manual fix, `/fix-step`, hotfix on a branch), the spec of the agent that produces that fragment **must** be updated in the same change so a fresh `/build` would re-emit the new version. Drift between agent specs and committed fragments is a bug. The fragment→agent map is the table in the "Agent architecture" section above. Use `/sync-agent <fragment>` to surface the diff.
+14. **Token-efficient agents** — read-only agents (`design-guardian`, `ux-advisor`, `qa-agent`) must prefer `Grep` over `Read` and never load `index.html` whole. Generator agents must not re-read sibling fragments to "verify" anything — `scripts/assemble.mjs` and the guardians are the verifiers.
 
 ---
 
