@@ -1,0 +1,1019 @@
+<!-- ============================================================
+     05-content.html — ContentAgent
+     Secciones: #resumen, #proyectos, #educacion
+     Fragmento parcial: sin <html>, <head>, <body>
+     ============================================================ -->
+
+<!-- ===================== STYLES ===================== -->
+<style>
+  /* ============================================================
+     SECCIÓN RESUMEN
+     ============================================================ */
+
+  #resumen {
+    padding-block: var(--space-10) var(--space-8);
+    border-bottom: var(--border);
+    margin-bottom: var(--space-10);
+  }
+
+  .hero {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .hero {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: var(--space-8);
+    }
+  }
+
+  /* — Columna izquierda: nombre + título + ubicación — */
+  .hero__identity {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  @media (min-width: 768px) {
+    .hero__identity {
+      min-width: 220px;
+      max-width: 260px;
+    }
+  }
+
+  .hero__name {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: var(--weight-black);
+    color: var(--color-text);
+    line-height: 1.15;
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .hero__name {
+      font-size: var(--text-4xl);
+    }
+  }
+
+  .hero__title {
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+    font-weight: var(--weight-regular);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .hero__location {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin-top: var(--space-1);
+  }
+
+  .hero__location svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--color-primary);
+  }
+
+  /* — Columna central: summary — */
+  .hero__summary {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .hero__summary p {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-regular);
+    color: var(--color-text);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .hero__summary p {
+      font-size: var(--text-base);
+    }
+  }
+
+  /* — Columna derecha: links + badges de idiomas — */
+  .hero__aside {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 768px) {
+    .hero__aside {
+      min-width: 180px;
+      align-items: flex-end;
+    }
+  }
+
+  /* Contact links */
+  .hero__contact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  @media (min-width: 768px) {
+    .hero__contact {
+      align-items: flex-end;
+    }
+  }
+
+  .hero__contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    min-height: 44px;
+    padding-block: var(--space-2);
+    transition: color var(--transition-fast);
+  }
+
+  .hero__contact-link:hover {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .hero__contact-link svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  .hero__contact-link--email {
+    font-family: var(--font-mono);
+  }
+
+  /* Language chips in hero */
+  .hero__lang-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  @media (min-width: 768px) {
+    .hero__lang-chips {
+      justify-content: flex-end;
+    }
+  }
+
+  /* ============================================================
+     SECCIÓN PROYECTOS
+     ============================================================ */
+
+  #proyectos {
+    padding-block: var(--space-8);
+    border-bottom: var(--border);
+    margin-bottom: var(--space-10);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+
+  .section-header__title {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .section-header__count {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 768px) {
+    .projects-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .projects-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    transition: border-color var(--transition-fast);
+  }
+
+  .project-card:hover {
+    border-color: var(--color-primary);
+  }
+
+  .project-card__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .project-card__name {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .project-card__company {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  [data-theme="light"] .project-card__company {
+    color: var(--color-text-muted);
+  }
+
+  .project-card__description {
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+    flex: 1;
+  }
+
+  .project-card__outcome {
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    color: var(--color-text);
+    line-height: 1.5;
+    padding: var(--space-2) var(--space-3);
+    background-color: var(--color-surface-2);
+    border-radius: var(--radius-sm);
+    border-left: 2px solid var(--color-primary);
+  }
+
+  .project-card__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin-top: auto;
+  }
+
+  .project-card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-primary);
+    text-decoration: none;
+    min-height: 44px;
+    padding-block: var(--space-2);
+    transition: opacity var(--transition-fast);
+  }
+
+  .project-card__link:hover {
+    opacity: 0.75;
+    text-decoration: none;
+  }
+
+  /* ============================================================
+     SECCIÓN EDUCACIÓN (+ CERTS + IDIOMAS + RECONOCIMIENTOS)
+     ============================================================ */
+
+  #educacion {
+    padding-block: var(--space-8);
+    margin-bottom: var(--space-10);
+  }
+
+  /* Subsecciones dentro de #educacion */
+  .edu-block {
+    margin-bottom: var(--space-10);
+  }
+
+  .edu-block:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Education cards */
+  .edu-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .edu-card {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+    padding: var(--space-5);
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-md);
+  }
+
+  @media (min-width: 768px) {
+    .edu-card {
+      grid-template-columns: 1fr auto;
+      align-items: start;
+    }
+  }
+
+  .edu-card__main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .edu-card__institution {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .edu-card__degree {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .edu-card__field {
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .edu-card__years {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    margin-top: var(--space-1);
+  }
+
+  @media (min-width: 768px) {
+    .edu-card__years {
+      margin-top: 0;
+      text-align: right;
+    }
+  }
+
+  /* Certifications grid */
+  .cert-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 768px) {
+    .cert-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .cert-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .cert-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    transition: border-color var(--transition-fast);
+  }
+
+  .cert-card:hover {
+    border-color: var(--color-primary);
+  }
+
+  .cert-card__icon {
+    flex-shrink: 0;
+    color: var(--color-primary);
+    margin-top: 2px;
+  }
+
+  .cert-card__icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .cert-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+
+  .cert-card__name {
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  .cert-card__meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  /* Cert link — contraste correcto en dark y light + touch target */
+  .cert-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--color-blue);
+    text-decoration: none;
+    transition: opacity var(--transition-fast);
+  }
+
+  .cert-link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+  }
+
+  [data-theme="light"] .cert-link {
+    color: var(--color-text-muted);
+    text-decoration: underline;
+  }
+
+  /* Languages list */
+  .lang-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  /* Honors list */
+  .honors-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .honor-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-md);
+  }
+
+  .honor-card__icon {
+    flex-shrink: 0;
+    color: var(--color-orange);
+    margin-top: 2px;
+  }
+
+  .honor-card__icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .honor-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+
+  .honor-card__name {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .honor-card__meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+</style>
+
+<!-- ===================== SECTION: RESUMEN ===================== -->
+<div id="resumen-content">
+  <!-- Rendered by JS -->
+</div>
+
+<!-- ===================== SECTION: PROYECTOS ===================== -->
+<div id="proyectos-content">
+  <!-- Rendered by JS -->
+</div>
+
+<!-- ===================== SECTION: EDUCACIÓN ===================== -->
+<div id="educacion-content">
+  <!-- Rendered by JS -->
+</div>
+
+<!-- ===================== SCRIPT ===================== -->
+<script>
+(function () {
+  "use strict";
+
+  /* -------------------------------------------------------
+     INLINE SVG PATHS — no CDN dependency, consistent with LayoutAgent
+     ------------------------------------------------------- */
+  var _iconPaths = {
+    "map-pin": [
+      "M20 10c0 6-8 13-8 13s-8-7-8-13a8 8 0 0 1 16 0Z",
+      "M12 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"
+    ],
+    "linkedin": [
+      "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z",
+      "M2 9h4v12H2z",
+      "M4 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"
+    ],
+    "github": [
+      "M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4",
+      "M9 18c-4.51 2-5-2-7-2"
+    ],
+    "mail": [
+      "M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z",
+      "M22 6l-10 7L2 6"
+    ],
+    "award": [
+      "M6 9H4.5a2.5 2.5 0 0 1 0-5H6",
+      "M18 9h1.5a2.5 2.5 0 0 0 0-5H18",
+      "M4 22h16",
+      "M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22",
+      "M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22",
+      "M18 2H6v7a6 6 0 0 0 12 0V2Z"
+    ],
+    "star": [
+      "M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+    ],
+    "external-link": [
+      "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6",
+      "M15 3h6v6",
+      "M10 14 21 3"
+    ]
+  };
+
+  function _makeIcon(name, size) {
+    size = size || 14;
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", size);
+    svg.setAttribute("height", size);
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("fill", "none");
+    svg.setAttribute("stroke", "currentColor");
+    svg.setAttribute("stroke-width", "2");
+    svg.setAttribute("stroke-linecap", "round");
+    svg.setAttribute("stroke-linejoin", "round");
+    svg.setAttribute("aria-hidden", "true");
+    var paths = _iconPaths[name] || [];
+    paths.forEach(function (d) {
+      var p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      p.setAttribute("d", d);
+      svg.appendChild(p);
+    });
+    return svg;
+  }
+
+  /* -------------------------------------------------------
+     RENDER: RESUMEN HERO
+     ------------------------------------------------------- */
+  function renderResumen() {
+    var el = document.getElementById("resumen-content");
+    if (!el) return;
+
+    var profile = CV_DATA.profile;
+
+    /* — Identity column — */
+    var identity = document.createElement("div");
+    identity.className = "hero__identity";
+
+    var nameEl = document.createElement("h1");
+    nameEl.className = "hero__name";
+    nameEl.textContent = profile.name;
+    identity.appendChild(nameEl);
+
+    var titleEl = document.createElement("p");
+    titleEl.className = "hero__title";
+    titleEl.textContent = t(profile.title);
+    identity.appendChild(titleEl);
+
+    var locEl = document.createElement("div");
+    locEl.className = "hero__location";
+    locEl.appendChild(_makeIcon("map-pin", 14));
+    var locSpan = document.createElement("span");
+    locSpan.textContent = t(profile.location);
+    locEl.appendChild(locSpan);
+    identity.appendChild(locEl);
+
+    /* — Summary column — */
+    var summaryCol = document.createElement("div");
+    summaryCol.className = "hero__summary";
+    var summaryP = document.createElement("p");
+    summaryP.textContent = t(profile.summary);
+    summaryCol.appendChild(summaryP);
+
+    /* — Aside: contact + lang chips — */
+    var aside = document.createElement("div");
+    aside.className = "hero__aside";
+
+    // Contact links
+    var contactDiv = document.createElement("div");
+    contactDiv.className = "hero__contact";
+
+    if (profile.contact.linkedin) {
+      var liLink = document.createElement("a");
+      liLink.className = "hero__contact-link";
+      liLink.href = profile.contact.linkedin;
+      liLink.target = "_blank";
+      liLink.rel = "noopener noreferrer";
+      liLink.setAttribute("aria-label", "LinkedIn");
+      liLink.appendChild(_makeIcon("linkedin", 16));
+      var liSpan = document.createElement("span");
+      liSpan.textContent = "LinkedIn";
+      liLink.appendChild(liSpan);
+      contactDiv.appendChild(liLink);
+    }
+
+    if (profile.contact.email) {
+      var mailLink = document.createElement("a");
+      mailLink.className = "hero__contact-link hero__contact-link--email";
+      mailLink.href = "mailto:" + profile.contact.email;
+      mailLink.setAttribute("aria-label", profile.contact.email);
+      mailLink.appendChild(_makeIcon("mail", 16));
+      var mailSpan = document.createElement("span");
+      mailSpan.textContent = profile.contact.email;
+      mailLink.appendChild(mailSpan);
+      contactDiv.appendChild(mailLink);
+    }
+
+    aside.appendChild(contactDiv);
+
+    /* — Assemble hero — */
+    var hero = document.createElement("div");
+    hero.className = "hero";
+    hero.appendChild(identity);
+    hero.appendChild(summaryCol);
+    hero.appendChild(aside);
+
+    el.innerHTML = "";
+    el.appendChild(hero);
+  }
+
+  /* -------------------------------------------------------
+     RENDER: PROYECTOS
+     --- Selecciona los 3 primeros proyectos de la experience
+         (los más recientes / relevantes)
+     ------------------------------------------------------- */
+  function renderProyectos() {
+    var el = document.getElementById("proyectos-content");
+    if (!el) return;
+
+    // Collect all projects from experience with reference to parent experience
+    var allProjects = [];
+    CV_DATA.experience.forEach(function (exp) {
+      if (exp.projects && exp.projects.length > 0) {
+        exp.projects.forEach(function (proj) {
+          allProjects.push({ project: proj, exp: exp });
+        });
+      }
+    });
+
+    // Take the first 3 (Fever Lead DE projects — most recent, most relevant)
+    var featured = allProjects.slice(0, 3);
+
+    // Header
+    var header = document.createElement("div");
+    header.className = "section-header";
+    var sectionTitle = document.createElement("h2");
+    sectionTitle.className = "section-header__title";
+    sectionTitle.textContent = t(CV_DATA.ui.sections.projects);
+    header.appendChild(sectionTitle);
+    var countSpan = document.createElement("span");
+    countSpan.className = "section-header__count";
+    countSpan.textContent = featured.length;
+    header.appendChild(countSpan);
+
+    // Grid
+    var grid = document.createElement("div");
+    grid.className = "projects-grid";
+
+    featured.forEach(function (item) {
+      var proj = item.project;
+      var exp = item.exp;
+
+      var card = document.createElement("div");
+      card.className = "project-card";
+
+      // Header row
+      var cardHeader = document.createElement("div");
+      cardHeader.className = "project-card__header";
+
+      var nameEl = document.createElement("h3");
+      nameEl.className = "project-card__name";
+      nameEl.textContent = t(proj.name);
+      cardHeader.appendChild(nameEl);
+
+      var companyEl = document.createElement("span");
+      companyEl.className = "project-card__company";
+      companyEl.textContent = exp.company;
+      cardHeader.appendChild(companyEl);
+
+      card.appendChild(cardHeader);
+
+      // Description
+      var descEl = document.createElement("p");
+      descEl.className = "project-card__description";
+      descEl.textContent = t(proj.description);
+      card.appendChild(descEl);
+
+      // Outcome
+      if (proj.outcome) {
+        var outcomeEl = document.createElement("div");
+        outcomeEl.className = "project-card__outcome";
+        outcomeEl.textContent = t(proj.outcome);
+        card.appendChild(outcomeEl);
+      }
+
+      // Stack badges
+      if (proj.stack && proj.stack.length > 0) {
+        var stackDiv = document.createElement("div");
+        stackDiv.className = "project-card__stack";
+        proj.stack.forEach(function (tech) {
+          var badge = document.createElement("span");
+          badge.className = "badge";
+          badge.textContent = tech;
+          stackDiv.appendChild(badge);
+        });
+        card.appendChild(stackDiv);
+      }
+
+      // Link to experience section
+      var linkEl = document.createElement("a");
+      linkEl.className = "project-card__link";
+      linkEl.href = "#experiencia";
+      linkEl.textContent = t(CV_DATA.ui.actions.view_in_experience);
+      card.appendChild(linkEl);
+
+      grid.appendChild(card);
+    });
+
+    el.innerHTML = "";
+    el.appendChild(header);
+    el.appendChild(grid);
+  }
+
+  /* -------------------------------------------------------
+     RENDER: EDUCACIÓN + CERTIFICACIONES + IDIOMAS + RECONOCIMIENTOS
+     ------------------------------------------------------- */
+  function renderEducacion() {
+    var el = document.getElementById("educacion-content");
+    if (!el) return;
+
+    el.innerHTML = "";
+
+    /* --- EDUCACIÓN --- */
+    var eduBlock = document.createElement("div");
+    eduBlock.className = "edu-block";
+
+    var eduHeader = document.createElement("div");
+    eduHeader.className = "section-header";
+    var eduTitle = document.createElement("h2");
+    eduTitle.className = "section-header__title";
+    eduTitle.textContent = t(CV_DATA.ui.nav.education);
+    eduHeader.appendChild(eduTitle);
+    eduBlock.appendChild(eduHeader);
+
+    var eduList = document.createElement("div");
+    eduList.className = "edu-list";
+
+    CV_DATA.education.forEach(function (edu) {
+      var card = document.createElement("div");
+      card.className = "edu-card";
+
+      var main = document.createElement("div");
+      main.className = "edu-card__main";
+
+      var instEl = document.createElement("p");
+      instEl.className = "edu-card__institution";
+      instEl.textContent = edu.institution;
+      main.appendChild(instEl);
+
+      var degreeEl = document.createElement("p");
+      degreeEl.className = "edu-card__degree";
+      degreeEl.textContent = t(edu.degree);
+      main.appendChild(degreeEl);
+
+      var fieldEl = document.createElement("p");
+      fieldEl.className = "edu-card__field";
+      fieldEl.textContent = t(edu.field);
+      main.appendChild(fieldEl);
+
+      card.appendChild(main);
+
+      var yearsEl = document.createElement("div");
+      yearsEl.className = "edu-card__years font-mono";
+      yearsEl.textContent = edu.start + " – " + edu.end;
+      card.appendChild(yearsEl);
+
+      eduList.appendChild(card);
+    });
+
+    eduBlock.appendChild(eduList);
+    el.appendChild(eduBlock);
+
+    /* --- CERTIFICACIONES --- */
+    var certBlock = document.createElement("div");
+    certBlock.className = "edu-block";
+
+    var certHeader = document.createElement("div");
+    certHeader.className = "section-header";
+    var certTitle = document.createElement("h2");
+    certTitle.className = "section-header__title";
+    certTitle.textContent = t(CV_DATA.ui.sections.certifications);
+    certHeader.appendChild(certTitle);
+    var certCount = document.createElement("span");
+    certCount.className = "section-header__count";
+    certCount.textContent = CV_DATA.certifications.length;
+    certHeader.appendChild(certCount);
+    certBlock.appendChild(certHeader);
+
+    var certGrid = document.createElement("div");
+    certGrid.className = "cert-grid";
+
+    CV_DATA.certifications.forEach(function (cert) {
+      var card = document.createElement("div");
+      card.className = "cert-card";
+
+      var iconDiv = document.createElement("div");
+      iconDiv.className = "cert-card__icon";
+      iconDiv.appendChild(_makeIcon("award", 16));
+      card.appendChild(iconDiv);
+
+      var body = document.createElement("div");
+      body.className = "cert-card__body";
+
+      var nameEl;
+      if (cert.url) {
+        nameEl = document.createElement("a");
+        nameEl.href = cert.url;
+        nameEl.target = "_blank";
+        nameEl.rel = "noopener noreferrer";
+        nameEl.className = "cert-card__name cert-link";
+      } else {
+        nameEl = document.createElement("p");
+        nameEl.className = "cert-card__name";
+      }
+      nameEl.textContent = t(cert.name);
+      body.appendChild(nameEl);
+
+      var metaEl = document.createElement("span");
+      metaEl.className = "cert-card__meta";
+      metaEl.textContent = cert.issuer + " · " + cert.year;
+      body.appendChild(metaEl);
+
+      card.appendChild(body);
+      certGrid.appendChild(card);
+    });
+
+    certBlock.appendChild(certGrid);
+    el.appendChild(certBlock);
+
+    /* --- IDIOMAS --- */
+    var langBlock = document.createElement("div");
+    langBlock.className = "edu-block";
+
+    var langHeader = document.createElement("div");
+    langHeader.className = "section-header";
+    var langTitle = document.createElement("h2");
+    langTitle.className = "section-header__title";
+    langTitle.textContent = t(CV_DATA.ui.sections.languages);
+    langHeader.appendChild(langTitle);
+    langBlock.appendChild(langHeader);
+
+    var langChips = document.createElement("div");
+    langChips.className = "lang-chips";
+
+    CV_DATA.languages.forEach(function (lang) {
+      var chip = document.createElement("span");
+      chip.className = "chip";
+      chip.textContent = t(lang.name) + " · " + t(lang.level);
+      langChips.appendChild(chip);
+    });
+
+    langBlock.appendChild(langChips);
+    el.appendChild(langBlock);
+
+    /* --- RECONOCIMIENTOS --- */
+    if (CV_DATA.honors && CV_DATA.honors.length > 0) {
+      var honorsBlock = document.createElement("div");
+      honorsBlock.className = "edu-block";
+
+      var honorsHeader = document.createElement("div");
+      honorsHeader.className = "section-header";
+      var honorsTitle = document.createElement("h2");
+      honorsTitle.className = "section-header__title";
+      honorsTitle.textContent = t(CV_DATA.ui.sections.honors);
+      honorsHeader.appendChild(honorsTitle);
+      honorsBlock.appendChild(honorsHeader);
+
+      var honorsList = document.createElement("div");
+      honorsList.className = "honors-list";
+
+      CV_DATA.honors.forEach(function (honor) {
+        var card = document.createElement("div");
+        card.className = "honor-card";
+
+        var iconDiv = document.createElement("div");
+        iconDiv.className = "honor-card__icon";
+        iconDiv.appendChild(_makeIcon("star", 16));
+        card.appendChild(iconDiv);
+
+        var body = document.createElement("div");
+        body.className = "honor-card__body";
+
+        var nameEl = document.createElement("p");
+        nameEl.className = "honor-card__name";
+        nameEl.textContent = t(honor.name);
+        body.appendChild(nameEl);
+
+        var metaEl = document.createElement("span");
+        metaEl.className = "honor-card__meta";
+        metaEl.textContent = honor.issuer + " · " + honor.year;
+        body.appendChild(metaEl);
+
+        card.appendChild(body);
+        honorsList.appendChild(card);
+      });
+
+      honorsBlock.appendChild(honorsList);
+      el.appendChild(honorsBlock);
+    }
+  }
+
+  /* -------------------------------------------------------
+     INICIALIZACIÓN
+     ------------------------------------------------------- */
+  function renderAll() {
+    renderResumen();
+    renderProyectos();
+    renderEducacion();
+  }
+
+  renderAll();
+
+  /* -------------------------------------------------------
+     RE-RENDER AL CAMBIAR DE IDIOMA
+     ------------------------------------------------------- */
+  window.addEventListener("cv:languagechange", function () {
+    renderAll();
+  });
+
+})();
+</script>

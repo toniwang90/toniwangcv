@@ -1,0 +1,885 @@
+<!-- ============================================================
+     02-layout.html — LayoutAgent
+     Header, KPI Bar, scaffold de secciones + i18n engine
+     Fragmento parcial: sin <html>, <head>, <body>
+     ============================================================ -->
+
+<!-- ===================== STYLES ===================== -->
+<style>
+  /* --- Site Header --- */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--color-surface);
+    border-bottom: var(--border);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    height: 60px;
+    padding-inline: var(--space-4);
+    max-width: 1200px;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 768px) {
+    .site-header__inner {
+      padding-inline: var(--space-6);
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .site-header__inner {
+      padding-inline: var(--space-8);
+    }
+  }
+
+  /* --- Logo --- */
+  .site-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .site-logo:hover {
+    text-decoration: none;
+  }
+
+  .site-logo__svg {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+  }
+
+  .site-logo__name {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    line-height: 1.2;
+  }
+
+  .site-logo__title {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-regular);
+    color: var(--color-text-muted);
+    line-height: 1.2;
+  }
+
+  /* --- Primary Nav --- */
+  .site-nav {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
+  }
+
+  .site-nav__link {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    transition: color var(--transition-fast), background-color var(--transition-fast);
+    white-space: nowrap;
+  }
+
+  .site-nav__link:hover {
+    color: var(--color-text);
+    background-color: var(--color-surface-2);
+    text-decoration: none;
+  }
+
+  .site-nav__link.is-active {
+    color: var(--color-primary);
+    background-color: var(--color-surface-2);
+  }
+
+  /* --- Header Actions --- */
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-shrink: 0;
+  }
+
+  /* --- Icon buttons (theme, hamburger) --- */
+  .btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color var(--transition-fast), background-color var(--transition-fast);
+    flex-shrink: 0;
+  }
+
+  .btn-icon:hover {
+    color: var(--color-text);
+    background-color: var(--color-surface-2);
+  }
+
+  .btn-icon svg {
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+  }
+
+  /* --- Language toggle pill --- */
+  .btn-lang {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 44px;
+    padding-inline: var(--space-3);
+    border-radius: var(--radius-full);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    color: var(--color-text-muted);
+    background-color: var(--color-surface-2);
+    border: var(--border);
+    cursor: pointer;
+    transition: color var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+
+  .btn-lang:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    background-color: var(--color-surface-2);
+  }
+
+  /* --- Download CV button --- */
+  .btn-download {
+    display: none;
+    align-items: center;
+    gap: var(--space-2);
+    height: 44px;
+    padding-inline: var(--space-4);
+    border-radius: var(--radius-md);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-bg);
+    background-color: var(--color-primary);
+    border: none;
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+    white-space: nowrap;
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+
+  .btn-download:hover {
+    opacity: 0.88;
+    text-decoration: none;
+    color: var(--color-bg);
+  }
+
+  .btn-download svg {
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+  }
+
+  @media (min-width: 768px) {
+    .btn-download {
+      display: flex;
+    }
+  }
+
+  /* --- Hamburger (mobile only) --- */
+  .btn-hamburger {
+    display: flex;
+  }
+
+  @media (min-width: 768px) {
+    .btn-hamburger {
+      display: none;
+    }
+  }
+
+  /* --- Mobile nav overlay --- */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background-color: var(--color-surface);
+    flex-direction: column;
+    padding: var(--space-4);
+    padding-top: 72px;
+    overflow-y: auto;
+  }
+
+  .mobile-nav.is-open {
+    display: flex;
+  }
+
+  .mobile-nav__link {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    padding: var(--space-4) var(--space-2);
+    border-bottom: var(--border);
+    transition: color var(--transition-fast);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .mobile-nav__link:hover {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .mobile-nav__download {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-6);
+    height: 52px;
+    padding-inline: var(--space-5);
+    border-radius: var(--radius-md);
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+    font-weight: var(--weight-medium);
+    color: var(--color-bg);
+    background-color: var(--color-primary);
+    border: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+    transition: opacity var(--transition-fast);
+  }
+
+  .mobile-nav__download:hover {
+    opacity: 0.88;
+    color: var(--color-bg);
+    text-decoration: none;
+  }
+
+  .mobile-nav__download svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* --- KPI Bar --- */
+  .kpi-bar {
+    background-color: var(--color-bg);
+    border-bottom: var(--border);
+    padding-block: var(--space-4);
+  }
+
+  .kpi-bar__inner {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+  }
+
+  @media (min-width: 768px) {
+    .kpi-bar__inner {
+      grid-template-columns: repeat(4, 1fr);
+      padding-inline: var(--space-6);
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .kpi-bar__inner {
+      padding-inline: var(--space-8);
+    }
+  }
+
+  /* --- KPI Card augment: accent bar on top --- */
+  .kpi-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--color-primary);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+
+  .kpi-card.is-visible::before {
+    opacity: 1;
+  }
+
+  /* --- Main sections scaffold --- */
+  #main-content {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+    padding-block: var(--space-8);
+  }
+
+  @media (min-width: 768px) {
+    #main-content {
+      padding-inline: var(--space-6);
+      padding-block: var(--space-10);
+    }
+  }
+
+  @media (min-width: 1440px) {
+    #main-content {
+      padding-inline: var(--space-8);
+    }
+  }
+
+  #main-content section {
+    scroll-margin-top: 72px;
+  }
+
+  /* --- Light mode contrast fixes (WCAG AA) --- */
+  [data-theme="light"] .kpi-card__label {
+    color: var(--color-text);
+  }
+
+  [data-theme="light"] .site-nav__link {
+    color: var(--color-text);
+  }
+
+  [data-theme="light"] .site-logo__title {
+    color: var(--color-text);
+  }
+</style>
+
+<!-- ===================== HEADER ===================== -->
+<header class="site-header" role="banner">
+  <div class="site-header__inner">
+
+    <!-- Logo: iniciales SVG + nombre + título -->
+    <a class="site-logo" href="#resumen" aria-label="Toni Wang — Lead Data Engineer">
+      <svg class="site-logo__svg" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <style>.logo-text { font-family: var(--font-mono); font-size: var(--text-sm); font-weight: 700; }</style>
+        <rect width="36" height="36" rx="6" fill="var(--color-primary)" opacity="0.15"/>
+        <rect width="36" height="36" rx="6" fill="none" stroke="var(--color-primary)" stroke-width="1"/>
+        <text
+          x="18"
+          y="23"
+          text-anchor="middle"
+          class="logo-text"
+          fill="var(--color-primary)"
+          letter-spacing="-0.5">TW</text>
+      </svg>
+      <div class="stack">
+        <span class="site-logo__name">Toni Wang</span>
+        <span class="site-logo__title">Lead Data Engineer</span>
+      </div>
+    </a>
+
+    <!-- Desktop navigation -->
+    <nav class="site-nav" role="navigation" aria-label="Navegación principal">
+      <a class="site-nav__link" href="#resumen"     data-i18n="nav.summary"></a>
+      <a class="site-nav__link" href="#experiencia" data-i18n="nav.experience"></a>
+      <a class="site-nav__link" href="#skills"      data-i18n="nav.skills"></a>
+      <a class="site-nav__link" href="#proyectos"   data-i18n="nav.projects"></a>
+      <a class="site-nav__link" href="#educacion"   data-i18n="nav.education"></a>
+    </nav>
+
+    <!-- Header actions -->
+    <div class="site-header__actions">
+
+      <!-- Toggle dark/light -->
+      <button
+        class="btn-icon"
+        id="btn-theme"
+        type="button"
+        aria-label="Toggle theme"
+        data-i18n-aria="actions.toggle_theme"
+        title="Toggle theme">
+        <!-- Icon injected by JS -->
+      </button>
+
+      <!-- Toggle ES/EN -->
+      <button
+        class="btn-lang"
+        id="btn-lang"
+        type="button"
+        aria-live="polite">
+        <!-- Label injected by JS: shows opposite language -->
+      </button>
+
+      <!-- Download CV (desktop) -->
+      <button
+        class="btn-download"
+        id="btn-download-desktop"
+        type="button"
+        onclick="window.print()">
+        <!-- Lucide download icon injected by JS -->
+        <span data-i18n="actions.download"></span>
+      </button>
+
+      <!-- Hamburger (mobile) -->
+      <button
+        class="btn-icon btn-hamburger"
+        id="btn-hamburger"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        aria-label="Abrir menú">
+        <!-- Icon injected by JS -->
+      </button>
+
+    </div>
+  </div>
+</header>
+
+<!-- ===================== MOBILE NAV ===================== -->
+<nav
+  class="mobile-nav"
+  id="mobile-nav"
+  role="navigation"
+  aria-label="Menú móvil"
+  aria-hidden="true">
+  <a class="mobile-nav__link" href="#resumen"     data-i18n="nav.summary"></a>
+  <a class="mobile-nav__link" href="#experiencia" data-i18n="nav.experience"></a>
+  <a class="mobile-nav__link" href="#skills"      data-i18n="nav.skills"></a>
+  <a class="mobile-nav__link" href="#proyectos"   data-i18n="nav.projects"></a>
+  <a class="mobile-nav__link" href="#educacion"   data-i18n="nav.education"></a>
+  <button
+    class="mobile-nav__download"
+    type="button"
+    onclick="window.print()">
+    <!-- icon injected by JS -->
+    <span data-i18n="actions.download"></span>
+  </button>
+</nav>
+
+<!-- ===================== KPI BAR ===================== -->
+<div class="kpi-bar" role="region" aria-label="Métricas del perfil" id="kpi-bar">
+  <div class="kpi-bar__inner">
+
+    <!-- Years of experience -->
+    <div class="kpi-card" data-kpi="years_experience" data-kpi-value="14">
+      <span class="kpi-card__value font-mono" data-kpi-display="0">0</span>
+      <span class="kpi-card__label" data-i18n="kpi.years_experience"></span>
+    </div>
+
+    <!-- Companies -->
+    <div class="kpi-card" data-kpi="companies" data-kpi-value="9">
+      <span class="kpi-card__value font-mono" data-kpi-display="0">0</span>
+      <span class="kpi-card__label" data-i18n="kpi.companies"></span>
+    </div>
+
+    <!-- Projects -->
+    <div class="kpi-card" data-kpi="projects" data-kpi-value="9">
+      <span class="kpi-card__value font-mono" data-kpi-display="0">0</span>
+      <span class="kpi-card__label" data-i18n="kpi.projects"></span>
+    </div>
+
+    <!-- Technologies -->
+    <div class="kpi-card" data-kpi="technologies" data-kpi-value="32">
+      <span class="kpi-card__value font-mono" data-kpi-display="0">0</span>
+      <span class="kpi-card__label" data-i18n="kpi.technologies"></span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===================== MAIN SCAFFOLD ===================== -->
+<main id="main-content">
+  <section id="resumen"     aria-label="Resumen"><!-- ContentAgent --></section>
+  <section id="experiencia" aria-label="Experiencia"><!-- TimelineAgent --></section>
+  <section id="skills"      aria-label="Skills"><!-- SkillsAgent --></section>
+  <section id="proyectos"   aria-label="Proyectos"><!-- ContentAgent --></section>
+  <section id="educacion"   aria-label="Educación"><!-- ContentAgent --></section>
+</main>
+
+<!-- ===================== SCRIPT ===================== -->
+<script>
+(function () {
+  "use strict";
+
+  /* -------------------------------------------------------
+     1. ESTADO GLOBAL DE IDIOMA
+     Sin localStorage — detectado via navigator.language
+     ------------------------------------------------------- */
+  var _navLang = (navigator.language || "es");
+  window.__cvLang = _navLang.startsWith("en") ? "en" : "es";
+  document.documentElement.setAttribute("lang", window.__cvLang);
+
+  /* -------------------------------------------------------
+     2. LABELS ESTÁTICAS — recorre data-i18n y aplica t()
+     ------------------------------------------------------- */
+  function applyStaticLabels() {
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      var path = el.dataset.i18n.split(".");
+      var v = CV_DATA.ui;
+      for (var i = 0; i < path.length; i++) {
+        v = v != null ? v[path[i]] : null;
+      }
+      if (v != null) {
+        el.textContent = t(v);
+      }
+    });
+
+    // Update aria-labels for data-i18n-aria elements
+    document.querySelectorAll("[data-i18n-aria]").forEach(function (el) {
+      var path = el.dataset.i18nAria.split(".");
+      var v = CV_DATA.ui;
+      for (var i = 0; i < path.length; i++) {
+        v = v != null ? v[path[i]] : null;
+      }
+      if (v != null) {
+        el.setAttribute("aria-label", t(v));
+      }
+    });
+
+    // Language button label: always shows the OPPOSITE language
+    var btnLang = document.getElementById("btn-lang");
+    if (btnLang) {
+      btnLang.textContent = t(CV_DATA.ui.actions.toggle_language);
+    }
+
+    // Download buttons: icon + label
+    _renderDownloadButtons();
+  }
+
+  /* -------------------------------------------------------
+     3. CAMBIO DE IDIOMA
+     ------------------------------------------------------- */
+  function setLanguage(lang) {
+    window.__cvLang = lang;
+    document.documentElement.setAttribute("lang", lang);
+    applyStaticLabels();
+    window.dispatchEvent(new CustomEvent("cv:languagechange", { detail: { lang: lang } }));
+  }
+
+  // Expose globally so other agents can call it
+  window.setLanguage = setLanguage;
+
+  /* -------------------------------------------------------
+     4. LUCIDE ICON HELPER
+     ------------------------------------------------------- */
+  function lucideIcon(name, attrs) {
+    attrs = attrs || {};
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svg.setAttribute("width", attrs.size || "18");
+    svg.setAttribute("height", attrs.size || "18");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("fill", "none");
+    svg.setAttribute("stroke", "currentColor");
+    svg.setAttribute("stroke-width", "2");
+    svg.setAttribute("stroke-linecap", "round");
+    svg.setAttribute("stroke-linejoin", "round");
+    svg.setAttribute("aria-hidden", "true");
+    // Inline path data for required icons
+    var paths = {
+      sun: [
+        "M12 3v1", "M12 20v1", "M4.22 4.22l.7.7", "M19.07 19.07l.71.71",
+        "M3 12h1", "M20 12h1", "M4.22 19.78l.7-.7", "M19.07 4.93l.71-.71",
+        "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"
+      ],
+      moon: [
+        "M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"
+      ],
+      download: [
+        "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4",
+        "M7 10l5 5 5-5",
+        "M12 15V3"
+      ],
+      menu: [
+        "M4 6h16", "M4 12h16", "M4 18h16"
+      ],
+      x: [
+        "M18 6 6 18", "M6 6l12 12"
+      ]
+    };
+    var iconPaths = paths[name] || [];
+    iconPaths.forEach(function (d) {
+      var pathEl = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      pathEl.setAttribute("d", d);
+      svg.appendChild(pathEl);
+    });
+    return svg;
+  }
+
+  /* -------------------------------------------------------
+     5. THEME TOGGLE
+     ------------------------------------------------------- */
+  var _currentTheme = "dark";
+
+  function _getThemeIcon() {
+    return _currentTheme === "dark" ? lucideIcon("sun") : lucideIcon("moon");
+  }
+
+  function _renderThemeBtn() {
+    var btn = document.getElementById("btn-theme");
+    if (!btn) return;
+    btn.innerHTML = "";
+    btn.appendChild(_getThemeIcon());
+  }
+
+  function toggleTheme() {
+    _currentTheme = _currentTheme === "dark" ? "light" : "dark";
+    if (_currentTheme === "light") {
+      document.documentElement.setAttribute("data-theme", "light");
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+    }
+    _renderThemeBtn();
+  }
+
+  var btnTheme = document.getElementById("btn-theme");
+  if (btnTheme) {
+    btnTheme.addEventListener("click", toggleTheme);
+    _renderThemeBtn();
+  }
+
+  /* -------------------------------------------------------
+     6. LANGUAGE TOGGLE
+     ------------------------------------------------------- */
+  var btnLang = document.getElementById("btn-lang");
+  if (btnLang) {
+    btnLang.addEventListener("click", function () {
+      var next = window.__cvLang === "es" ? "en" : "es";
+      setLanguage(next);
+    });
+  }
+
+  /* -------------------------------------------------------
+     7. DOWNLOAD BUTTON — icon + label
+     ------------------------------------------------------- */
+  function _renderDownloadButtons() {
+    ["btn-download-desktop"].forEach(function (id) {
+      var btn = document.getElementById(id);
+      if (!btn) return;
+      // Ensure icon is present (only first child if not span)
+      var icon = btn.querySelector("svg");
+      if (!icon) {
+        var newIcon = lucideIcon("download", { size: "16" });
+        btn.insertBefore(newIcon, btn.firstChild);
+      }
+    });
+
+    // Mobile nav download button — find by class
+    var mobileDownload = document.querySelector(".mobile-nav__download");
+    if (mobileDownload) {
+      var mIcon = mobileDownload.querySelector("svg");
+      if (!mIcon) {
+        var newMIcon = lucideIcon("download", { size: "18" });
+        mobileDownload.insertBefore(newMIcon, mobileDownload.firstChild);
+      }
+    }
+  }
+
+  /* -------------------------------------------------------
+     8. HAMBURGER MENU
+     ------------------------------------------------------- */
+  var _menuOpen = false;
+  var btnHamburger = document.getElementById("btn-hamburger");
+  var mobileNav = document.getElementById("mobile-nav");
+
+  function _renderHamburgerIcon() {
+    if (!btnHamburger) return;
+    btnHamburger.innerHTML = "";
+    btnHamburger.appendChild(lucideIcon(_menuOpen ? "x" : "menu"));
+  }
+
+  function _closeMobileNav() {
+    _menuOpen = false;
+    if (mobileNav) {
+      mobileNav.classList.remove("is-open");
+      mobileNav.setAttribute("aria-hidden", "true");
+    }
+    if (btnHamburger) {
+      btnHamburger.setAttribute("aria-expanded", "false");
+      btnHamburger.setAttribute(
+        "aria-label",
+        t(CV_DATA.ui.actions.menu_open)
+      );
+    }
+    _renderHamburgerIcon();
+    document.body.style.overflow = "";
+  }
+
+  function _openMobileNav() {
+    _menuOpen = true;
+    if (mobileNav) {
+      mobileNav.classList.add("is-open");
+      mobileNav.setAttribute("aria-hidden", "false");
+    }
+    if (btnHamburger) {
+      btnHamburger.setAttribute("aria-expanded", "true");
+      btnHamburger.setAttribute(
+        "aria-label",
+        t(CV_DATA.ui.actions.menu_close)
+      );
+    }
+    _renderHamburgerIcon();
+    document.body.style.overflow = "hidden";
+  }
+
+  if (btnHamburger) {
+    btnHamburger.addEventListener("click", function () {
+      if (_menuOpen) _closeMobileNav();
+      else _openMobileNav();
+    });
+    _renderHamburgerIcon();
+  }
+
+  // Close mobile nav when a link is clicked
+  if (mobileNav) {
+    mobileNav.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", _closeMobileNav);
+    });
+  }
+
+  // Close mobile nav on resize to desktop
+  window.addEventListener("resize", function () {
+    if (window.innerWidth >= 768 && _menuOpen) {
+      _closeMobileNav();
+    }
+  });
+
+  /* -------------------------------------------------------
+     9. SCROLL-SPY — activa la clase is-active en nav
+     ------------------------------------------------------- */
+  var _sections = ["resumen", "experiencia", "skills", "proyectos", "educacion"];
+
+  function _updateActiveNav() {
+    var scrollY = window.scrollY + 80;
+    var current = _sections[0];
+
+    _sections.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && el.offsetTop <= scrollY) {
+        current = id;
+      }
+    });
+
+    var navLinks = document.querySelectorAll(".site-nav__link");
+    navLinks.forEach(function (link) {
+      link.classList.remove("is-active");
+      if (link.getAttribute("href") === "#" + current) {
+        link.classList.add("is-active");
+      }
+    });
+  }
+
+  var _scrollTicking = false;
+  window.addEventListener("scroll", function () {
+    if (!_scrollTicking) {
+      window.requestAnimationFrame(function () {
+        _updateActiveNav();
+        _scrollTicking = false;
+      });
+      _scrollTicking = true;
+    }
+  }, { passive: true });
+
+  /* -------------------------------------------------------
+     10. KPI COUNT-UP ANIMATION (IntersectionObserver)
+     ------------------------------------------------------- */
+  function _easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+
+  function _countUp(displayEl, target, duration) {
+    var start = null;
+    var startValue = 0;
+
+    function _step(timestamp) {
+      if (!start) start = timestamp;
+      var elapsed = timestamp - start;
+      var progress = Math.min(elapsed / duration, 1);
+      var eased = _easeOutCubic(progress);
+      var current = Math.round(startValue + (target - startValue) * eased);
+      displayEl.textContent = current;
+      if (progress < 1) {
+        window.requestAnimationFrame(_step);
+      } else {
+        displayEl.textContent = target;
+      }
+    }
+
+    window.requestAnimationFrame(_step);
+  }
+
+  var _kpiAnimated = false;
+
+  function _animateKPIs() {
+    if (_kpiAnimated) return;
+    _kpiAnimated = true;
+
+    var cards = document.querySelectorAll(".kpi-card[data-kpi-value]");
+    cards.forEach(function (card, index) {
+      var target = parseInt(card.dataset.kpiValue, 10);
+      var displayEl = card.querySelector("[data-kpi-display]");
+      if (!displayEl || isNaN(target)) return;
+
+      card.classList.add("is-visible");
+
+      // Stagger each card slightly
+      var delay = index * 80;
+      setTimeout(function () {
+        _countUp(displayEl, target, 1500);
+      }, delay);
+    });
+  }
+
+  var kpiBar = document.getElementById("kpi-bar");
+  if (kpiBar && "IntersectionObserver" in window) {
+    var kpiObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          _animateKPIs();
+          kpiObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.2 });
+    kpiObserver.observe(kpiBar);
+  } else if (kpiBar) {
+    // Fallback for environments without IntersectionObserver
+    _animateKPIs();
+  }
+
+  /* -------------------------------------------------------
+     11. INICIALIZACIÓN
+     ------------------------------------------------------- */
+  // Load Lucide from CDN, then render icons and labels
+  // (Lucide is loaded by AssemblerAgent in <head>; here we
+  //  rely on inline SVG paths so no CDN dependency needed.)
+  applyStaticLabels();
+  _updateActiveNav();
+
+})();
+</script>

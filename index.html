@@ -1,0 +1,5081 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Curriculum Vitae — CV de Toni Wang">
+  <meta property="og:title" content="Toni Wang — CV">
+  <title>Toni Wang — CV</title>
+
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+  <style>
+/* === DESIGN SYSTEM === */
+/* =============================================================================
+   01-design-system.css
+   Design System — CV Dashboard Toni Wang
+   Tokens, reset, utilidades base
+   Sin <style> tags — fragmento parcial inyectado por AssemblerAgent
+   ============================================================================= */
+
+/* =============================================================================
+   IMPORT DE FUENTES
+   ============================================================================= */
+
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* =============================================================================
+   VARIABLES CSS — DARK MODE (default)
+   ============================================================================= */
+
+:root {
+  /* --- Colores base --- */
+  --color-primary:        #4f98a3;
+  --color-bg:             #0d1117;
+  --color-surface:        #161b22;
+  --color-surface-2:      #21262d;
+  --color-surface-offset: #30363d;
+  --color-text:           #e6edf3;
+  --color-text-muted:     #8b949e;
+  --color-divider:        #21262d;
+
+  /* --- Colores de categoría (skill matrix) --- */
+  --color-blue:           #58a6ff;   /* visualization */
+  --color-orange:         #f0883e;   /* cloud */
+  --color-success:        #3fb950;   /* languages */
+  --color-purple:         #bc8cff;   /* tools */
+
+  /* --- Tipografía --- */
+  --font-display: 'Satoshi', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  /* --- Escala tipográfica --- */
+  --text-xs:   0.75rem;    /* 12px */
+  --text-sm:   0.875rem;   /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg:   1.125rem;   /* 18px */
+  --text-xl:   1.25rem;    /* 20px */
+  --text-2xl:  1.5rem;     /* 24px */
+  --text-3xl:  1.875rem;   /* 30px */
+  --text-4xl:  2.25rem;    /* 36px */
+  --text-5xl:  3rem;       /* 48px */
+
+  /* --- Font weights --- */
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-bold:    700;
+  --weight-black:   900;
+
+  /* --- Forma --- */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-full: 9999px;
+
+  /* --- Espaciado --- */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* --- Transiciones --- */
+  --transition-fast: 120ms ease;
+  --transition-base: 200ms ease;
+
+  /* --- Sombras --- */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+  /* --- Bordes --- */
+  --border-width: 1px;
+  --border: var(--border-width) solid var(--color-divider);
+}
+
+/* =============================================================================
+   OVERRIDE — LIGHT MODE
+   ============================================================================= */
+
+[data-theme="light"] {
+  --color-bg:             #ffffff;
+  --color-surface:        #f6f8fa;
+  --color-surface-2:      #eaeef2;
+  --color-surface-offset: #d0d7de;
+  --color-text:           #1f2328;
+  --color-text-muted:     #656d76;
+  --color-divider:        #d0d7de;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* =============================================================================
+   RESET MÍNIMO
+   ============================================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background-color var(--transition-base), color var(--transition-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* =============================================================================
+   TIPOGRAFÍA — CLASES BASE
+   ============================================================================= */
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.text-xs   { font-size: var(--text-xs); }
+.text-sm   { font-size: var(--text-sm); }
+.text-base { font-size: var(--text-base); }
+.text-lg   { font-size: var(--text-lg); }
+.text-xl   { font-size: var(--text-xl); }
+.text-2xl  { font-size: var(--text-2xl); }
+.text-3xl  { font-size: var(--text-3xl); }
+.text-4xl  { font-size: var(--text-4xl); }
+.text-5xl  { font-size: var(--text-5xl); }
+
+.text-muted   { color: var(--color-text-muted); }
+.text-primary { color: var(--color-primary); }
+
+.weight-regular { font-weight: var(--weight-regular); }
+.weight-medium  { font-weight: var(--weight-medium); }
+.weight-bold    { font-weight: var(--weight-bold); }
+.weight-black   { font-weight: var(--weight-black); }
+
+/* =============================================================================
+   SUPERFICIES
+   ============================================================================= */
+
+.surface {
+  background-color: var(--color-surface);
+  border: var(--border);
+  border-radius: var(--radius-md);
+}
+
+.surface-2 {
+  background-color: var(--color-surface-2);
+  border: var(--border);
+  border-radius: var(--radius-md);
+}
+
+.surface-offset {
+  background-color: var(--color-surface-offset);
+  border: var(--border);
+  border-radius: var(--radius-md);
+}
+
+/* =============================================================================
+   BADGE — chip de tecnología (JetBrains Mono, borde divider)
+   ============================================================================= */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-muted);
+  background-color: var(--color-surface-2);
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
+  line-height: 1.4;
+  white-space: nowrap;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.badge:hover {
+  color: var(--color-text);
+  border-color: var(--color-primary);
+}
+
+/* =============================================================================
+   CHIP — variante pill (radio-full)
+   ============================================================================= */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-muted);
+  background-color: var(--color-surface-2);
+  border: var(--border);
+  border-radius: var(--radius-full);
+  padding: var(--space-1) var(--space-3);
+  line-height: 1.4;
+  white-space: nowrap;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.chip:hover {
+  color: var(--color-text);
+  border-color: var(--color-primary);
+}
+
+/* Color variants para categorías */
+.chip--primary    { color: var(--color-primary);  border-color: var(--color-primary); }
+.chip--blue       { color: var(--color-blue);     border-color: var(--color-blue); }
+.chip--orange     { color: var(--color-orange);   border-color: var(--color-orange); }
+.chip--success    { color: var(--color-success);  border-color: var(--color-success); }
+.chip--purple     { color: var(--color-purple);   border-color: var(--color-purple); }
+
+/* =============================================================================
+   SKILL DOT — SVG helper classes
+   ============================================================================= */
+
+.skill-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.skill-dot--filled {
+  background-color: var(--color-primary);
+}
+
+.skill-dot--empty {
+  background-color: transparent;
+  border: var(--border-width) solid var(--color-surface-offset);
+}
+
+/* Row de skill dots */
+.skill-dot-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.skill-dot-row__dots {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.skill-dot-row__label {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  min-width: 0;
+}
+
+/* =============================================================================
+   KPI CARD
+   ============================================================================= */
+
+.kpi-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-5);
+  background-color: var(--color-surface);
+  border: var(--border);
+  border-radius: var(--radius-md);
+}
+
+.kpi-card__value {
+  font-family: var(--font-mono);
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-text);
+  line-height: 1.1;
+}
+
+.kpi-card__label {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-muted);
+}
+
+.kpi-card__icon {
+  color: var(--color-primary);
+  margin-bottom: var(--space-2);
+}
+
+/* =============================================================================
+   LAYOUT HELPERS
+   ============================================================================= */
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-inline: var(--space-6);
+  }
+}
+
+@media (min-width: 1440px) {
+  .container {
+    padding-inline: var(--space-8);
+  }
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.stack--sm  { gap: var(--space-2); }
+.stack--md  { gap: var(--space-4); }
+.stack--lg  { gap: var(--space-8); }
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.cluster--sm  { gap: var(--space-2); }
+.cluster--md  { gap: var(--space-3); }
+.cluster--lg  { gap: var(--space-4); }
+
+/* =============================================================================
+   DIVIDER
+   ============================================================================= */
+
+.divider {
+  border: none;
+  border-top: var(--border);
+  margin-block: var(--space-4);
+}
+
+/* =============================================================================
+   FOCUS VISIBLE (accesibilidad)
+   ============================================================================= */
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+
+/* === PREVIEW HELPERS === */
+
+.preview-pending {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  border: 1px dashed var(--color-divider, #30363d);
+  border-radius: 8px;
+  background: var(--color-surface, #161b22);
+  color: var(--color-text-muted, #8b949e);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 13px;
+}
+.preview-pending strong { color: var(--color-text, #e6edf3); }
+.preview-fallback { max-width: 960px; margin: 2rem auto; padding: 2rem; }
+.preview-fallback h1 { font-family: var(--font-display, sans-serif); }
+.preview-fallback section { margin-block: 2rem; }
+
+
+/* === LAYOUT === */
+
+  /* --- Site Header --- */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--color-surface);
+    border-bottom: var(--border);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    height: 60px;
+    padding-inline: var(--space-4);
+    max-width: 1200px;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 768px) {
+    .site-header__inner {
+      padding-inline: var(--space-6);
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .site-header__inner {
+      padding-inline: var(--space-8);
+    }
+  }
+
+  /* --- Logo --- */
+  .site-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .site-logo:hover {
+    text-decoration: none;
+  }
+
+  .site-logo__svg {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+  }
+
+  .site-logo__name {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    line-height: 1.2;
+  }
+
+  .site-logo__title {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-regular);
+    color: var(--color-text-muted);
+    line-height: 1.2;
+  }
+
+  /* --- Primary Nav --- */
+  .site-nav {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
+  }
+
+  .site-nav__link {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    transition: color var(--transition-fast), background-color var(--transition-fast);
+    white-space: nowrap;
+  }
+
+  .site-nav__link:hover {
+    color: var(--color-text);
+    background-color: var(--color-surface-2);
+    text-decoration: none;
+  }
+
+  .site-nav__link.is-active {
+    color: var(--color-primary);
+    background-color: var(--color-surface-2);
+  }
+
+  /* --- Header Actions --- */
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-shrink: 0;
+  }
+
+  /* --- Icon buttons (theme, hamburger) --- */
+  .btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color var(--transition-fast), background-color var(--transition-fast);
+    flex-shrink: 0;
+  }
+
+  .btn-icon:hover {
+    color: var(--color-text);
+    background-color: var(--color-surface-2);
+  }
+
+  .btn-icon svg {
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+  }
+
+  /* --- Language toggle pill --- */
+  .btn-lang {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 44px;
+    padding-inline: var(--space-3);
+    border-radius: var(--radius-full);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    color: var(--color-text-muted);
+    background-color: var(--color-surface-2);
+    border: var(--border);
+    cursor: pointer;
+    transition: color var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+
+  .btn-lang:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    background-color: var(--color-surface-2);
+  }
+
+  /* --- Download CV button --- */
+  .btn-download {
+    display: none;
+    align-items: center;
+    gap: var(--space-2);
+    height: 44px;
+    padding-inline: var(--space-4);
+    border-radius: var(--radius-md);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-bg);
+    background-color: var(--color-primary);
+    border: none;
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+    white-space: nowrap;
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+
+  .btn-download:hover {
+    opacity: 0.88;
+    text-decoration: none;
+    color: var(--color-bg);
+  }
+
+  .btn-download svg {
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+  }
+
+  @media (min-width: 768px) {
+    .btn-download {
+      display: flex;
+    }
+  }
+
+  /* --- Hamburger (mobile only) --- */
+  .btn-hamburger {
+    display: flex;
+  }
+
+  @media (min-width: 768px) {
+    .btn-hamburger {
+      display: none;
+    }
+  }
+
+  /* --- Mobile nav overlay --- */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background-color: var(--color-surface);
+    flex-direction: column;
+    padding: var(--space-4);
+    padding-top: 72px;
+    overflow-y: auto;
+  }
+
+  .mobile-nav.is-open {
+    display: flex;
+  }
+
+  .mobile-nav__link {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    padding: var(--space-4) var(--space-2);
+    border-bottom: var(--border);
+    transition: color var(--transition-fast);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .mobile-nav__link:hover {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .mobile-nav__download {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-6);
+    height: 52px;
+    padding-inline: var(--space-5);
+    border-radius: var(--radius-md);
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+    font-weight: var(--weight-medium);
+    color: var(--color-bg);
+    background-color: var(--color-primary);
+    border: none;
+    cursor: pointer;
+    justify-content: center;
+    text-decoration: none;
+    transition: opacity var(--transition-fast);
+  }
+
+  .mobile-nav__download:hover {
+    opacity: 0.88;
+    color: var(--color-bg);
+    text-decoration: none;
+  }
+
+  .mobile-nav__download svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* --- KPI Bar --- */
+  .kpi-bar {
+    background-color: var(--color-bg);
+    border-bottom: var(--border);
+    padding-block: var(--space-4);
+  }
+
+  .kpi-bar__inner {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+  }
+
+  @media (min-width: 768px) {
+    .kpi-bar__inner {
+      grid-template-columns: repeat(4, 1fr);
+      padding-inline: var(--space-6);
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .kpi-bar__inner {
+      padding-inline: var(--space-8);
+    }
+  }
+
+  /* --- KPI Card augment: accent bar on top --- */
+  .kpi-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--color-primary);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+
+  .kpi-card.is-visible::before {
+    opacity: 1;
+  }
+
+  /* --- Main sections scaffold --- */
+  #main-content {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+    padding-block: var(--space-8);
+  }
+
+  @media (min-width: 768px) {
+    #main-content {
+      padding-inline: var(--space-6);
+      padding-block: var(--space-10);
+    }
+  }
+
+  @media (min-width: 1440px) {
+    #main-content {
+      padding-inline: var(--space-8);
+    }
+  }
+
+  #main-content section {
+    scroll-margin-top: 72px;
+  }
+
+  /* --- Light mode contrast fixes (WCAG AA) --- */
+  [data-theme="light"] .kpi-card__label {
+    color: var(--color-text);
+  }
+
+  [data-theme="light"] .site-nav__link {
+    color: var(--color-text);
+  }
+
+  [data-theme="light"] .site-logo__title {
+    color: var(--color-text);
+  }
+
+
+/* === TIMELINE === */
+
+  /* ==========================================================
+     TIMELINE SECTION
+     ========================================================== */
+
+  .timeline-section {
+    padding-block: var(--space-10);
+    border-top: var(--border);
+  }
+
+  .timeline-section__header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .timeline-section__title {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    line-height: 1.2;
+  }
+
+  .timeline-section__count {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  /* ==========================================================
+     DESKTOP TIMELINE (SVG via D3.js)
+     ========================================================== */
+
+  .timeline-svg-wrap {
+    display: none;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @media (min-width: 768px) {
+    .timeline-svg-wrap {
+      display: block;
+    }
+  }
+
+  .timeline-svg-wrap svg {
+    display: block;
+    overflow: visible;
+  }
+
+  /* Tooltip */
+  .timeline-tooltip {
+    position: fixed;
+    z-index: 200;
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 100ms ease;
+    max-width: 280px;
+    box-shadow: var(--shadow-md);
+  }
+
+  .timeline-tooltip.is-visible {
+    opacity: 1;
+  }
+
+  .timeline-tooltip__company {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    margin-bottom: var(--space-1);
+  }
+
+  .timeline-tooltip__role {
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .timeline-tooltip__duration {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-primary);
+  }
+
+  /* ==========================================================
+     MOBILE TIMELINE (card list)
+     ========================================================== */
+
+  .timeline-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 768px) {
+    .timeline-mobile {
+      display: none;
+    }
+  }
+
+  .timeline-card {
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    cursor: pointer;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+    min-height: 44px;
+  }
+
+  .timeline-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background-color: var(--timeline-bar-color, var(--color-primary));
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  }
+
+  .timeline-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .timeline-card:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .timeline-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+  }
+
+  .timeline-card__company {
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    line-height: 1.3;
+  }
+
+  .timeline-card__current-badge {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    border-radius: var(--radius-full);
+    padding: 0 var(--space-2);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .timeline-card__role {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .timeline-card__dates {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-3);
+  }
+
+  .timeline-card__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+
+  /* ==========================================================
+     DRILLDOWN PANEL
+     ========================================================== */
+
+  .drilldown-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    background-color: var(--color-overlay);
+    opacity: 0;
+    transition: opacity 300ms ease-out;
+    pointer-events: none;
+  }
+
+  .drilldown-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .drilldown-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 301;
+    width: 100%;
+    max-width: 100%;
+    background-color: var(--color-surface);
+    border-left: var(--border);
+    overflow-y: auto;
+    overflow-x: hidden;
+    transform: translateX(100%);
+    transition: transform 300ms ease-out;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (min-width: 768px) {
+    .drilldown-panel {
+      width: 440px;
+      max-width: 100%;
+    }
+  }
+
+  .drilldown-panel.is-open {
+    transform: translateX(0);
+  }
+
+  /* --- Panel header --- */
+  .drilldown-panel__header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--color-surface);
+    border-bottom: var(--border);
+    padding: var(--space-4) var(--space-5);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .drilldown-panel__header-meta {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .drilldown-panel__company {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    line-height: 1.2;
+    margin-bottom: var(--space-1);
+  }
+
+  .drilldown-panel__role {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .drilldown-panel__dates {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-primary);
+  }
+
+  .drilldown-panel__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color var(--transition-fast), background-color var(--transition-fast);
+    flex-shrink: 0;
+  }
+
+  .drilldown-panel__close:hover {
+    color: var(--color-text);
+    background-color: var(--color-surface-2);
+  }
+
+  .drilldown-panel__close svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* --- Panel body --- */
+  .drilldown-panel__body {
+    padding: var(--space-5);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  /* --- Sections within panel --- */
+  .drilldown-section__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-3);
+  }
+
+  /* Description */
+  .drilldown-description {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    line-height: 1.7;
+  }
+
+  /* Stack chips */
+  .drilldown-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  /* Impact bullets */
+  .drilldown-impact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .drilldown-impact__item {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    line-height: 1.6;
+  }
+
+  .drilldown-impact__bullet {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    min-width: 5px;
+    border-radius: var(--radius-full);
+    background-color: var(--color-primary);
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+
+  /* Projects accordion */
+  .drilldown-projects {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .drilldown-project {
+    background-color: var(--color-surface-2);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .drilldown-project__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    min-height: 44px;
+    transition: background-color var(--transition-fast);
+  }
+
+  .drilldown-project__toggle:hover {
+    background-color: var(--color-surface-offset);
+  }
+
+  .drilldown-project__name {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-text);
+    line-height: 1.3;
+  }
+
+  .drilldown-project__chevron {
+    width: 16px;
+    height: 16px;
+    color: var(--color-text-muted);
+    transition: transform var(--transition-fast);
+    flex-shrink: 0;
+  }
+
+  .drilldown-project.is-open .drilldown-project__chevron {
+    transform: rotate(180deg);
+  }
+
+  .drilldown-project__body {
+    display: none;
+    padding: 0 var(--space-4) var(--space-4);
+    border-top: var(--border);
+  }
+
+  .drilldown-project.is-open .drilldown-project__body {
+    display: block;
+  }
+
+  .drilldown-project__description {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.65;
+    padding-top: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .drilldown-project__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin-bottom: var(--space-3);
+  }
+
+  .drilldown-project__outcome {
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    color: var(--color-primary);
+    line-height: 1.5;
+    padding: var(--space-2) var(--space-3);
+    background-color: var(--color-surface);
+    border-left: 2px solid var(--color-primary);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+
+  /* Overlay color tokens */
+  :root {
+    --color-overlay: rgba(0, 0, 0, 0.5);
+  }
+
+  [data-theme="light"] {
+    --color-overlay: rgba(0, 0, 0, 0.3);
+  }
+
+
+/* === SKILLS === */
+
+  /* -------------------------------------------------------
+     SKILLS SECTION — scoped to .skills-section
+     ------------------------------------------------------- */
+
+  .skills-section {
+    padding-block: var(--space-12);
+  }
+
+  /* Section header */
+  .skills-section__header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    margin-bottom: var(--space-8);
+    border-bottom: var(--border);
+    padding-bottom: var(--space-4);
+  }
+
+  .skills-section__title {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    line-height: 1.2;
+  }
+
+  .skills-section__subtitle {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  /* Categories grid: 1 col mobile, 2 col desktop */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .skills-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Category card */
+  .skill-category {
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  /* Category header */
+  .skill-category__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding-bottom: var(--space-3);
+    border-bottom: var(--border);
+  }
+
+  .skill-category__accent {
+    width: 3px;
+    height: 16px;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+  }
+
+  .skill-category__accent--data_engineering { background-color: var(--color-primary); }
+  .skill-category__accent--visualization    { background-color: var(--color-blue); }
+  .skill-category__accent--cloud            { background-color: var(--color-orange); }
+  .skill-category__accent--languages        { background-color: var(--color-success); }
+  .skill-category__accent--tools            { background-color: var(--color-purple); }
+
+  .skill-category__name {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .skill-category__name--data_engineering { color: var(--color-primary); }
+  .skill-category__name--visualization    { color: var(--color-blue); }
+  .skill-category__name--cloud            { color: var(--color-orange); }
+  .skill-category__name--languages        { color: var(--color-success); }
+  .skill-category__name--tools            { color: var(--color-purple); }
+
+  /* Skill list */
+  .skill-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  /* Single skill row */
+  .skill-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    min-height: 44px;
+    padding-block: var(--space-1);
+    position: relative;
+  }
+
+  .skill-row__name {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* SVG dot container */
+  .skill-dots {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    position: relative;
+    cursor: default;
+  }
+
+  /* Individual SVG dot wrapper — used for tooltip target */
+  .skill-dots__dot-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Tooltip */
+  .skill-dots__tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    right: 0;
+    z-index: 20;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-divider);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+    box-shadow: var(--shadow-md);
+  }
+
+  .skill-dots:hover .skill-dots__tooltip,
+  .skill-dots:focus-within .skill-dots__tooltip {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* SVG dots — SVG circles drawn in JS */
+  .skill-dots svg {
+    display: block;
+    overflow: visible;
+  }
+
+  /* Transition for fill animation */
+  .skill-dot-circle {
+    transition: fill 200ms ease-in-out;
+  }
+
+
+/* === CONTENT === */
+
+  /* ============================================================
+     SECCIÓN RESUMEN
+     ============================================================ */
+
+  #resumen {
+    padding-block: var(--space-10) var(--space-8);
+    border-bottom: var(--border);
+    margin-bottom: var(--space-10);
+  }
+
+  .hero {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .hero {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: var(--space-8);
+    }
+  }
+
+  /* — Columna izquierda: nombre + título + ubicación — */
+  .hero__identity {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  @media (min-width: 768px) {
+    .hero__identity {
+      min-width: 220px;
+      max-width: 260px;
+    }
+  }
+
+  .hero__name {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: var(--weight-black);
+    color: var(--color-text);
+    line-height: 1.15;
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .hero__name {
+      font-size: var(--text-4xl);
+    }
+  }
+
+  .hero__title {
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+    font-weight: var(--weight-regular);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .hero__location {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin-top: var(--space-1);
+  }
+
+  .hero__location svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--color-primary);
+  }
+
+  /* — Columna central: summary — */
+  .hero__summary {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .hero__summary p {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-regular);
+    color: var(--color-text);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .hero__summary p {
+      font-size: var(--text-base);
+    }
+  }
+
+  /* — Columna derecha: links + badges de idiomas — */
+  .hero__aside {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 768px) {
+    .hero__aside {
+      min-width: 180px;
+      align-items: flex-end;
+    }
+  }
+
+  /* Contact links */
+  .hero__contact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  @media (min-width: 768px) {
+    .hero__contact {
+      align-items: flex-end;
+    }
+  }
+
+  .hero__contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    min-height: 44px;
+    padding-block: var(--space-2);
+    transition: color var(--transition-fast);
+  }
+
+  .hero__contact-link:hover {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .hero__contact-link svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  .hero__contact-link--email {
+    font-family: var(--font-mono);
+  }
+
+  /* Language chips in hero */
+  .hero__lang-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  @media (min-width: 768px) {
+    .hero__lang-chips {
+      justify-content: flex-end;
+    }
+  }
+
+  /* ============================================================
+     SECCIÓN PROYECTOS
+     ============================================================ */
+
+  #proyectos {
+    padding-block: var(--space-8);
+    border-bottom: var(--border);
+    margin-bottom: var(--space-10);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+
+  .section-header__title {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .section-header__count {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 768px) {
+    .projects-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .projects-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    transition: border-color var(--transition-fast);
+  }
+
+  .project-card:hover {
+    border-color: var(--color-primary);
+  }
+
+  .project-card__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .project-card__name {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .project-card__company {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  [data-theme="light"] .project-card__company {
+    color: var(--color-text-muted);
+  }
+
+  .project-card__description {
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+    flex: 1;
+  }
+
+  .project-card__outcome {
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    color: var(--color-text);
+    line-height: 1.5;
+    padding: var(--space-2) var(--space-3);
+    background-color: var(--color-surface-2);
+    border-radius: var(--radius-sm);
+    border-left: 2px solid var(--color-primary);
+  }
+
+  .project-card__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin-top: auto;
+  }
+
+  .project-card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-primary);
+    text-decoration: none;
+    min-height: 44px;
+    padding-block: var(--space-2);
+    transition: opacity var(--transition-fast);
+  }
+
+  .project-card__link:hover {
+    opacity: 0.75;
+    text-decoration: none;
+  }
+
+  /* ============================================================
+     SECCIÓN EDUCACIÓN (+ CERTS + IDIOMAS + RECONOCIMIENTOS)
+     ============================================================ */
+
+  #educacion {
+    padding-block: var(--space-8);
+    margin-bottom: var(--space-10);
+  }
+
+  /* Subsecciones dentro de #educacion */
+  .edu-block {
+    margin-bottom: var(--space-10);
+  }
+
+  .edu-block:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Education cards */
+  .edu-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .edu-card {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+    padding: var(--space-5);
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-md);
+  }
+
+  @media (min-width: 768px) {
+    .edu-card {
+      grid-template-columns: 1fr auto;
+      align-items: start;
+    }
+  }
+
+  .edu-card__main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .edu-card__institution {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .edu-card__degree {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .edu-card__field {
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .edu-card__years {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    margin-top: var(--space-1);
+  }
+
+  @media (min-width: 768px) {
+    .edu-card__years {
+      margin-top: 0;
+      text-align: right;
+    }
+  }
+
+  /* Certifications grid */
+  .cert-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 768px) {
+    .cert-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .cert-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .cert-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    transition: border-color var(--transition-fast);
+  }
+
+  .cert-card:hover {
+    border-color: var(--color-primary);
+  }
+
+  .cert-card__icon {
+    flex-shrink: 0;
+    color: var(--color-primary);
+    margin-top: 2px;
+  }
+
+  .cert-card__icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .cert-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+
+  .cert-card__name {
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  .cert-card__meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  /* Cert link — contraste correcto en dark y light + touch target */
+  .cert-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--color-blue);
+    text-decoration: none;
+    transition: opacity var(--transition-fast);
+  }
+
+  .cert-link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+  }
+
+  [data-theme="light"] .cert-link {
+    color: var(--color-text-muted);
+    text-decoration: underline;
+  }
+
+  /* Languages list */
+  .lang-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  /* Honors list */
+  .honors-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .honor-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-md);
+  }
+
+  .honor-card__icon {
+    flex-shrink: 0;
+    color: var(--color-orange);
+    margin-top: 2px;
+  }
+
+  .honor-card__icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .honor-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+
+  .honor-card__name {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .honor-card__meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+
+/* === PRINT === */
+/* =============================================================================
+   06-print.css — PrintAgent
+   CSS de impresión — exportar el CV como PDF limpio desde el navegador
+   Solo @media print { ... } — fragmento parcial inyectado por AssemblerAgent
+   Sin <style> tags
+   ============================================================================= */
+
+@media print {
+
+  /* ===========================================================================
+     @PAGE — MÁRGENES Y TAMAÑO
+     =========================================================================== */
+
+  @page {
+    size: A4 portrait;
+    margin: 16mm 18mm 20mm 18mm;
+  }
+
+  @page :first {
+    margin-top: 12mm;
+  }
+
+  /* ===========================================================================
+     FORZAR LIGHT MODE — override variables incluso con [data-theme="dark"]
+     Las CSS custom properties se redefinen aquí para que toda la hoja de
+     impresión use valores de alto contraste sobre blanco.
+     =========================================================================== */
+
+  :root,
+  [data-theme="dark"],
+  [data-theme="light"] {
+    --color-bg:             white;
+    --color-surface:        white;
+    --color-surface-2:      #f0f0f0;
+    --color-surface-offset: #d8d8d8;
+    --color-text:           black;
+    --color-text-muted:     #444444;
+    --color-divider:        #cccccc;
+    --color-primary:        #2a6a73;
+    --color-blue:           #1a5fa8;
+    --color-orange:         #b05c10;
+    --color-success:        #1a7a28;
+    --color-purple:         #6a3ab0;
+    --shadow-sm:            none;
+    --shadow-md:            none;
+    --border:               1px solid var(--color-divider);
+    --font-display:         'Satoshi', sans-serif;
+    --font-mono:            'JetBrains Mono', monospace;
+    --transition-fast:      0ms;
+    --transition-base:      0ms;
+  }
+
+  /* ===========================================================================
+     RESET GLOBAL DE IMPRESIÓN
+     =========================================================================== */
+
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  html {
+    font-size: 11pt;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    font-family: var(--font-display) !important;
+    font-size: 10pt !important;
+    line-height: 1.5 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    min-height: auto !important;
+    -webkit-font-smoothing: auto !important;
+  }
+
+  /* ===========================================================================
+     ELEMENTOS A OCULTAR COMPLETAMENTE
+     =========================================================================== */
+
+  /* Header sticky de navegación */
+  .site-header,
+  .site-header__inner {
+    display: none !important;
+  }
+
+  /* Navegación desktop y mobile */
+  .site-nav,
+  .mobile-nav {
+    display: none !important;
+  }
+
+  /* Botones de acción en header */
+  .btn-icon,
+  .btn-lang,
+  .btn-download,
+  .btn-hamburger,
+  .theme-toggle,
+  #btn-theme,
+  #btn-lang,
+  #btn-download-desktop,
+  #btn-hamburger {
+    display: none !important;
+  }
+
+  /* KPI bar animada (no aporta en impresión) */
+  .kpi-bar {
+    display: none !important;
+  }
+
+  /* Tooltip del timeline D3 */
+  .timeline-tooltip {
+    display: none !important;
+  }
+
+  /* Tooltip de skill dots */
+  .skill-dots__tooltip {
+    display: none !important;
+  }
+
+  /* Drilldown panel y overlay (elemento modal) */
+  .drilldown-overlay,
+  .drilldown-panel {
+    display: none !important;
+  }
+
+  /* SVG timeline D3 — no imprime bien (requiere viewport, escala, interactividad) */
+  .timeline-svg-wrap {
+    display: none !important;
+  }
+
+  /* ===========================================================================
+     LAYOUT DE IMPRESIÓN — UNA COLUMNA, SIN GRIDS COMPLEJOS
+     =========================================================================== */
+
+  #main-content {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #main-content section {
+    scroll-margin-top: 0 !important;
+  }
+
+  /* Grids multi-columna → una columna en impresión */
+  .skills-grid,
+  .projects-grid,
+  .cert-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8pt !important;
+  }
+
+  /* Hero: una columna */
+  .hero {
+    flex-direction: column !important;
+    gap: 8pt !important;
+  }
+
+  .hero__identity {
+    min-width: auto !important;
+    max-width: 100% !important;
+  }
+
+  .hero__aside {
+    min-width: auto !important;
+    align-items: flex-start !important;
+  }
+
+  .hero__contact {
+    align-items: flex-start !important;
+  }
+
+  /* ===========================================================================
+     TIMELINE EN IMPRESIÓN — MOSTRAR LISTA MOBILE, OCULTAR D3
+     =========================================================================== */
+
+  /* La lista mobile (.timeline-mobile) está hidden en desktop (display:none).
+     En impresión la forzamos visible para reemplazar al SVG D3. */
+  .timeline-mobile {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8pt !important;
+  }
+
+  /* Simplificar cards de timeline para impresión */
+  .timeline-card {
+    border: 1pt solid var(--color-divider) !important;
+    border-radius: 4pt !important;
+    padding: 8pt 10pt !important;
+    cursor: default !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    background: white !important;
+  }
+
+  /* Eliminar el pseudo-elemento barra izquierda de color en impresión
+     (depende de CSS custom property inline —timeline-bar-color— y puede
+     no renderizarse correctamente en todos los motores PDF) */
+  .timeline-card::before {
+    display: none !important;
+  }
+
+  /* Quitar pading left extra que compensa la barra */
+  .timeline-section__header {
+    margin-bottom: 8pt !important;
+  }
+
+  /* ===========================================================================
+     SKILL DOTS — SVG VISIBLE EN IMPRESIÓN
+     =========================================================================== */
+
+  /* Asegurar que los círculos SVG impriman con color */
+  .skill-dots svg,
+  .skill-dot-circle {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Contenedor de dots: cursor default */
+  .skill-dots {
+    cursor: default !important;
+  }
+
+  /* Forzar visibilidad de los dots y su contenedor */
+  .skill-dots,
+  .skill-dots svg {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* ===========================================================================
+     SUPERFICIES Y CARDS — SIMPLIFICAR BORDES
+     =========================================================================== */
+
+  .surface,
+  .surface-2,
+  .surface-offset,
+  .skill-category,
+  .timeline-card,
+  .project-card,
+  .edu-card,
+  .cert-card,
+  .honor-card {
+    background: white !important;
+    border: 1pt solid var(--color-divider) !important;
+    box-shadow: none !important;
+  }
+
+  /* Eliminar pseudo-elementos decorativos que no imprimen bien */
+  .kpi-card::before {
+    display: none !important;
+  }
+
+  /* ===========================================================================
+     TIPOGRAFÍA DE IMPRESIÓN
+     =========================================================================== */
+
+  /* Fallback a sistema si las web fonts no cargan */
+  .font-display,
+  .site-logo__name,
+  .site-logo__title,
+  .hero__name,
+  .hero__title,
+  .section-header__title,
+  .timeline-section__title,
+  .skills-section__title,
+  .skill-category__name,
+  .timeline-card__company,
+  .drilldown-panel__company,
+  .project-card__name,
+  .edu-card__institution,
+  .edu-card__degree,
+  .cert-card__name,
+  .honor-card__name {
+    font-family: var(--font-display) !important;
+  }
+
+  .font-mono,
+  .timeline-card__dates,
+  .skill-row__name,
+  .badge,
+  .chip,
+  .edu-card__years,
+  .cert-card__meta,
+  .honor-card__meta,
+  .kpi-card__value,
+  .section-header__count {
+    font-family: var(--font-mono) !important;
+  }
+
+  /* Tamaños de texto en impresión */
+  .hero__name {
+    font-size: 20pt !important;
+    line-height: 1.15 !important;
+  }
+
+  .hero__title {
+    font-size: 11pt !important;
+  }
+
+  .section-header__title,
+  .timeline-section__title,
+  .skills-section__title {
+    font-size: 13pt !important;
+  }
+
+  .skill-row__name,
+  .timeline-card__company,
+  .project-card__name,
+  .edu-card__institution {
+    font-size: 9pt !important;
+  }
+
+  .badge,
+  .chip {
+    font-size: 7pt !important;
+    padding: 1pt 3pt !important;
+  }
+
+  /* Links visibles en impresión */
+  a {
+    color: black !important;
+    text-decoration: none !important;
+  }
+
+  /* Mostrar URL de links de contacto y certificaciones */
+  .hero__contact-link[href^="mailto:"]::after {
+    content: " (" attr(href) ")";
+    font-size: 7pt;
+    color: var(--color-text-muted);
+  }
+
+  .cert-link[href]::after {
+    display: none; /* Las URLs de certificados son largas — omitir */
+  }
+
+  /* ===========================================================================
+     SALTOS DE PÁGINA
+     =========================================================================== */
+
+  /* Evitar que una sección quede partida entre páginas */
+  section {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Educación siempre empieza en nueva página */
+  #educacion {
+    break-before: always !important;
+    page-break-before: always !important;
+  }
+
+  /* Evitar que cards queden partidas */
+  .timeline-card,
+  .skill-category,
+  .project-card,
+  .edu-card,
+  .cert-card,
+  .honor-card,
+  .edu-block {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Evitar heading huérfano al final de página */
+  .section-header,
+  .timeline-section__header,
+  .skills-section__header {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  /* ===========================================================================
+     CONTENIDO TRADUCIDO — NO OCULTAR
+     Los elementos con data-i18n ya tienen su textContent renderizado
+     por applyStaticLabels() antes de abrir el diálogo de impresión.
+     El CSS no fuerza ningún idioma — muestra el contenido activo.
+     =========================================================================== */
+
+  [data-i18n],
+  [data-i18n-aria] {
+    visibility: visible !important;
+    display: revert !important;
+  }
+
+  /* ===========================================================================
+     OVERFLOW Y SCROLL — ELIMINAR
+     =========================================================================== */
+
+  body,
+  #main-content,
+  .timeline-section,
+  .skills-section,
+  #resumen,
+  #proyectos,
+  #educacion {
+    overflow: visible !important;
+    max-width: 100% !important;
+  }
+
+  /* Scrollable wrapper del SVG — ya oculto, pero por si acaso */
+  .timeline-svg-wrap {
+    overflow: visible !important;
+  }
+
+  /* ===========================================================================
+     SCROLL-SPY ACTIVE STATE — LIMPIAR
+     =========================================================================== */
+
+  .site-nav__link.is-active {
+    color: black !important;
+    background-color: transparent !important;
+  }
+
+}
+/* fin @media print */
+
+  </style>
+</head>
+<body>
+
+
+<!-- ============================================================
+     02-layout.html — LayoutAgent
+     Header, KPI Bar, scaffold de secciones + i18n engine
+     Fragmento parcial: sin <html>, <head>, <body>
+     ============================================================ -->
+
+<!-- ===================== STYLES ===================== -->
+
+
+<!-- ===================== HEADER ===================== -->
+<header class="site-header" role="banner">
+  <div class="site-header__inner">
+
+    <!-- Logo: iniciales SVG + nombre + título -->
+    <a class="site-logo" href="#resumen" aria-label="Toni Wang — Lead Data Engineer">
+      <svg class="site-logo__svg" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <style>.logo-text { font-family: var(--font-mono); font-size: var(--text-sm); font-weight: 700; }</style>
+        <rect width="36" height="36" rx="6" fill="var(--color-primary)" opacity="0.15"/>
+        <rect width="36" height="36" rx="6" fill="none" stroke="var(--color-primary)" stroke-width="1"/>
+        <text
+          x="18"
+          y="23"
+          text-anchor="middle"
+          class="logo-text"
+          fill="var(--color-primary)"
+          letter-spacing="-0.5">TW</text>
+      </svg>
+      <div class="stack">
+        <span class="site-logo__name">Toni Wang</span>
+        <span class="site-logo__title">Lead Data Engineer</span>
+      </div>
+    </a>
+
+    <!-- Desktop navigation -->
+    <nav class="site-nav" role="navigation" aria-label="Navegación principal">
+      <a class="site-nav__link" href="#resumen"     data-i18n="nav.summary"></a>
+      <a class="site-nav__link" href="#experiencia" data-i18n="nav.experience"></a>
+      <a class="site-nav__link" href="#skills"      data-i18n="nav.skills"></a>
+      <a class="site-nav__link" href="#proyectos"   data-i18n="nav.projects"></a>
+      <a class="site-nav__link" href="#educacion"   data-i18n="nav.education"></a>
+    </nav>
+
+    <!-- Header actions -->
+    <div class="site-header__actions">
+
+      <!-- Toggle dark/light -->
+      <button
+        class="btn-icon"
+        id="btn-theme"
+        type="button"
+        aria-label="Toggle theme"
+        data-i18n-aria="actions.toggle_theme"
+        title="Toggle theme">
+        <!-- Icon injected by JS -->
+      </button>
+
+      <!-- Toggle ES/EN -->
+      <button
+        class="btn-lang"
+        id="btn-lang"
+        type="button"
+        aria-live="polite">
+        <!-- Label injected by JS: shows opposite language -->
+      </button>
+
+      <!-- Download CV (desktop) -->
+      <button
+        class="btn-download"
+        id="btn-download-desktop"
+        type="button"
+        onclick="window.print()">
+        <!-- Lucide download icon injected by JS -->
+        <span data-i18n="actions.download"></span>
+      </button>
+
+      <!-- Hamburger (mobile) -->
+      <button
+        class="btn-icon btn-hamburger"
+        id="btn-hamburger"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        aria-label="Abrir menú">
+        <!-- Icon injected by JS -->
+      </button>
+
+    </div>
+  </div>
+</header>
+
+<!-- ===================== MOBILE NAV ===================== -->
+<nav
+  class="mobile-nav"
+  id="mobile-nav"
+  role="navigation"
+  aria-label="Menú móvil"
+  aria-hidden="true">
+  <a class="mobile-nav__link" href="#resumen"     data-i18n="nav.summary"></a>
+  <a class="mobile-nav__link" href="#experiencia" data-i18n="nav.experience"></a>
+  <a class="mobile-nav__link" href="#skills"      data-i18n="nav.skills"></a>
+  <a class="mobile-nav__link" href="#proyectos"   data-i18n="nav.projects"></a>
+  <a class="mobile-nav__link" href="#educacion"   data-i18n="nav.education"></a>
+  <button
+    class="mobile-nav__download"
+    type="button"
+    onclick="window.print()">
+    <!-- icon injected by JS -->
+    <span data-i18n="actions.download"></span>
+  </button>
+</nav>
+
+<!-- ===================== KPI BAR ===================== -->
+<div class="kpi-bar" role="region" aria-label="Métricas del perfil" id="kpi-bar">
+  <div class="kpi-bar__inner">
+
+    <!-- Years of experience -->
+    <div class="kpi-card" data-kpi="years_experience" data-kpi-value="14">
+      <span class="kpi-card__value font-mono" data-kpi-display="0">0</span>
+      <span class="kpi-card__label" data-i18n="kpi.years_experience"></span>
+    </div>
+
+    <!-- Companies -->
+    <div class="kpi-card" data-kpi="companies" data-kpi-value="9">
+      <span class="kpi-card__value font-mono" data-kpi-display="0">0</span>
+      <span class="kpi-card__label" data-i18n="kpi.companies"></span>
+    </div>
+
+    <!-- Projects -->
+    <div class="kpi-card" data-kpi="projects" data-kpi-value="9">
+      <span class="kpi-card__value font-mono" data-kpi-display="0">0</span>
+      <span class="kpi-card__label" data-i18n="kpi.projects"></span>
+    </div>
+
+    <!-- Technologies -->
+    <div class="kpi-card" data-kpi="technologies" data-kpi-value="32">
+      <span class="kpi-card__value font-mono" data-kpi-display="0">0</span>
+      <span class="kpi-card__label" data-i18n="kpi.technologies"></span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===================== MAIN SCAFFOLD ===================== -->
+<main id="main-content">
+  <section id="resumen"     aria-label="Resumen"><div id="resumen-content">
+  <!-- Rendered by JS -->
+</div></section>
+  <section id="experiencia" aria-label="Experiencia"><!-- ============================================================
+     03-timeline.html — TimelineAgent
+     Sección de experiencia laboral: Timeline D3.js (desktop)
+     + lista móvil + DrillDown panel con hash routing
+     Fragmento parcial: sin <html>, <head>, <body>
+     ============================================================ -->
+
+<!-- ===================== STYLES ===================== -->
+
+
+<!-- ===================== HTML ===================== -->
+<div class="timeline-section" id="experiencia">
+
+  <!-- Section header -->
+  <div class="timeline-section__header">
+    <h2 class="timeline-section__title" id="timeline-section-title"></h2>
+    <span class="timeline-section__count font-mono" id="timeline-count"></span>
+  </div>
+
+  <!-- Desktop: SVG timeline (D3.js) -->
+  <div class="timeline-svg-wrap" id="timeline-svg-wrap" aria-hidden="true">
+    <!-- SVG injected by D3 -->
+  </div>
+
+  <!-- Mobile: vertical card list -->
+  <ul class="timeline-mobile" id="timeline-mobile" role="list" aria-label="Experiencia laboral"></ul>
+
+</div>
+
+<!-- Tooltip (shared, desktop only) -->
+<div class="timeline-tooltip" id="timeline-tooltip" role="tooltip" aria-hidden="true">
+  <div class="timeline-tooltip__company" id="tt-company"></div>
+  <div class="timeline-tooltip__role" id="tt-role"></div>
+  <div class="timeline-tooltip__duration" id="tt-duration"></div>
+</div>
+
+<!-- DrillDown overlay -->
+<div class="drilldown-overlay" id="drilldown-overlay" aria-hidden="true"></div>
+
+<!-- DrillDown panel -->
+<aside
+  class="drilldown-panel"
+  id="drilldown-panel"
+  role="complementary"
+  aria-label="Detalle de experiencia"
+  aria-hidden="true"
+  tabindex="-1">
+
+  <!-- Header -->
+  <div class="drilldown-panel__header">
+    <div class="drilldown-panel__header-meta">
+      <div class="drilldown-panel__company" id="dd-company"></div>
+      <div class="drilldown-panel__role" id="dd-role"></div>
+      <div class="drilldown-panel__dates" id="dd-dates"></div>
+    </div>
+    <button
+      class="drilldown-panel__close"
+      id="drilldown-close"
+      type="button"
+      aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Body -->
+  <div class="drilldown-panel__body">
+
+    <!-- Description -->
+    <div id="dd-description-wrap">
+      <div class="drilldown-description" id="dd-description"></div>
+    </div>
+
+    <!-- Stack -->
+    <div id="dd-stack-wrap">
+      <div class="drilldown-section__label" id="dd-stack-label"></div>
+      <div class="drilldown-stack" id="dd-stack"></div>
+    </div>
+
+    <!-- Impact -->
+    <div id="dd-impact-wrap">
+      <div class="drilldown-section__label" id="dd-impact-label"></div>
+      <ul class="drilldown-impact" id="dd-impact" role="list"></ul>
+    </div>
+
+    <!-- Projects -->
+    <div id="dd-projects-wrap" style="display:none">
+      <div class="drilldown-section__label" id="dd-projects-label"></div>
+      <div class="drilldown-projects" id="dd-projects"></div>
+    </div>
+
+  </div>
+</aside>
+
+<!-- ===================== SCRIPT ===================== --></section>
+  <section id="skills"      aria-label="Skills"><!-- ============================================================
+     04-skills.html — SkillsAgent
+     Skill Matrix: SVG dots animados por categoría
+     Fragmento parcial: sin <html>, <head>, <body>
+     ============================================================ -->
+
+<!-- ===================== STYLES ===================== -->
+
+
+<!-- ===================== HTML ===================== -->
+<section id="skills" class="skills-section" aria-label="Skills">
+  <div class="skills-section__header">
+    <h2 class="skills-section__title" data-i18n="nav.skills"></h2>
+    <span class="skills-section__subtitle" aria-hidden="true">skill matrix</span>
+  </div>
+
+  <!-- Grid container — populated by JS -->
+  <div class="skills-grid" id="skills-grid" role="list" aria-label="Skill categories"></div>
+</section>
+
+<!-- ===================== SCRIPT ===================== --></section>
+  <section id="proyectos"   aria-label="Proyectos"><div id="proyectos-content">
+  <!-- Rendered by JS -->
+</div></section>
+  <section id="educacion"   aria-label="Educación"><div id="educacion-content">
+  <!-- Rendered by JS -->
+</div></section>
+</main>
+
+<!-- ===================== SCRIPT ===================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+/* CV_DATA — must be first */
+const CV_DATA = {
+  meta: {
+    languages: ["es", "en"],
+    default_language: "es"
+  },
+  profile: {
+    name: "Toni Wang",
+    title: "Lead Data Engineer",
+    location: {
+      es: "Madrid, España (residencia: Molina de Segura, Murcia)",
+      en: "Madrid, Spain (residence: Molina de Segura, Murcia)"
+    },
+    summary: {
+      es: "Ingeniero informático apasionado por los datos, con +14 años de experiencia en business intelligence, big data y machine learning. He liderado proyectos de data analysis, integration, discovery y visualisation, construyendo data warehouses desde cero e integrando múltiples fuentes para convertir datos en producto.",
+      en: "Software engineer passionate about data, with 14+ years of experience in business intelligence, big data and machine learning. I have led data analysis, integration, discovery and visualisation projects, building data warehouses from scratch and integrating multiple sources to turn data into product."
+    },
+    contact: {
+      linkedin: "https://www.linkedin.com/in/tonywangchen",
+      email: "tony.wang@um.es"
+    },
+    kpis: {
+      years_experience: 14,
+      companies: 9,
+      projects: 9,
+      technologies: 32
+    }
+  },
+  experience: [
+    {
+      id: "exp-001",
+      company: "Fever",
+      role: "Lead Data Engineer",
+      start: "2025-01",
+      end: null,
+      current: true,
+      description: {
+        es: "Liderazgo técnico y humano de un equipo de 8 Analytics Engineers, con foco en Partner Reporting y Finanzas. Alineo la estrategia de datos con departamentos clave de la compañía (Marketing, Finanzas y Operaciones).",
+        en: "Technical and people leadership of an 8-person Analytics Engineering team, focused on Partner Reporting and Finance. I align the data strategy with key company departments (Marketing, Finance and Operations)."
+      },
+      impact: [
+        {
+          es: "Lidero un equipo de 8 Analytics Engineers, principalmente en las verticales de Partner Reporting y Finanzas",
+          en: "I lead an 8-person Analytics Engineering team, mainly in the Partner Reporting and Finance verticals"
+        },
+        {
+          es: "Supervisión y gestión del proceso de contrataciones y crecimiento del equipo",
+          en: "Oversight and management of hiring and team growth"
+        },
+        {
+          es: "Creación y mantenimiento de una fuente de datos única y real, eligiendo las tecnologías que mejor se adaptan a cada problema de negocio",
+          en: "Creation and maintenance of a single source of truth, picking the best-fit technologies for each business problem"
+        },
+        {
+          es: "Recolección y priorización de requisitos de Stakeholders para construir productos data-driven",
+          en: "Collection and prioritisation of stakeholder requirements to build data-driven products"
+        }
+      ],
+      stack: ["Snowflake", "Python", "Airflow", "dbt", "AWS", "Metabase", "Pandas", "Spark", "Fivetran"],
+      projects: [
+        {
+          name: {
+            es: "Evolución de la plataforma de datos corporativa",
+            en: "Evolution of the corporate data platform"
+          },
+          description: {
+            es: "Liderazgo de la evolución continua del data warehouse y la plataforma de datos de Fever, sirviendo a Marketing, Finanzas y Operaciones como única fuente de verdad.",
+            en: "Leadership of the continuous evolution of Fever's data warehouse and data platform, serving Marketing, Finance and Operations as the single source of truth."
+          },
+          stack: ["Snowflake", "Python", "Airflow", "dbt", "AWS"],
+          outcome: {
+            es: "Plataforma consolidada como única fuente de verdad para los departamentos clave de la compañía",
+            en: "Platform consolidated as the single source of truth for the company's key departments"
+          }
+        },
+        {
+          name: {
+            es: "Modernización del stack de datos",
+            en: "Data stack modernisation"
+          },
+          description: {
+            es: "Modernización progresiva del stack: introducción de nuevas tecnologías de orquestación, transformación y calidad de datos para escalar el equipo y los casos de uso.",
+            en: "Progressive stack modernisation: introduction of new orchestration, transformation and data quality technologies to scale the team and use cases."
+          },
+          stack: ["dbt", "Airflow", "Fivetran", "Snowflake"],
+          outcome: {
+            es: "Stack actualizado para soportar el crecimiento del equipo y la complejidad creciente de los casos de uso",
+            en: "Updated stack to support team growth and the increasing complexity of use cases"
+          }
+        },
+        {
+          name: {
+            es: "Productos de datos para stakeholders",
+            en: "Data products for stakeholders"
+          },
+          description: {
+            es: "Construcción de productos data-driven para Marketing, Finanzas y Operaciones: dashboards estratégicos, modelos de attribution y métricas de negocio en producción.",
+            en: "Building data-driven products for Marketing, Finance and Operations: strategic dashboards, attribution models and production-grade business metrics."
+          },
+          stack: ["Snowflake", "Metabase", "Python"],
+          outcome: {
+            es: "Reporting estratégico productivo que sirve como base de decisión a Partner Reporting y Finanzas",
+            en: "Production strategic reporting that serves as the decision basis for Partner Reporting and Finance"
+          }
+        }
+      ]
+    },
+    {
+      id: "exp-002",
+      company: "Fever",
+      role: "Senior Data Engineer",
+      start: "2018-09",
+      end: "2025-02",
+      current: false,
+      description: {
+        es: "Análisis y desarrollo de un data warehouse desde cero (ingesta, modelado, transformaciones, capa de presentación y visualización), integrando múltiples fuentes de datos de marketing y producto.",
+        en: "Analysis and development of a data warehouse from scratch (ingestion, modelling, transformations, presentation and visualisation layer), integrating multiple marketing and product data sources."
+      },
+      impact: [
+        {
+          es: "Construcción end-to-end del data warehouse de Fever en Snowflake desde cero",
+          en: "End-to-end construction of Fever's Snowflake data warehouse from scratch"
+        },
+        {
+          es: "Escala alcanzada: +50 fuentes integradas y +1.000 tablas productivas",
+          en: "Scale reached: 50+ integrated sources and 1,000+ production tables"
+        },
+        {
+          es: "Crecimiento del departamento de datos de 2 ingenieros a más de 30 personas",
+          en: "Data department grew from 2 engineers to 30+ people"
+        },
+        {
+          es: "Integración de fuentes clave: Google Analytics, Facebook, Mixpanel, Adwords, funnel.io",
+          en: "Integration of key sources: Google Analytics, Facebook, Mixpanel, Adwords, funnel.io"
+        }
+      ],
+      stack: ["Snowflake", "Python", "Pandas", "Spark", "Airflow", "Fivetran", "Metabase", "Microstrategy", "PostgreSQL", "AWS", "JQL", "funnel.io"],
+      projects: [
+        {
+          name: {
+            es: "Data Warehouse corporativo en Snowflake",
+            en: "Corporate Data Warehouse on Snowflake"
+          },
+          description: {
+            es: "Diseño, construcción y mantenimiento del data warehouse central de la compañía sobre Snowflake, sirviendo a Marketing, Producto y Finanzas.",
+            en: "Design, build and maintenance of the company's central data warehouse on Snowflake, serving Marketing, Product and Finance."
+          },
+          stack: ["Snowflake", "Python", "Airflow", "Fivetran"],
+          outcome: {
+            es: "+1.000 tablas productivas; soporte al crecimiento del departamento de 2 a 30+ ingenieros de datos",
+            en: "1,000+ production tables; support for the department's growth from 2 to 30+ data engineers"
+          }
+        },
+        {
+          name: {
+            es: "Integración multi-fuente de marketing",
+            en: "Multi-source marketing integration"
+          },
+          description: {
+            es: "Ingesta y normalización de datos de plataformas (Google Analytics, Facebook, Mixpanel, Adwords) para análisis unificado de adquisición y conversión.",
+            en: "Ingestion and normalisation of platform data (Google Analytics, Facebook, Mixpanel, Adwords) for unified acquisition and conversion analysis."
+          },
+          stack: ["funnel.io", "Fivetran", "Python", "Airflow"],
+          outcome: {
+            es: "+50 fuentes integradas en el data warehouse para análisis cross-canal",
+            en: "50+ sources integrated into the data warehouse for cross-channel analysis"
+          }
+        }
+      ]
+    },
+    {
+      id: "exp-003",
+      company: "Hawkers Group",
+      role: "BI & Big Data Engineer",
+      start: "2017-03",
+      end: "2018-08",
+      current: false,
+      description: {
+        es: "Análisis y desarrollo de un sistema nuevo de BI utilizando tecnologías Big Data, integrando múltiples fuentes vía API en un único data warehouse.",
+        en: "Analysis and development of a new BI system using Big Data technologies, integrating multiple API sources into a single data warehouse."
+      },
+      impact: [
+        {
+          es: "Diseño e implementación de un stack Big Data sobre Cloudera (HDFS, Spark, Hive, Sqoop, Flume)",
+          en: "Design and implementation of a Big Data stack on Cloudera (HDFS, Spark, Hive, Sqoop, Flume)"
+        },
+        {
+          es: "Integración API de fuentes externas: Google Analytics, Facebook, Shopify",
+          en: "API integration of external sources: Google Analytics, Facebook, Shopify"
+        }
+      ],
+      stack: ["Apache Hadoop", "HDFS", "Spark", "Hive", "Sqoop", "Flume", "Cloudera", "PostgreSQL", "Scala", "Shell", "Pentaho", "Microstrategy"],
+      projects: [
+        {
+          name: {
+            es: "Plataforma BI Big Data e-commerce",
+            en: "Big Data BI platform for e-commerce"
+          },
+          description: {
+            es: "Construcción de un sistema de BI sobre stack Cloudera para alimentar reporting de e-commerce.",
+            en: "Building a BI system on a Cloudera stack to feed e-commerce reporting."
+          },
+          stack: ["Hadoop", "Spark", "Hive", "Microstrategy"],
+          outcome: {
+            es: "Visión unificada de las distintas fuentes de venta online en un único data warehouse",
+            en: "Unified view of the different online sales sources in a single data warehouse"
+          }
+        }
+      ]
+    },
+    {
+      id: "exp-004",
+      company: "Tempe (Grupo Inditex)",
+      role: {
+        es: "Analista de Datos / Técnico BI",
+        en: "Data Analyst / BI Technician"
+      },
+      start: "2016-06",
+      end: "2017-02",
+      current: false,
+      description: {
+        es: "Análisis inteligente de datos para la obtención de conocimiento accionable, resolución de incidencias en reporting y desarrollo de nuevos informes.",
+        en: "Intelligent data analysis to extract actionable knowledge, reporting incident resolution and development of new reports."
+      },
+      impact: [
+        {
+          es: "Resolución de incidencias y mantenimiento del reporting corporativo",
+          en: "Incident resolution and maintenance of corporate reporting"
+        },
+        {
+          es: "Desarrollo de nuevos informes y modelos analíticos",
+          en: "Development of new reports and analytical models"
+        }
+      ],
+      stack: ["Microsoft SQL Server", "RStudio", "Microsoft Analysis Services", "Microsoft Reporting Services"],
+      projects: []
+    },
+    {
+      id: "exp-005",
+      company: "Capgemini",
+      role: "BI Consultant",
+      start: "2015-10",
+      end: "2017-02",
+      current: false,
+      description: {
+        es: "Consultor Business Intelligence en el Centro de Excelencia BI de Murcia. Cliente principal: Gas Natural Fenosa.",
+        en: "Business Intelligence consultant at the Murcia BI Center of Excellence. Main client: Gas Natural Fenosa."
+      },
+      impact: [
+        {
+          es: "Soporte y desarrollo de datamarts para Gas Natural Fenosa",
+          en: "Support and development of datamarts for Gas Natural Fenosa"
+        },
+        {
+          es: "Resolución de incidencias y mantenimiento evolutivo",
+          en: "Incident resolution and evolutionary maintenance"
+        },
+        {
+          es: "Desarrollo de proyectos ETL end-to-end hasta capa de reporting",
+          en: "End-to-end ETL project development through to the reporting layer"
+        }
+      ],
+      stack: ["PL/SQL", "Microstrategy", "Oracle SQL Developer"],
+      projects: [
+        {
+          name: {
+            es: "Mantenimiento y evolución de datamarts — Gas Natural Fenosa",
+            en: "Datamart maintenance and evolution — Gas Natural Fenosa"
+          },
+          description: {
+            es: "Diseño técnico y funcional de nuevos datamarts y desarrollo de proyectos ETL completos hasta reporting en Microstrategy.",
+            en: "Technical and functional design of new datamarts and development of complete ETL projects through to Microstrategy reporting."
+          },
+          stack: ["PL/SQL", "Oracle SQL Developer", "Microstrategy"],
+          outcome: {
+            es: "Continuidad operativa de los datamarts del cliente y entrega de nuevos desarrollos end-to-end",
+            en: "Operational continuity of the client's datamarts and delivery of new end-to-end developments"
+          }
+        }
+      ]
+    },
+    {
+      id: "exp-006",
+      company: "Xepient Solutions",
+      role: "Data Scientist",
+      start: "2015-04",
+      end: "2015-09",
+      current: false,
+      description: {
+        es: "Análisis inteligente de datos y extracción de información y conocimiento a partir de grandes volúmenes de datos.",
+        en: "Intelligent data analysis and extraction of information and knowledge from large data volumes."
+      },
+      impact: [
+        {
+          es: "Aplicación de técnicas de minería de datos para extracción de conocimiento de grandes volúmenes",
+          en: "Application of data mining techniques to extract knowledge from large volumes"
+        }
+      ],
+      stack: ["RStudio", "Weka", "Microsoft SQL Management Studio", "Kettle"],
+      projects: []
+    },
+    {
+      id: "exp-007",
+      company: "Freelance",
+      role: {
+        es: "Desarrollador Web/Software",
+        en: "Web/Software Developer"
+      },
+      start: "2014-04",
+      end: "2015-09",
+      current: false,
+      description: {
+        es: "Desarrollo de aplicaciones de escritorio, páginas web y módulos de automatización de trabajo para diversos clientes.",
+        en: "Development of desktop applications, websites and work automation modules for various clients."
+      },
+      impact: [
+        {
+          es: "Entrega de proyectos a medida combinando frontend, backend y automatización",
+          en: "Delivery of bespoke projects combining frontend, backend and automation"
+        }
+      ],
+      stack: ["Java", "JavaScript", "PHP", "HTML", "CSS"],
+      projects: []
+    },
+    {
+      id: "exp-008",
+      company: "STEL Solutions",
+      role: {
+        es: "Programador Web",
+        en: "Web Developer"
+      },
+      start: "2013-02",
+      end: "2013-10",
+      current: false,
+      description: {
+        es: "Desarrollo web mediante CMS Joomla y desarrollo de comercios electrónicos con Prestashop.",
+        en: "Web development with Joomla CMS and e-commerce development with Prestashop."
+      },
+      impact: [
+        {
+          es: "Diseño y desarrollo de la aplicación STEL Corner",
+          en: "Design and development of the STEL Corner application"
+        }
+      ],
+      stack: ["HTML", "PHP", "CSS", "JavaScript", "Joomla", "Prestashop"],
+      projects: []
+    },
+    {
+      id: "exp-009",
+      company: "MetaEnlace Sistemas de Información",
+      role: {
+        es: "Prácticas Curriculares",
+        en: "Curricular Internship"
+      },
+      start: "2012-06",
+      end: "2012-07",
+      current: false,
+      description: {
+        es: "Prácticas curriculares de la Universidad de Murcia: desarrollo de macros y plantillas de reporting.",
+        en: "Curricular internship from the University of Murcia: development of macros and reporting templates."
+      },
+      impact: [
+        {
+          es: "Desarrollo de macros en VBA",
+          en: "Development of VBA macros"
+        },
+        {
+          es: "Generación de plantillas con JasperReport",
+          en: "Generation of templates with JasperReport"
+        }
+      ],
+      stack: ["VBA", "C#", "Java", "JasperReport"],
+      projects: []
+    }
+  ],
+  skills: {
+    data_engineering: [
+      { name: "Apache Spark", level: 5, years: 9, category: "data_engineering" },
+      { name: "Apache Airflow", level: 5, years: 6, category: "data_engineering" },
+      { name: "Pandas", level: 5, years: 7, category: "data_engineering" },
+      { name: "Apache Hadoop (HDFS/Hive/Sqoop)", level: 4, years: 2, category: "data_engineering" },
+      { name: "Fivetran", level: 4, years: 5, category: "data_engineering" },
+      { name: "Cloudera", level: 3, years: 2, category: "data_engineering" },
+      { name: "Pentaho Data Integration", level: 3, years: 2, category: "data_engineering" }
+    ],
+    visualization: [
+      { name: "Microstrategy", level: 5, years: 9, category: "visualization" },
+      { name: "Metabase", level: 5, years: 7, category: "visualization" },
+      { name: "Pentaho", level: 3, years: 2, category: "visualization" },
+      { name: "MS Reporting Services", level: 3, years: 1, category: "visualization" },
+      { name: "MS Analysis Services", level: 3, years: 1, category: "visualization" }
+    ],
+    cloud: [
+      { name: "Snowflake", level: 5, years: 7, category: "cloud" },
+      { name: "AWS", level: 4, years: 7, category: "cloud" }
+    ],
+    languages: [
+      { name: "SQL", level: 5, years: 13, category: "languages" },
+      { name: "PL/SQL", level: 4, years: 7, category: "languages" },
+      { name: "Python", level: 5, years: 7, category: "languages" },
+      { name: "Bash/Shell", level: 4, years: 9, category: "languages" },
+      { name: "Java", level: 3, years: 4, category: "languages" },
+      { name: "Scala", level: 3, years: 2, category: "languages" },
+      { name: "JQL", level: 4, years: 5, category: "languages" },
+      { name: "R", level: 3, years: 1, category: "languages" },
+      { name: "JavaScript", level: 2, years: 2, category: "languages" }
+    ],
+    tools: [
+      { name: "PostgreSQL", level: 5, years: 9, category: "tools" },
+      { name: "Oracle SQL Developer", level: 4, years: 3, category: "tools" },
+      { name: "Microsoft SQL Server", level: 3, years: 1, category: "tools" },
+      { name: "Git/GitHub", level: 5, years: 11, category: "tools" },
+      { name: "funnel.io", level: 4, years: 5, category: "tools" },
+      { name: "RStudio", level: 3, years: 1, category: "tools" },
+      { name: "Weka", level: 2, years: 1, category: "tools" },
+      { name: "JIRA", level: 4, years: 7, category: "tools" }
+    ]
+  },
+  education: [
+    {
+      institution: "Universidad de Murcia",
+      degree: {
+        es: "Máster Universitario",
+        en: "Master's Degree"
+      },
+      field: {
+        es: "Nuevas Tecnologías Informáticas (modalidad bilingüe en inglés)",
+        en: "Computer Science New Technologies (bilingual English programme)"
+      },
+      start: "2014",
+      end: "2015",
+      highlights: []
+    },
+    {
+      institution: "Universidad de Murcia",
+      degree: {
+        es: "Grado",
+        en: "Bachelor's Degree"
+      },
+      field: {
+        es: "Ingeniería Informática, Mención en Computación",
+        en: "Computer Engineering, Specialisation in Computation"
+      },
+      start: "2009",
+      end: "2014",
+      highlights: []
+    }
+  ],
+  certifications: [
+    { name: "Oracle Database SQL Expert (1Z0-047)", issuer: "Oracle", year: "2015", url: null },
+    { name: "Java SE 8 Programmer I (1Z0-803)", issuer: "Oracle", year: "2016", url: null },
+    { name: "Oracle Database 11g Data Warehousing Certified Implementation Specialist (1Z0-515)", issuer: "Oracle", year: "2016", url: null }
+  ],
+  honors: [
+    {
+      name: {
+        es: "Beca Santander de Prácticas en PYMES",
+        en: "Santander Internship Grant for SMEs"
+      },
+      issuer: "Santander CRUE CEPYME",
+      year: "2013"
+    }
+  ],
+  languages: [
+    {
+      name: { es: "Español", en: "Spanish" },
+      level: { es: "Nativo", en: "Native" }
+    },
+    {
+      name: { es: "Chino mandarín (Wenzhou Wu)", en: "Mandarin Chinese (Wenzhou Wu)" },
+      level: { es: "Nativo", en: "Native" }
+    },
+    {
+      name: { es: "Chino mandarín (Qingtianhua)", en: "Mandarin Chinese (Qingtianhua)" },
+      level: { es: "Nativo", en: "Native" }
+    },
+    {
+      name: { es: "Inglés", en: "English" },
+      level: { es: "Profesional (Working)", en: "Professional (Working)" }
+    },
+    {
+      name: { es: "Chino mandarín (estándar)", en: "Mandarin Chinese (Standard)" },
+      level: { es: "Elemental", en: "Elementary" }
+    },
+    {
+      name: { es: "Francés", en: "French" },
+      level: { es: "Elemental", en: "Elementary" }
+    }
+  ],
+  ui: {
+    nav: {
+      summary:    { es: "Resumen",     en: "Summary" },
+      experience: { es: "Experiencia", en: "Experience" },
+      skills:     { es: "Skills",      en: "Skills" },
+      projects:   { es: "Proyectos",   en: "Projects" },
+      education:  { es: "Educación",   en: "Education" }
+    },
+    kpi: {
+      years_experience: { es: "Años de experiencia", en: "Years of experience" },
+      companies:        { es: "Empresas",            en: "Companies" },
+      projects:         { es: "Proyectos",           en: "Projects" },
+      technologies:     { es: "Tecnologías",         en: "Technologies" }
+    },
+    actions: {
+      download:        { es: "Descargar CV",  en: "Download CV" },
+      close:           { es: "Cerrar",        en: "Close" },
+      toggle_theme:    { es: "Cambiar tema",  en: "Toggle theme" },
+      toggle_language: { es: "EN",            en: "ES" },
+      menu_open:       { es: "Abrir menú",    en: "Open menu" },
+      menu_close:      { es: "Cerrar menú",   en: "Close menu" },
+      view_in_experience: { es: "Ver en experiencia →", en: "View in experience →" }
+    },
+    timeline: {
+      today:    { es: "Hoy",    en: "Today" },
+      present:  { es: "actual", en: "present" },
+      duration_year:   { es: "año",   en: "year" },
+      duration_years:  { es: "años",  en: "years" },
+      duration_month:  { es: "mes",   en: "month" },
+      duration_months: { es: "meses", en: "months" }
+    },
+    skills: {
+      categories: {
+        data_engineering: { es: "Ingeniería de datos", en: "Data Engineering" },
+        visualization:    { es: "Visualización",       en: "Visualization" },
+        cloud:            { es: "Cloud",               en: "Cloud" },
+        languages:        { es: "Lenguajes",           en: "Languages" },
+        tools:            { es: "Herramientas",        en: "Tools" }
+      },
+      tooltip_format: {
+        es: "{years} años · Nivel {level}/5",
+        en: "{years} years · Level {level}/5"
+      }
+    },
+    sections: {
+      stack:          { es: "Stack técnico",   en: "Tech stack" },
+      impact:         { es: "Impacto",         en: "Impact" },
+      projects:       { es: "Proyectos",       en: "Projects" },
+      certifications: { es: "Certificaciones", en: "Certifications" },
+      languages:      { es: "Idiomas",         en: "Languages" },
+      honors:         { es: "Reconocimientos", en: "Honors & Awards" },
+      contact:        { es: "Contacto",        en: "Contact" }
+    },
+    months: {
+      es: ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"],
+      en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    }
+  }
+};
+
+/**
+ * Helper de internacionalización.
+ *
+ * Lee un valor que puede ser:
+ *   - string plano  → se devuelve tal cual (ej. tech names, fechas, nombres propios)
+ *   - { es, en }    → se devuelve la versión del idioma activo, con fallback a `es`
+ *   - undefined/null → se devuelve "" para evitar "undefined" en pantalla
+ *
+ * Uso:
+ *   t(CV_DATA.profile.summary)
+ *   t(CV_DATA.ui.nav.experience)
+ *   t(experience.role)
+ */
+function t(value, lang) {
+  lang = lang || (typeof window !== "undefined" && window.__cvLang) || CV_DATA.meta.default_language;
+  if (value == null) return "";
+  if (typeof value === "object" && !Array.isArray(value) && (value.es !== undefined || value.en !== undefined)) {
+    return value[lang] != null ? value[lang] : (value.es != null ? value.es : Object.values(value)[0]);
+  }
+  return value;
+}
+
+
+/* Theme detection */
+(function() {
+  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (!document.documentElement.hasAttribute('data-theme')) {
+    document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  }
+})();
+
+/* Each fragment script is wrapped in try/catch in partial mode so a single
+   broken/missing reference does not blank the whole preview. */
+
+(function () {
+  "use strict";
+
+  /* -------------------------------------------------------
+     1. ESTADO GLOBAL DE IDIOMA
+     Sin localStorage — detectado via navigator.language
+     ------------------------------------------------------- */
+  var _navLang = (navigator.language || "es");
+  window.__cvLang = _navLang.startsWith("en") ? "en" : "es";
+  document.documentElement.setAttribute("lang", window.__cvLang);
+
+  /* -------------------------------------------------------
+     2. LABELS ESTÁTICAS — recorre data-i18n y aplica t()
+     ------------------------------------------------------- */
+  function applyStaticLabels() {
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      var path = el.dataset.i18n.split(".");
+      var v = CV_DATA.ui;
+      for (var i = 0; i < path.length; i++) {
+        v = v != null ? v[path[i]] : null;
+      }
+      if (v != null) {
+        el.textContent = t(v);
+      }
+    });
+
+    // Update aria-labels for data-i18n-aria elements
+    document.querySelectorAll("[data-i18n-aria]").forEach(function (el) {
+      var path = el.dataset.i18nAria.split(".");
+      var v = CV_DATA.ui;
+      for (var i = 0; i < path.length; i++) {
+        v = v != null ? v[path[i]] : null;
+      }
+      if (v != null) {
+        el.setAttribute("aria-label", t(v));
+      }
+    });
+
+    // Language button label: always shows the OPPOSITE language
+    var btnLang = document.getElementById("btn-lang");
+    if (btnLang) {
+      btnLang.textContent = t(CV_DATA.ui.actions.toggle_language);
+    }
+
+    // Download buttons: icon + label
+    _renderDownloadButtons();
+  }
+
+  /* -------------------------------------------------------
+     3. CAMBIO DE IDIOMA
+     ------------------------------------------------------- */
+  function setLanguage(lang) {
+    window.__cvLang = lang;
+    document.documentElement.setAttribute("lang", lang);
+    applyStaticLabels();
+    window.dispatchEvent(new CustomEvent("cv:languagechange", { detail: { lang: lang } }));
+  }
+
+  // Expose globally so other agents can call it
+  window.setLanguage = setLanguage;
+
+  /* -------------------------------------------------------
+     4. LUCIDE ICON HELPER
+     ------------------------------------------------------- */
+  function lucideIcon(name, attrs) {
+    attrs = attrs || {};
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svg.setAttribute("width", attrs.size || "18");
+    svg.setAttribute("height", attrs.size || "18");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("fill", "none");
+    svg.setAttribute("stroke", "currentColor");
+    svg.setAttribute("stroke-width", "2");
+    svg.setAttribute("stroke-linecap", "round");
+    svg.setAttribute("stroke-linejoin", "round");
+    svg.setAttribute("aria-hidden", "true");
+    // Inline path data for required icons
+    var paths = {
+      sun: [
+        "M12 3v1", "M12 20v1", "M4.22 4.22l.7.7", "M19.07 19.07l.71.71",
+        "M3 12h1", "M20 12h1", "M4.22 19.78l.7-.7", "M19.07 4.93l.71-.71",
+        "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"
+      ],
+      moon: [
+        "M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"
+      ],
+      download: [
+        "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4",
+        "M7 10l5 5 5-5",
+        "M12 15V3"
+      ],
+      menu: [
+        "M4 6h16", "M4 12h16", "M4 18h16"
+      ],
+      x: [
+        "M18 6 6 18", "M6 6l12 12"
+      ]
+    };
+    var iconPaths = paths[name] || [];
+    iconPaths.forEach(function (d) {
+      var pathEl = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      pathEl.setAttribute("d", d);
+      svg.appendChild(pathEl);
+    });
+    return svg;
+  }
+
+  /* -------------------------------------------------------
+     5. THEME TOGGLE
+     ------------------------------------------------------- */
+  var _currentTheme = "dark";
+
+  function _getThemeIcon() {
+    return _currentTheme === "dark" ? lucideIcon("sun") : lucideIcon("moon");
+  }
+
+  function _renderThemeBtn() {
+    var btn = document.getElementById("btn-theme");
+    if (!btn) return;
+    btn.innerHTML = "";
+    btn.appendChild(_getThemeIcon());
+  }
+
+  function toggleTheme() {
+    _currentTheme = _currentTheme === "dark" ? "light" : "dark";
+    if (_currentTheme === "light") {
+      document.documentElement.setAttribute("data-theme", "light");
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+    }
+    _renderThemeBtn();
+  }
+
+  var btnTheme = document.getElementById("btn-theme");
+  if (btnTheme) {
+    btnTheme.addEventListener("click", toggleTheme);
+    _renderThemeBtn();
+  }
+
+  /* -------------------------------------------------------
+     6. LANGUAGE TOGGLE
+     ------------------------------------------------------- */
+  var btnLang = document.getElementById("btn-lang");
+  if (btnLang) {
+    btnLang.addEventListener("click", function () {
+      var next = window.__cvLang === "es" ? "en" : "es";
+      setLanguage(next);
+    });
+  }
+
+  /* -------------------------------------------------------
+     7. DOWNLOAD BUTTON — icon + label
+     ------------------------------------------------------- */
+  function _renderDownloadButtons() {
+    ["btn-download-desktop"].forEach(function (id) {
+      var btn = document.getElementById(id);
+      if (!btn) return;
+      // Ensure icon is present (only first child if not span)
+      var icon = btn.querySelector("svg");
+      if (!icon) {
+        var newIcon = lucideIcon("download", { size: "16" });
+        btn.insertBefore(newIcon, btn.firstChild);
+      }
+    });
+
+    // Mobile nav download button — find by class
+    var mobileDownload = document.querySelector(".mobile-nav__download");
+    if (mobileDownload) {
+      var mIcon = mobileDownload.querySelector("svg");
+      if (!mIcon) {
+        var newMIcon = lucideIcon("download", { size: "18" });
+        mobileDownload.insertBefore(newMIcon, mobileDownload.firstChild);
+      }
+    }
+  }
+
+  /* -------------------------------------------------------
+     8. HAMBURGER MENU
+     ------------------------------------------------------- */
+  var _menuOpen = false;
+  var btnHamburger = document.getElementById("btn-hamburger");
+  var mobileNav = document.getElementById("mobile-nav");
+
+  function _renderHamburgerIcon() {
+    if (!btnHamburger) return;
+    btnHamburger.innerHTML = "";
+    btnHamburger.appendChild(lucideIcon(_menuOpen ? "x" : "menu"));
+  }
+
+  function _closeMobileNav() {
+    _menuOpen = false;
+    if (mobileNav) {
+      mobileNav.classList.remove("is-open");
+      mobileNav.setAttribute("aria-hidden", "true");
+    }
+    if (btnHamburger) {
+      btnHamburger.setAttribute("aria-expanded", "false");
+      btnHamburger.setAttribute(
+        "aria-label",
+        t(CV_DATA.ui.actions.menu_open)
+      );
+    }
+    _renderHamburgerIcon();
+    document.body.style.overflow = "";
+  }
+
+  function _openMobileNav() {
+    _menuOpen = true;
+    if (mobileNav) {
+      mobileNav.classList.add("is-open");
+      mobileNav.setAttribute("aria-hidden", "false");
+    }
+    if (btnHamburger) {
+      btnHamburger.setAttribute("aria-expanded", "true");
+      btnHamburger.setAttribute(
+        "aria-label",
+        t(CV_DATA.ui.actions.menu_close)
+      );
+    }
+    _renderHamburgerIcon();
+    document.body.style.overflow = "hidden";
+  }
+
+  if (btnHamburger) {
+    btnHamburger.addEventListener("click", function () {
+      if (_menuOpen) _closeMobileNav();
+      else _openMobileNav();
+    });
+    _renderHamburgerIcon();
+  }
+
+  // Close mobile nav when a link is clicked
+  if (mobileNav) {
+    mobileNav.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", _closeMobileNav);
+    });
+  }
+
+  // Close mobile nav on resize to desktop
+  window.addEventListener("resize", function () {
+    if (window.innerWidth >= 768 && _menuOpen) {
+      _closeMobileNav();
+    }
+  });
+
+  /* -------------------------------------------------------
+     9. SCROLL-SPY — activa la clase is-active en nav
+     ------------------------------------------------------- */
+  var _sections = ["resumen", "experiencia", "skills", "proyectos", "educacion"];
+
+  function _updateActiveNav() {
+    var scrollY = window.scrollY + 80;
+    var current = _sections[0];
+
+    _sections.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && el.offsetTop <= scrollY) {
+        current = id;
+      }
+    });
+
+    var navLinks = document.querySelectorAll(".site-nav__link");
+    navLinks.forEach(function (link) {
+      link.classList.remove("is-active");
+      if (link.getAttribute("href") === "#" + current) {
+        link.classList.add("is-active");
+      }
+    });
+  }
+
+  var _scrollTicking = false;
+  window.addEventListener("scroll", function () {
+    if (!_scrollTicking) {
+      window.requestAnimationFrame(function () {
+        _updateActiveNav();
+        _scrollTicking = false;
+      });
+      _scrollTicking = true;
+    }
+  }, { passive: true });
+
+  /* -------------------------------------------------------
+     10. KPI COUNT-UP ANIMATION (IntersectionObserver)
+     ------------------------------------------------------- */
+  function _easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+
+  function _countUp(displayEl, target, duration) {
+    var start = null;
+    var startValue = 0;
+
+    function _step(timestamp) {
+      if (!start) start = timestamp;
+      var elapsed = timestamp - start;
+      var progress = Math.min(elapsed / duration, 1);
+      var eased = _easeOutCubic(progress);
+      var current = Math.round(startValue + (target - startValue) * eased);
+      displayEl.textContent = current;
+      if (progress < 1) {
+        window.requestAnimationFrame(_step);
+      } else {
+        displayEl.textContent = target;
+      }
+    }
+
+    window.requestAnimationFrame(_step);
+  }
+
+  var _kpiAnimated = false;
+
+  function _animateKPIs() {
+    if (_kpiAnimated) return;
+    _kpiAnimated = true;
+
+    var cards = document.querySelectorAll(".kpi-card[data-kpi-value]");
+    cards.forEach(function (card, index) {
+      var target = parseInt(card.dataset.kpiValue, 10);
+      var displayEl = card.querySelector("[data-kpi-display]");
+      if (!displayEl || isNaN(target)) return;
+
+      card.classList.add("is-visible");
+
+      // Stagger each card slightly
+      var delay = index * 80;
+      setTimeout(function () {
+        _countUp(displayEl, target, 1500);
+      }, delay);
+    });
+  }
+
+  var kpiBar = document.getElementById("kpi-bar");
+  if (kpiBar && "IntersectionObserver" in window) {
+    var kpiObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          _animateKPIs();
+          kpiObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.2 });
+    kpiObserver.observe(kpiBar);
+  } else if (kpiBar) {
+    // Fallback for environments without IntersectionObserver
+    _animateKPIs();
+  }
+
+  /* -------------------------------------------------------
+     11. INICIALIZACIÓN
+     ------------------------------------------------------- */
+  // Load Lucide from CDN, then render icons and labels
+  // (Lucide is loaded by AssemblerAgent in <head>; here we
+  //  rely on inline SVG paths so no CDN dependency needed.)
+  applyStaticLabels();
+  _updateActiveNav();
+
+})();
+
+
+(function () {
+  "use strict";
+
+  /* ----------------------------------------------------------
+     CONSTANTS & STATE
+  ---------------------------------------------------------- */
+  var EXPERIENCE = CV_DATA.experience;
+  var UI = CV_DATA.ui;
+
+  // Company color palette — maps to CSS vars, cycling through accent colors
+  var COMPANY_COLORS = [
+    "var(--color-primary)",
+    "var(--color-blue)",
+    "var(--color-purple)",
+    "var(--color-orange)",
+    "var(--color-success)",
+    "var(--color-primary)",
+    "var(--color-blue)",
+    "var(--color-purple)",
+    "var(--color-orange)"
+  ];
+
+  var _openExpId = null; // currently open drilldown experience id
+
+  /* ----------------------------------------------------------
+     DATE HELPERS
+  ---------------------------------------------------------- */
+  function parseYearMonth(str) {
+    // "2025-01" → Date at first day of month
+    if (!str) return new Date();
+    var parts = str.split("-");
+    return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, 1);
+  }
+
+  function today() {
+    var d = new Date();
+    return new Date(d.getFullYear(), d.getMonth(), 1);
+  }
+
+  function formatDateRange(exp) {
+    var lang = window.__cvLang || "es";
+    var months = UI.months[lang];
+
+    var startDate = parseYearMonth(exp.start);
+    var endDate = exp.current ? today() : parseYearMonth(exp.end);
+
+    var startStr = months[startDate.getMonth()] + " " + startDate.getFullYear();
+    var endStr = exp.current
+      ? t(UI.timeline.today)
+      : months[endDate.getMonth()] + " " + endDate.getFullYear();
+
+    return startStr + " — " + endStr;
+  }
+
+  function calcDuration(exp) {
+    var lang = window.__cvLang || "es";
+    var startDate = parseYearMonth(exp.start);
+    var endDate = exp.current ? today() : parseYearMonth(exp.end);
+
+    var months = (endDate.getFullYear() - startDate.getFullYear()) * 12
+      + (endDate.getMonth() - startDate.getMonth());
+
+    var years = Math.floor(months / 12);
+    var remainMonths = months % 12;
+
+    var parts = [];
+    if (years > 0) {
+      parts.push(years + " " + t(years === 1 ? UI.timeline.duration_year : UI.timeline.duration_years));
+    }
+    if (remainMonths > 0) {
+      parts.push(remainMonths + " " + t(remainMonths === 1 ? UI.timeline.duration_month : UI.timeline.duration_months));
+    }
+    return parts.join(" ") || "—";
+  }
+
+  /* ----------------------------------------------------------
+     DRILLDOWN PANEL
+  ---------------------------------------------------------- */
+  var panel = document.getElementById("drilldown-panel");
+  var overlay = document.getElementById("drilldown-overlay");
+  var closeBtn = document.getElementById("drilldown-close");
+
+  function openDrilldown(expId) {
+    var exp = EXPERIENCE.find(function (e) { return e.id === expId; });
+    if (!exp) return;
+
+    _openExpId = expId;
+    renderDrilldownContent(exp);
+
+    panel.classList.add("is-open");
+    overlay.classList.add("is-open");
+    panel.setAttribute("aria-hidden", "false");
+    overlay.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+
+    // Hash routing
+    history.replaceState(null, "", "#" + expId);
+
+    // Focus panel for keyboard users
+    setTimeout(function () { panel.focus(); }, 310);
+  }
+
+  function closeDrilldown() {
+    _openExpId = null;
+    panel.classList.remove("is-open");
+    overlay.classList.remove("is-open");
+    panel.setAttribute("aria-hidden", "true");
+    overlay.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+
+    // Clear hash
+    history.replaceState(null, "", window.location.pathname + window.location.search);
+  }
+
+  function renderDrilldownContent(exp) {
+    var lang = window.__cvLang || "es";
+
+    // Close button label
+    closeBtn.setAttribute("aria-label", t(UI.actions.close));
+
+    // Header
+    document.getElementById("dd-company").textContent = exp.company;
+    document.getElementById("dd-role").textContent = t(exp.role);
+    document.getElementById("dd-dates").textContent = formatDateRange(exp) + " · " + calcDuration(exp);
+
+    // Description
+    document.getElementById("dd-description").textContent = t(exp.description);
+
+    // Stack label
+    document.getElementById("dd-stack-label").textContent = t(UI.sections.stack);
+
+    // Stack chips
+    var stackEl = document.getElementById("dd-stack");
+    stackEl.innerHTML = "";
+    exp.stack.forEach(function (tech) {
+      var chip = document.createElement("span");
+      chip.className = "chip";
+      chip.textContent = tech;
+      stackEl.appendChild(chip);
+    });
+
+    // Impact label
+    document.getElementById("dd-impact-label").textContent = t(UI.sections.impact);
+
+    // Impact bullets
+    var impactEl = document.getElementById("dd-impact");
+    impactEl.innerHTML = "";
+    (exp.impact || []).forEach(function (item) {
+      var li = document.createElement("li");
+      li.className = "drilldown-impact__item";
+      li.setAttribute("role", "listitem");
+      var bullet = document.createElement("span");
+      bullet.className = "drilldown-impact__bullet";
+      bullet.setAttribute("aria-hidden", "true");
+      var text = document.createElement("span");
+      text.textContent = t(item);
+      li.appendChild(bullet);
+      li.appendChild(text);
+      impactEl.appendChild(li);
+    });
+
+    // Projects
+    var projectsWrap = document.getElementById("dd-projects-wrap");
+    var projectsEl = document.getElementById("dd-projects");
+    projectsEl.innerHTML = "";
+
+    if (exp.projects && exp.projects.length > 0) {
+      document.getElementById("dd-projects-label").textContent = t(UI.sections.projects);
+      projectsWrap.style.display = "";
+
+      exp.projects.forEach(function (proj, idx) {
+        var article = document.createElement("div");
+        article.className = "drilldown-project";
+        article.setAttribute("data-project-idx", idx);
+
+        // Toggle button
+        var toggleBtn = document.createElement("button");
+        toggleBtn.className = "drilldown-project__toggle";
+        toggleBtn.type = "button";
+        toggleBtn.setAttribute("aria-expanded", "false");
+
+        var nameSpan = document.createElement("span");
+        nameSpan.className = "drilldown-project__name";
+        nameSpan.textContent = t(proj.name);
+
+        // Chevron SVG
+        var chevron = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        chevron.setAttribute("viewBox", "0 0 24 24");
+        chevron.setAttribute("fill", "none");
+        chevron.setAttribute("stroke", "currentColor");
+        chevron.setAttribute("stroke-width", "2");
+        chevron.setAttribute("stroke-linecap", "round");
+        chevron.setAttribute("stroke-linejoin", "round");
+        chevron.setAttribute("aria-hidden", "true");
+        chevron.classList.add("drilldown-project__chevron");
+        var chevPath = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+        chevPath.setAttribute("points", "6 9 12 15 18 9");
+        chevron.appendChild(chevPath);
+
+        toggleBtn.appendChild(nameSpan);
+        toggleBtn.appendChild(chevron);
+
+        // Body
+        var body = document.createElement("div");
+        body.className = "drilldown-project__body";
+
+        var desc = document.createElement("p");
+        desc.className = "drilldown-project__description";
+        desc.textContent = t(proj.description);
+
+        var projStack = document.createElement("div");
+        projStack.className = "drilldown-project__stack";
+        (proj.stack || []).forEach(function (tech) {
+          var chip = document.createElement("span");
+          chip.className = "chip";
+          chip.textContent = tech;
+          projStack.appendChild(chip);
+        });
+
+        var outcome = document.createElement("p");
+        outcome.className = "drilldown-project__outcome";
+        outcome.textContent = t(proj.outcome);
+
+        body.appendChild(desc);
+        body.appendChild(projStack);
+        body.appendChild(outcome);
+
+        article.appendChild(toggleBtn);
+        article.appendChild(body);
+        projectsEl.appendChild(article);
+
+        // Accordion toggle
+        toggleBtn.addEventListener("click", function () {
+          var isOpen = article.classList.contains("is-open");
+          article.classList.toggle("is-open", !isOpen);
+          toggleBtn.setAttribute("aria-expanded", String(!isOpen));
+        });
+      });
+    } else {
+      projectsWrap.style.display = "none";
+    }
+  }
+
+  // Close handlers
+  closeBtn.addEventListener("click", closeDrilldown);
+  overlay.addEventListener("click", closeDrilldown);
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && _openExpId) {
+      closeDrilldown();
+    }
+  });
+
+  /* ----------------------------------------------------------
+     MOBILE CARD LIST
+  ---------------------------------------------------------- */
+  function renderMobileList() {
+    var listEl = document.getElementById("timeline-mobile");
+    listEl.innerHTML = "";
+
+    // Reverse chronological
+    var sorted = EXPERIENCE.slice().sort(function (a, b) {
+      return parseYearMonth(b.start) - parseYearMonth(a.start);
+    });
+
+    sorted.forEach(function (exp, idx) {
+      // Find original index for color
+      var origIdx = EXPERIENCE.indexOf(exp);
+      var color = COMPANY_COLORS[origIdx % COMPANY_COLORS.length];
+
+      var li = document.createElement("li");
+      li.setAttribute("role", "listitem");
+
+      var card = document.createElement("div");
+      card.className = "timeline-card";
+      card.setAttribute("tabindex", "0");
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-label", exp.company + " — " + t(exp.role));
+      card.style.setProperty("--timeline-bar-color", color);
+
+      // Header row
+      var header = document.createElement("div");
+      header.className = "timeline-card__header";
+
+      var company = document.createElement("div");
+      company.className = "timeline-card__company";
+      company.textContent = exp.company;
+
+      header.appendChild(company);
+
+      if (exp.current) {
+        var badge = document.createElement("span");
+        badge.className = "timeline-card__current-badge";
+        badge.textContent = t(UI.timeline.present);
+        header.appendChild(badge);
+      }
+
+      // Role
+      var role = document.createElement("div");
+      role.className = "timeline-card__role";
+      role.textContent = t(exp.role);
+
+      // Dates
+      var dates = document.createElement("div");
+      dates.className = "timeline-card__dates";
+      dates.textContent = formatDateRange(exp) + " · " + calcDuration(exp);
+
+      // Stack chips
+      var stackWrap = document.createElement("div");
+      stackWrap.className = "timeline-card__stack";
+      exp.stack.slice(0, 6).forEach(function (tech) {
+        var chip = document.createElement("span");
+        chip.className = "badge";
+        chip.textContent = tech;
+        stackWrap.appendChild(chip);
+      });
+      if (exp.stack.length > 6) {
+        var more = document.createElement("span");
+        more.className = "badge";
+        more.textContent = "+" + (exp.stack.length - 6);
+        stackWrap.appendChild(more);
+      }
+
+      card.appendChild(header);
+      card.appendChild(role);
+      card.appendChild(dates);
+      card.appendChild(stackWrap);
+      li.appendChild(card);
+      listEl.appendChild(li);
+
+      // Click / keyboard open drilldown
+      function _handleOpen() { openDrilldown(exp.id); }
+      card.addEventListener("click", _handleOpen);
+      card.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          _handleOpen();
+        }
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------
+     DESKTOP D3.JS TIMELINE
+  ---------------------------------------------------------- */
+  function renderD3Timeline() {
+    var wrap = document.getElementById("timeline-svg-wrap");
+    wrap.innerHTML = "";
+
+    var containerWidth = wrap.parentElement
+      ? wrap.parentElement.clientWidth
+      : 900;
+    // Minimum width to avoid tiny bars
+    var totalWidth = Math.max(containerWidth, 700);
+
+    var MARGIN = { top: 16, right: 60, bottom: 44, left: 210 };
+    var ROW_HEIGHT = 40;
+    var ROW_GAP = 8;
+    var LABEL_FONT_SIZE = 12;
+
+    var numRows = EXPERIENCE.length;
+    var innerHeight = numRows * (ROW_HEIGHT + ROW_GAP) - ROW_GAP;
+    var totalHeight = innerHeight + MARGIN.top + MARGIN.bottom;
+    var innerWidth = totalWidth - MARGIN.left - MARGIN.right;
+
+    // Time domain: from earliest start to today
+    var allStarts = EXPERIENCE.map(function (e) { return parseYearMonth(e.start); });
+    var domainStart = d3.min(allStarts);
+    var domainEnd = today();
+    // Add a tiny right padding (1 month)
+    var domainEndPadded = new Date(domainEnd.getFullYear(), domainEnd.getMonth() + 2, 1);
+
+    var xScale = d3.scaleTime()
+      .domain([domainStart, domainEndPadded])
+      .range([0, innerWidth]);
+
+    // SVG
+    var svg = d3.select(wrap)
+      .append("svg")
+      .attr("width", totalWidth)
+      .attr("height", totalHeight)
+      .attr("role", "img")
+      .attr("aria-label", t(UI.nav.experience));
+
+    var g = svg.append("g")
+      .attr("transform", "translate(" + MARGIN.left + "," + MARGIN.top + ")");
+
+    // X Axis — only year ticks
+    var xAxis = d3.axisBottom(xScale)
+      .ticks(d3.timeYear.every(1))
+      .tickFormat(d3.timeFormat("%Y"))
+      .tickSize(4);
+
+    g.append("g")
+      .attr("transform", "translate(0," + innerHeight + ")")
+      .call(xAxis)
+      .call(function (axisG) {
+        axisG.select(".domain").attr("stroke", "var(--color-divider)");
+        axisG.selectAll(".tick line").attr("stroke", "var(--color-divider)");
+        axisG.selectAll(".tick text")
+          .attr("fill", "var(--color-text-muted)")
+          .attr("font-family", "var(--font-mono)")
+          .attr("font-size", LABEL_FONT_SIZE + "px");
+      });
+
+    // Horizontal grid lines
+    EXPERIENCE.forEach(function (exp, i) {
+      var y = i * (ROW_HEIGHT + ROW_GAP) + ROW_HEIGHT / 2;
+      g.append("line")
+        .attr("x1", 0)
+        .attr("x2", innerWidth)
+        .attr("y1", y)
+        .attr("y2", y)
+        .attr("stroke", "var(--color-divider)")
+        .attr("stroke-width", 1)
+        .attr("stroke-dasharray", "2,4");
+    });
+
+    // Today line
+    var todayX = xScale(today());
+
+    g.append("line")
+      .attr("x1", todayX)
+      .attr("x2", todayX)
+      .attr("y1", -MARGIN.top + 4)
+      .attr("y2", innerHeight)
+      .attr("stroke", "var(--color-primary)")
+      .attr("stroke-width", 1.5)
+      .attr("stroke-dasharray", "4,3")
+      .attr("opacity", 0.7);
+
+    // "Hoy" label
+    var todayLabel = t(UI.timeline.today);
+    g.append("text")
+      .attr("x", todayX + 4)
+      .attr("y", -MARGIN.top + 14)
+      .attr("fill", "var(--color-primary)")
+      .attr("font-family", "var(--font-mono)")
+      .attr("font-size", "12px")
+      .text(todayLabel);
+
+    // Tooltip
+    var tooltip = document.getElementById("timeline-tooltip");
+    var ttCompany = document.getElementById("tt-company");
+    var ttRole = document.getElementById("tt-role");
+    var ttDuration = document.getElementById("tt-duration");
+
+    // Bars
+    EXPERIENCE.forEach(function (exp, i) {
+      var color = COMPANY_COLORS[i % COMPANY_COLORS.length];
+      var startX = xScale(parseYearMonth(exp.start));
+      var endDate = exp.current ? today() : parseYearMonth(exp.end);
+      var endX = xScale(endDate);
+      var barWidth = Math.max(endX - startX, 4);
+      var barY = i * (ROW_HEIGHT + ROW_GAP);
+
+      // Label group (company + role) — interactive: same hover/click as the bar
+      var labelGroup = g.append("g")
+        .attr("class", "timeline-label-group")
+        .style("cursor", "pointer");
+
+      // Company label — line 1 (left margin)
+      var companyFull = exp.company;
+      var companyText = companyFull.length > 24 ? companyFull.slice(0, 22) + "…" : companyFull;
+
+      var companyEl = labelGroup.append("text")
+        .attr("x", -8)
+        .attr("y", barY + ROW_HEIGHT / 2 - 5)
+        .attr("text-anchor", "end")
+        .attr("fill", "var(--color-text)")
+        .attr("font-family", "var(--font-display)")
+        .attr("font-weight", "600")
+        .attr("font-size", LABEL_FONT_SIZE + "px")
+        .text(companyText);
+      companyEl.append("title").text(companyFull);
+
+      // Role label — line 2 (left margin, muted)
+      var roleFull = t(exp.role);
+      var roleText = roleFull.length > 28 ? roleFull.slice(0, 26) + "…" : roleFull;
+
+      var roleEl = labelGroup.append("text")
+        .attr("x", -8)
+        .attr("y", barY + ROW_HEIGHT / 2 + 10)
+        .attr("text-anchor", "end")
+        .attr("fill", "var(--color-text-muted)")
+        .attr("font-family", "var(--font-mono)")
+        .attr("font-size", LABEL_FONT_SIZE + "px")
+        .text(roleText);
+      roleEl.append("title").text(roleFull);
+
+      // Transparent hit area for the label group (full margin width, row-tall)
+      labelGroup.append("rect")
+        .attr("x", -MARGIN.left + 4)
+        .attr("y", barY - (44 - ROW_HEIGHT) / 2)
+        .attr("width", MARGIN.left - 12)
+        .attr("height", 44)
+        .attr("fill", "transparent")
+        .attr("data-exp-id", exp.id);
+
+      labelGroup.on("mousemove", function (event) {
+        ttCompany.textContent = exp.company;
+        ttRole.textContent = t(exp.role);
+        ttDuration.textContent = formatDateRange(exp) + " · " + calcDuration(exp);
+        tooltip.classList.add("is-visible");
+        tooltip.setAttribute("aria-hidden", "false");
+        _positionTooltip(event.clientX, event.clientY);
+        companyEl.attr("fill", "var(--color-primary)");
+      });
+
+      labelGroup.on("mouseleave", function () {
+        tooltip.classList.remove("is-visible");
+        tooltip.setAttribute("aria-hidden", "true");
+        companyEl.attr("fill", "var(--color-text)");
+      });
+
+      labelGroup.on("click", function () {
+        tooltip.classList.remove("is-visible");
+        openDrilldown(exp.id);
+      });
+
+      // Bar background (clickable hit area)
+      var barGroup = g.append("g")
+        .attr("class", "timeline-bar-group")
+        .style("cursor", "pointer");
+
+      // Bar rect
+      barGroup.append("rect")
+        .attr("x", startX)
+        .attr("y", barY)
+        .attr("width", barWidth)
+        .attr("height", ROW_HEIGHT)
+        .attr("rx", 4)
+        .attr("fill", color)
+        .attr("opacity", 0.25)
+        .attr("data-exp-id", exp.id);
+
+      // Bar border / accent line (top)
+      barGroup.append("rect")
+        .attr("x", startX)
+        .attr("y", barY)
+        .attr("width", barWidth)
+        .attr("height", 2)
+        .attr("rx", 1)
+        .attr("fill", color)
+        .attr("opacity", 0.85);
+
+      // Transparent hit area — 44px tall, centred over the bar
+      var HIT_HEIGHT = 44;
+      barGroup.append("rect")
+        .attr("x", startX)
+        .attr("y", barY - (HIT_HEIGHT - ROW_HEIGHT) / 2)
+        .attr("width", barWidth)
+        .attr("height", HIT_HEIGHT)
+        .attr("fill", "transparent")
+        .attr("data-exp-id", exp.id);
+
+      // Hover
+      barGroup.on("mousemove", function (event) {
+        ttCompany.textContent = exp.company;
+        ttRole.textContent = t(exp.role);
+        ttDuration.textContent = formatDateRange(exp) + " · " + calcDuration(exp);
+        tooltip.classList.add("is-visible");
+        tooltip.setAttribute("aria-hidden", "false");
+        _positionTooltip(event.clientX, event.clientY);
+      });
+
+      barGroup.on("mouseleave", function () {
+        tooltip.classList.remove("is-visible");
+        tooltip.setAttribute("aria-hidden", "true");
+      });
+
+      barGroup.on("click", function () {
+        tooltip.classList.remove("is-visible");
+        openDrilldown(exp.id);
+      });
+
+      // Keyboard accessibility via foreignObject workaround:
+      // We add a title element for screen reader hint
+      barGroup.append("title")
+        .text(exp.company + " — " + t(exp.role) + " · " + calcDuration(exp));
+    });
+  }
+
+  function _positionTooltip(clientX, clientY) {
+    var tooltip = document.getElementById("timeline-tooltip");
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+    var tw = tooltip.offsetWidth || 240;
+    var th = tooltip.offsetHeight || 80;
+    var offset = 14;
+
+    var left = clientX + offset;
+    var top = clientY + offset;
+
+    if (left + tw > vw - 8) left = clientX - tw - offset;
+    if (top + th > vh - 8) top = clientY - th - offset;
+
+    tooltip.style.left = left + "px";
+    tooltip.style.top = top + "px";
+  }
+
+  /* ----------------------------------------------------------
+     SECTION HEADER
+  ---------------------------------------------------------- */
+  function renderHeader() {
+    var title = document.getElementById("timeline-section-title");
+    var count = document.getElementById("timeline-count");
+    if (title) title.textContent = t(UI.nav.experience);
+    if (count) count.textContent = EXPERIENCE.length;
+  }
+
+  /* ----------------------------------------------------------
+     FULL RENDER
+  ---------------------------------------------------------- */
+  function renderAll() {
+    renderHeader();
+    renderMobileList();
+
+    // D3 only on desktop
+    if (window.innerWidth >= 768 && typeof d3 !== "undefined") {
+      renderD3Timeline();
+    }
+
+    // If there's a matching hash on load, open drilldown
+    var hash = window.location.hash.replace("#", "");
+    if (hash && EXPERIENCE.find(function (e) { return e.id === hash; })) {
+      openDrilldown(hash);
+    }
+  }
+
+  /* ----------------------------------------------------------
+     LANGUAGE CHANGE LISTENER
+  ---------------------------------------------------------- */
+  window.addEventListener("cv:languagechange", function () {
+    renderHeader();
+    renderMobileList();
+    if (window.innerWidth >= 768 && typeof d3 !== "undefined") {
+      renderD3Timeline();
+    }
+    // Re-render drilldown content if one is open
+    if (_openExpId) {
+      var exp = EXPERIENCE.find(function (e) { return e.id === _openExpId; });
+      if (exp) renderDrilldownContent(exp);
+    }
+  });
+
+  /* ----------------------------------------------------------
+     RESIZE HANDLER — re-render D3 on viewport width change
+  ---------------------------------------------------------- */
+  var _resizeTimer;
+  window.addEventListener("resize", function () {
+    clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(function () {
+      if (window.innerWidth >= 768 && typeof d3 !== "undefined") {
+        renderD3Timeline();
+      }
+    }, 200);
+  });
+
+  /* ----------------------------------------------------------
+     INIT
+  ---------------------------------------------------------- */
+  // D3 may not be loaded yet — wait for it
+  function _waitForD3AndRender() {
+    if (typeof d3 !== "undefined") {
+      renderAll();
+    } else {
+      setTimeout(_waitForD3AndRender, 50);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", _waitForD3AndRender);
+  } else {
+    _waitForD3AndRender();
+  }
+
+})();
+
+
+(function () {
+  "use strict";
+
+  /* -------------------------------------------------------
+     COLOR MAP — categoria → CSS var (per spec)
+     ------------------------------------------------------- */
+  var CATEGORY_COLORS = {
+    data_engineering: "var(--color-primary)",
+    visualization:    "var(--color-blue)",
+    cloud:            "var(--color-orange)",
+    languages:        "var(--color-success)",
+    tools:            "var(--color-purple)"
+  };
+
+  /* -------------------------------------------------------
+     CATEGORY ORDER (deterministic render order)
+     ------------------------------------------------------- */
+  var CATEGORY_ORDER = [
+    "data_engineering",
+    "visualization",
+    "cloud",
+    "languages",
+    "tools"
+  ];
+
+  /* -------------------------------------------------------
+     SVG DOT BUILDER
+     Builds a row of 5 SVG circles. Starts all empty.
+     Returns { svg, circles[] } for later animation.
+     ------------------------------------------------------- */
+  var DOT_R      = 6;   // radius px
+  var DOT_GAP    = 4;   // gap px
+  var DOT_DIAM   = DOT_R * 2;
+  var DOT_STEP   = DOT_DIAM + DOT_GAP;
+  var DOT_TOTAL  = 5;
+  var SVG_W      = DOT_TOTAL * DOT_STEP - DOT_GAP;  // 68px
+  var SVG_H      = DOT_DIAM;                         // 12px
+
+  function _buildDotSVG(level, filledColor) {
+    var ns = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("width", SVG_W);
+    svg.setAttribute("height", SVG_H);
+    svg.setAttribute("viewBox", "0 0 " + SVG_W + " " + SVG_H);
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+
+    var circles = [];
+    for (var i = 0; i < DOT_TOTAL; i++) {
+      var cx = DOT_R + i * DOT_STEP;
+      var cy = DOT_R;
+
+      var circle = document.createElementNS(ns, "circle");
+      circle.setAttribute("cx", cx);
+      circle.setAttribute("cy", cy);
+      circle.setAttribute("r", DOT_R);
+      circle.setAttribute("class", "skill-dot-circle");
+      // All dots start empty — animation fills them
+      circle.setAttribute("fill", "var(--color-surface-2)");
+      circle.setAttribute("stroke", "var(--color-surface-offset)");
+      circle.setAttribute("stroke-width", "1");
+
+      svg.appendChild(circle);
+      circles.push(circle);
+    }
+
+    return { svg: svg, circles: circles, level: level, color: filledColor };
+  }
+
+  /* -------------------------------------------------------
+     TOOLTIP STRING
+     ------------------------------------------------------- */
+  function _buildTooltipText(skill) {
+    var fmt = t(CV_DATA.ui.skills.tooltip_format);
+    return fmt
+      .replace("{years}", skill.years)
+      .replace("{level}", skill.level);
+  }
+
+  /* -------------------------------------------------------
+     RENDER — builds the full grid DOM
+     Returns array of dot records for the IntersectionObserver
+     ------------------------------------------------------- */
+  var _allDotRecords = []; // { circles, level, color, animated }
+
+  function _renderGrid() {
+    var grid = document.getElementById("skills-grid");
+    if (!grid) return;
+
+    grid.innerHTML = "";
+    _allDotRecords = [];
+
+    CATEGORY_ORDER.forEach(function (cat) {
+      var skills = CV_DATA.skills[cat];
+      if (!skills || !skills.length) return;
+
+      var color = CATEGORY_COLORS[cat] || "var(--color-primary)";
+      var categoryLabel = t(CV_DATA.ui.skills.categories[cat]);
+
+      /* --- Category card --- */
+      var card = document.createElement("div");
+      card.className = "skill-category";
+      card.setAttribute("role", "listitem");
+      card.setAttribute("data-category", cat);
+
+      /* --- Category header --- */
+      var header = document.createElement("div");
+      header.className = "skill-category__header";
+
+      var accent = document.createElement("span");
+      accent.className = "skill-category__accent skill-category__accent--" + cat;
+      accent.setAttribute("aria-hidden", "true");
+
+      var nameEl = document.createElement("span");
+      nameEl.className = "skill-category__name skill-category__name--" + cat;
+      nameEl.textContent = categoryLabel;
+      nameEl.setAttribute("data-category-key", cat);
+
+      header.appendChild(accent);
+      header.appendChild(nameEl);
+      card.appendChild(header);
+
+      /* --- Skill list --- */
+      var list = document.createElement("ul");
+      list.className = "skill-list";
+
+      skills.forEach(function (skill) {
+        var li = document.createElement("li");
+        li.className = "skill-row";
+
+        /* Skill name */
+        var nameSpan = document.createElement("span");
+        nameSpan.className = "skill-row__name";
+        nameSpan.textContent = skill.name;
+
+        /* Dots container with tooltip */
+        var dotsWrap = document.createElement("div");
+        dotsWrap.className = "skill-dots";
+        dotsWrap.setAttribute("role", "img");
+        dotsWrap.setAttribute("aria-label", skill.name + " — " + _buildTooltipText(skill));
+        dotsWrap.setAttribute("tabindex", "0");
+        dotsWrap.setAttribute("data-skill-name", skill.name);
+        dotsWrap.setAttribute("data-years", skill.years);
+        dotsWrap.setAttribute("data-level", skill.level);
+
+        /* Tooltip element */
+        var tooltip = document.createElement("span");
+        tooltip.className = "skill-dots__tooltip";
+        tooltip.setAttribute("role", "tooltip");
+        tooltip.setAttribute("aria-hidden", "true");
+        tooltip.textContent = _buildTooltipText(skill);
+        tooltip.setAttribute("data-tooltip-skill", skill.name);
+
+        /* SVG dots */
+        var dotRecord = _buildDotSVG(skill.level, color);
+        _allDotRecords.push({ circles: dotRecord.circles, level: dotRecord.level, color: dotRecord.color, animated: false });
+
+        dotsWrap.appendChild(dotRecord.svg);
+        dotsWrap.appendChild(tooltip);
+
+        li.appendChild(nameSpan);
+        li.appendChild(dotsWrap);
+        list.appendChild(li);
+      });
+
+      card.appendChild(list);
+      grid.appendChild(card);
+    });
+  }
+
+  /* -------------------------------------------------------
+     ANIMATION — fills dots progressively, left to right
+     Only fires once per record (animated flag guard)
+     ------------------------------------------------------- */
+  var DELAYS = [0, 80, 160, 240, 320]; // ms per dot
+
+  function _animateDotRecord(record) {
+    if (record.animated) return;
+    record.animated = true;
+
+    for (var i = 0; i < DOT_TOTAL; i++) {
+      (function (circle, idx, level, color) {
+        setTimeout(function () {
+          if (idx < level) {
+            circle.setAttribute("fill", color);
+            circle.setAttribute("stroke", color);
+          }
+          // dots beyond level keep their empty style — no-op
+        }, DELAYS[idx]);
+      })(record.circles[i], i, record.level, record.color);
+    }
+  }
+
+  /* -------------------------------------------------------
+     INTERSECTION OBSERVER — triggers on viewport entry
+     threshold: 0.3, fires once (disconnect after animation)
+     ------------------------------------------------------- */
+  function _setupObserver() {
+    var grid = document.getElementById("skills-grid");
+    if (!grid) return;
+
+    if (!("IntersectionObserver" in window)) {
+      // Fallback: animate immediately
+      _allDotRecords.forEach(_animateDotRecord);
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          _allDotRecords.forEach(_animateDotRecord);
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+
+    observer.observe(grid);
+  }
+
+  /* -------------------------------------------------------
+     i18n — re-render labels on language change
+     Dot SVGs are NOT re-rendered (color stays, tooltips update)
+     ------------------------------------------------------- */
+  function _refreshLabels() {
+    // Category name labels
+    document.querySelectorAll("[data-category-key]").forEach(function (el) {
+      var cat = el.getAttribute("data-category-key");
+      var label = CV_DATA.ui.skills.categories[cat];
+      if (label) el.textContent = t(label);
+    });
+
+    // Tooltip strings and aria-labels
+    document.querySelectorAll(".skill-dots[data-skill-name]").forEach(function (wrap) {
+      var years = parseInt(wrap.getAttribute("data-years"), 10);
+      var level = parseInt(wrap.getAttribute("data-level"), 10);
+      var name  = wrap.getAttribute("data-skill-name");
+
+      var fmt = t(CV_DATA.ui.skills.tooltip_format);
+      var tooltipText = fmt
+        .replace("{years}", years)
+        .replace("{level}", level);
+
+      wrap.setAttribute("aria-label", name + " — " + tooltipText);
+
+      var tooltipEl = wrap.querySelector(".skill-dots__tooltip");
+      if (tooltipEl) tooltipEl.textContent = tooltipText;
+    });
+  }
+
+  window.addEventListener("cv:languagechange", _refreshLabels);
+
+  /* -------------------------------------------------------
+     INIT
+     ------------------------------------------------------- */
+  function _init() {
+    _renderGrid();
+    _setupObserver();
+  }
+
+  // Run after current paint (grid scaffold already in DOM)
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", _init);
+  } else {
+    _init();
+  }
+
+})();
+
+
+(function () {
+  "use strict";
+
+  /* -------------------------------------------------------
+     INLINE SVG PATHS — no CDN dependency, consistent with LayoutAgent
+     ------------------------------------------------------- */
+  var _iconPaths = {
+    "map-pin": [
+      "M20 10c0 6-8 13-8 13s-8-7-8-13a8 8 0 0 1 16 0Z",
+      "M12 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"
+    ],
+    "linkedin": [
+      "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z",
+      "M2 9h4v12H2z",
+      "M4 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"
+    ],
+    "github": [
+      "M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4",
+      "M9 18c-4.51 2-5-2-7-2"
+    ],
+    "mail": [
+      "M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z",
+      "M22 6l-10 7L2 6"
+    ],
+    "award": [
+      "M6 9H4.5a2.5 2.5 0 0 1 0-5H6",
+      "M18 9h1.5a2.5 2.5 0 0 0 0-5H18",
+      "M4 22h16",
+      "M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22",
+      "M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22",
+      "M18 2H6v7a6 6 0 0 0 12 0V2Z"
+    ],
+    "star": [
+      "M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+    ],
+    "external-link": [
+      "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6",
+      "M15 3h6v6",
+      "M10 14 21 3"
+    ]
+  };
+
+  function _makeIcon(name, size) {
+    size = size || 14;
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", size);
+    svg.setAttribute("height", size);
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("fill", "none");
+    svg.setAttribute("stroke", "currentColor");
+    svg.setAttribute("stroke-width", "2");
+    svg.setAttribute("stroke-linecap", "round");
+    svg.setAttribute("stroke-linejoin", "round");
+    svg.setAttribute("aria-hidden", "true");
+    var paths = _iconPaths[name] || [];
+    paths.forEach(function (d) {
+      var p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      p.setAttribute("d", d);
+      svg.appendChild(p);
+    });
+    return svg;
+  }
+
+  /* -------------------------------------------------------
+     RENDER: RESUMEN HERO
+     ------------------------------------------------------- */
+  function renderResumen() {
+    var el = document.getElementById("resumen-content");
+    if (!el) return;
+
+    var profile = CV_DATA.profile;
+
+    /* — Identity column — */
+    var identity = document.createElement("div");
+    identity.className = "hero__identity";
+
+    var nameEl = document.createElement("h1");
+    nameEl.className = "hero__name";
+    nameEl.textContent = profile.name;
+    identity.appendChild(nameEl);
+
+    var titleEl = document.createElement("p");
+    titleEl.className = "hero__title";
+    titleEl.textContent = t(profile.title);
+    identity.appendChild(titleEl);
+
+    var locEl = document.createElement("div");
+    locEl.className = "hero__location";
+    locEl.appendChild(_makeIcon("map-pin", 14));
+    var locSpan = document.createElement("span");
+    locSpan.textContent = t(profile.location);
+    locEl.appendChild(locSpan);
+    identity.appendChild(locEl);
+
+    /* — Summary column — */
+    var summaryCol = document.createElement("div");
+    summaryCol.className = "hero__summary";
+    var summaryP = document.createElement("p");
+    summaryP.textContent = t(profile.summary);
+    summaryCol.appendChild(summaryP);
+
+    /* — Aside: contact + lang chips — */
+    var aside = document.createElement("div");
+    aside.className = "hero__aside";
+
+    // Contact links
+    var contactDiv = document.createElement("div");
+    contactDiv.className = "hero__contact";
+
+    if (profile.contact.linkedin) {
+      var liLink = document.createElement("a");
+      liLink.className = "hero__contact-link";
+      liLink.href = profile.contact.linkedin;
+      liLink.target = "_blank";
+      liLink.rel = "noopener noreferrer";
+      liLink.setAttribute("aria-label", "LinkedIn");
+      liLink.appendChild(_makeIcon("linkedin", 16));
+      var liSpan = document.createElement("span");
+      liSpan.textContent = "LinkedIn";
+      liLink.appendChild(liSpan);
+      contactDiv.appendChild(liLink);
+    }
+
+    if (profile.contact.email) {
+      var mailLink = document.createElement("a");
+      mailLink.className = "hero__contact-link hero__contact-link--email";
+      mailLink.href = "mailto:" + profile.contact.email;
+      mailLink.setAttribute("aria-label", profile.contact.email);
+      mailLink.appendChild(_makeIcon("mail", 16));
+      var mailSpan = document.createElement("span");
+      mailSpan.textContent = profile.contact.email;
+      mailLink.appendChild(mailSpan);
+      contactDiv.appendChild(mailLink);
+    }
+
+    aside.appendChild(contactDiv);
+
+    /* — Assemble hero — */
+    var hero = document.createElement("div");
+    hero.className = "hero";
+    hero.appendChild(identity);
+    hero.appendChild(summaryCol);
+    hero.appendChild(aside);
+
+    el.innerHTML = "";
+    el.appendChild(hero);
+  }
+
+  /* -------------------------------------------------------
+     RENDER: PROYECTOS
+     --- Selecciona los 3 primeros proyectos de la experience
+         (los más recientes / relevantes)
+     ------------------------------------------------------- */
+  function renderProyectos() {
+    var el = document.getElementById("proyectos-content");
+    if (!el) return;
+
+    // Collect all projects from experience with reference to parent experience
+    var allProjects = [];
+    CV_DATA.experience.forEach(function (exp) {
+      if (exp.projects && exp.projects.length > 0) {
+        exp.projects.forEach(function (proj) {
+          allProjects.push({ project: proj, exp: exp });
+        });
+      }
+    });
+
+    // Take the first 3 (Fever Lead DE projects — most recent, most relevant)
+    var featured = allProjects.slice(0, 3);
+
+    // Header
+    var header = document.createElement("div");
+    header.className = "section-header";
+    var sectionTitle = document.createElement("h2");
+    sectionTitle.className = "section-header__title";
+    sectionTitle.textContent = t(CV_DATA.ui.sections.projects);
+    header.appendChild(sectionTitle);
+    var countSpan = document.createElement("span");
+    countSpan.className = "section-header__count";
+    countSpan.textContent = featured.length;
+    header.appendChild(countSpan);
+
+    // Grid
+    var grid = document.createElement("div");
+    grid.className = "projects-grid";
+
+    featured.forEach(function (item) {
+      var proj = item.project;
+      var exp = item.exp;
+
+      var card = document.createElement("div");
+      card.className = "project-card";
+
+      // Header row
+      var cardHeader = document.createElement("div");
+      cardHeader.className = "project-card__header";
+
+      var nameEl = document.createElement("h3");
+      nameEl.className = "project-card__name";
+      nameEl.textContent = t(proj.name);
+      cardHeader.appendChild(nameEl);
+
+      var companyEl = document.createElement("span");
+      companyEl.className = "project-card__company";
+      companyEl.textContent = exp.company;
+      cardHeader.appendChild(companyEl);
+
+      card.appendChild(cardHeader);
+
+      // Description
+      var descEl = document.createElement("p");
+      descEl.className = "project-card__description";
+      descEl.textContent = t(proj.description);
+      card.appendChild(descEl);
+
+      // Outcome
+      if (proj.outcome) {
+        var outcomeEl = document.createElement("div");
+        outcomeEl.className = "project-card__outcome";
+        outcomeEl.textContent = t(proj.outcome);
+        card.appendChild(outcomeEl);
+      }
+
+      // Stack badges
+      if (proj.stack && proj.stack.length > 0) {
+        var stackDiv = document.createElement("div");
+        stackDiv.className = "project-card__stack";
+        proj.stack.forEach(function (tech) {
+          var badge = document.createElement("span");
+          badge.className = "badge";
+          badge.textContent = tech;
+          stackDiv.appendChild(badge);
+        });
+        card.appendChild(stackDiv);
+      }
+
+      // Link to experience section
+      var linkEl = document.createElement("a");
+      linkEl.className = "project-card__link";
+      linkEl.href = "#experiencia";
+      linkEl.textContent = t(CV_DATA.ui.actions.view_in_experience);
+      card.appendChild(linkEl);
+
+      grid.appendChild(card);
+    });
+
+    el.innerHTML = "";
+    el.appendChild(header);
+    el.appendChild(grid);
+  }
+
+  /* -------------------------------------------------------
+     RENDER: EDUCACIÓN + CERTIFICACIONES + IDIOMAS + RECONOCIMIENTOS
+     ------------------------------------------------------- */
+  function renderEducacion() {
+    var el = document.getElementById("educacion-content");
+    if (!el) return;
+
+    el.innerHTML = "";
+
+    /* --- EDUCACIÓN --- */
+    var eduBlock = document.createElement("div");
+    eduBlock.className = "edu-block";
+
+    var eduHeader = document.createElement("div");
+    eduHeader.className = "section-header";
+    var eduTitle = document.createElement("h2");
+    eduTitle.className = "section-header__title";
+    eduTitle.textContent = t(CV_DATA.ui.nav.education);
+    eduHeader.appendChild(eduTitle);
+    eduBlock.appendChild(eduHeader);
+
+    var eduList = document.createElement("div");
+    eduList.className = "edu-list";
+
+    CV_DATA.education.forEach(function (edu) {
+      var card = document.createElement("div");
+      card.className = "edu-card";
+
+      var main = document.createElement("div");
+      main.className = "edu-card__main";
+
+      var instEl = document.createElement("p");
+      instEl.className = "edu-card__institution";
+      instEl.textContent = edu.institution;
+      main.appendChild(instEl);
+
+      var degreeEl = document.createElement("p");
+      degreeEl.className = "edu-card__degree";
+      degreeEl.textContent = t(edu.degree);
+      main.appendChild(degreeEl);
+
+      var fieldEl = document.createElement("p");
+      fieldEl.className = "edu-card__field";
+      fieldEl.textContent = t(edu.field);
+      main.appendChild(fieldEl);
+
+      card.appendChild(main);
+
+      var yearsEl = document.createElement("div");
+      yearsEl.className = "edu-card__years font-mono";
+      yearsEl.textContent = edu.start + " – " + edu.end;
+      card.appendChild(yearsEl);
+
+      eduList.appendChild(card);
+    });
+
+    eduBlock.appendChild(eduList);
+    el.appendChild(eduBlock);
+
+    /* --- CERTIFICACIONES --- */
+    var certBlock = document.createElement("div");
+    certBlock.className = "edu-block";
+
+    var certHeader = document.createElement("div");
+    certHeader.className = "section-header";
+    var certTitle = document.createElement("h2");
+    certTitle.className = "section-header__title";
+    certTitle.textContent = t(CV_DATA.ui.sections.certifications);
+    certHeader.appendChild(certTitle);
+    var certCount = document.createElement("span");
+    certCount.className = "section-header__count";
+    certCount.textContent = CV_DATA.certifications.length;
+    certHeader.appendChild(certCount);
+    certBlock.appendChild(certHeader);
+
+    var certGrid = document.createElement("div");
+    certGrid.className = "cert-grid";
+
+    CV_DATA.certifications.forEach(function (cert) {
+      var card = document.createElement("div");
+      card.className = "cert-card";
+
+      var iconDiv = document.createElement("div");
+      iconDiv.className = "cert-card__icon";
+      iconDiv.appendChild(_makeIcon("award", 16));
+      card.appendChild(iconDiv);
+
+      var body = document.createElement("div");
+      body.className = "cert-card__body";
+
+      var nameEl;
+      if (cert.url) {
+        nameEl = document.createElement("a");
+        nameEl.href = cert.url;
+        nameEl.target = "_blank";
+        nameEl.rel = "noopener noreferrer";
+        nameEl.className = "cert-card__name cert-link";
+      } else {
+        nameEl = document.createElement("p");
+        nameEl.className = "cert-card__name";
+      }
+      nameEl.textContent = t(cert.name);
+      body.appendChild(nameEl);
+
+      var metaEl = document.createElement("span");
+      metaEl.className = "cert-card__meta";
+      metaEl.textContent = cert.issuer + " · " + cert.year;
+      body.appendChild(metaEl);
+
+      card.appendChild(body);
+      certGrid.appendChild(card);
+    });
+
+    certBlock.appendChild(certGrid);
+    el.appendChild(certBlock);
+
+    /* --- IDIOMAS --- */
+    var langBlock = document.createElement("div");
+    langBlock.className = "edu-block";
+
+    var langHeader = document.createElement("div");
+    langHeader.className = "section-header";
+    var langTitle = document.createElement("h2");
+    langTitle.className = "section-header__title";
+    langTitle.textContent = t(CV_DATA.ui.sections.languages);
+    langHeader.appendChild(langTitle);
+    langBlock.appendChild(langHeader);
+
+    var langChips = document.createElement("div");
+    langChips.className = "lang-chips";
+
+    CV_DATA.languages.forEach(function (lang) {
+      var chip = document.createElement("span");
+      chip.className = "chip";
+      chip.textContent = t(lang.name) + " · " + t(lang.level);
+      langChips.appendChild(chip);
+    });
+
+    langBlock.appendChild(langChips);
+    el.appendChild(langBlock);
+
+    /* --- RECONOCIMIENTOS --- */
+    if (CV_DATA.honors && CV_DATA.honors.length > 0) {
+      var honorsBlock = document.createElement("div");
+      honorsBlock.className = "edu-block";
+
+      var honorsHeader = document.createElement("div");
+      honorsHeader.className = "section-header";
+      var honorsTitle = document.createElement("h2");
+      honorsTitle.className = "section-header__title";
+      honorsTitle.textContent = t(CV_DATA.ui.sections.honors);
+      honorsHeader.appendChild(honorsTitle);
+      honorsBlock.appendChild(honorsHeader);
+
+      var honorsList = document.createElement("div");
+      honorsList.className = "honors-list";
+
+      CV_DATA.honors.forEach(function (honor) {
+        var card = document.createElement("div");
+        card.className = "honor-card";
+
+        var iconDiv = document.createElement("div");
+        iconDiv.className = "honor-card__icon";
+        iconDiv.appendChild(_makeIcon("star", 16));
+        card.appendChild(iconDiv);
+
+        var body = document.createElement("div");
+        body.className = "honor-card__body";
+
+        var nameEl = document.createElement("p");
+        nameEl.className = "honor-card__name";
+        nameEl.textContent = t(honor.name);
+        body.appendChild(nameEl);
+
+        var metaEl = document.createElement("span");
+        metaEl.className = "honor-card__meta";
+        metaEl.textContent = honor.issuer + " · " + honor.year;
+        body.appendChild(metaEl);
+
+        card.appendChild(body);
+        honorsList.appendChild(card);
+      });
+
+      honorsBlock.appendChild(honorsList);
+      el.appendChild(honorsBlock);
+    }
+  }
+
+  /* -------------------------------------------------------
+     INICIALIZACIÓN
+     ------------------------------------------------------- */
+  function renderAll() {
+    renderResumen();
+    renderProyectos();
+    renderEducacion();
+  }
+
+  renderAll();
+
+  /* -------------------------------------------------------
+     RE-RENDER AL CAMBIAR DE IDIOMA
+     ------------------------------------------------------- */
+  window.addEventListener("cv:languagechange", function () {
+    renderAll();
+  });
+
+})();
+
+
+if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+</script>
+</body>
+</html>

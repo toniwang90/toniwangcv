@@ -1,0 +1,1243 @@
+<!-- ============================================================
+     03-timeline.html — TimelineAgent
+     Sección de experiencia laboral: Timeline D3.js (desktop)
+     + lista móvil + DrillDown panel con hash routing
+     Fragmento parcial: sin <html>, <head>, <body>
+     ============================================================ -->
+
+<!-- ===================== STYLES ===================== -->
+<style>
+  /* ==========================================================
+     TIMELINE SECTION
+     ========================================================== */
+
+  .timeline-section {
+    padding-block: var(--space-10);
+    border-top: var(--border);
+  }
+
+  .timeline-section__header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .timeline-section__title {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    line-height: 1.2;
+  }
+
+  .timeline-section__count {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  /* ==========================================================
+     DESKTOP TIMELINE (SVG via D3.js)
+     ========================================================== */
+
+  .timeline-svg-wrap {
+    display: none;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @media (min-width: 768px) {
+    .timeline-svg-wrap {
+      display: block;
+    }
+  }
+
+  .timeline-svg-wrap svg {
+    display: block;
+    overflow: visible;
+  }
+
+  /* Tooltip */
+  .timeline-tooltip {
+    position: fixed;
+    z-index: 200;
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 100ms ease;
+    max-width: 280px;
+    box-shadow: var(--shadow-md);
+  }
+
+  .timeline-tooltip.is-visible {
+    opacity: 1;
+  }
+
+  .timeline-tooltip__company {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    margin-bottom: var(--space-1);
+  }
+
+  .timeline-tooltip__role {
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .timeline-tooltip__duration {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-primary);
+  }
+
+  /* ==========================================================
+     MOBILE TIMELINE (card list)
+     ========================================================== */
+
+  .timeline-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 768px) {
+    .timeline-mobile {
+      display: none;
+    }
+  }
+
+  .timeline-card {
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    cursor: pointer;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+    min-height: 44px;
+  }
+
+  .timeline-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background-color: var(--timeline-bar-color, var(--color-primary));
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  }
+
+  .timeline-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .timeline-card:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .timeline-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+  }
+
+  .timeline-card__company {
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    line-height: 1.3;
+  }
+
+  .timeline-card__current-badge {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    border-radius: var(--radius-full);
+    padding: 0 var(--space-2);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .timeline-card__role {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .timeline-card__dates {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-3);
+  }
+
+  .timeline-card__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+
+  /* ==========================================================
+     DRILLDOWN PANEL
+     ========================================================== */
+
+  .drilldown-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    background-color: var(--color-overlay);
+    opacity: 0;
+    transition: opacity 300ms ease-out;
+    pointer-events: none;
+  }
+
+  .drilldown-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .drilldown-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 301;
+    width: 100%;
+    max-width: 100%;
+    background-color: var(--color-surface);
+    border-left: var(--border);
+    overflow-y: auto;
+    overflow-x: hidden;
+    transform: translateX(100%);
+    transition: transform 300ms ease-out;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (min-width: 768px) {
+    .drilldown-panel {
+      width: 440px;
+      max-width: 100%;
+    }
+  }
+
+  .drilldown-panel.is-open {
+    transform: translateX(0);
+  }
+
+  /* --- Panel header --- */
+  .drilldown-panel__header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--color-surface);
+    border-bottom: var(--border);
+    padding: var(--space-4) var(--space-5);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .drilldown-panel__header-meta {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .drilldown-panel__company {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    line-height: 1.2;
+    margin-bottom: var(--space-1);
+  }
+
+  .drilldown-panel__role {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .drilldown-panel__dates {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-primary);
+  }
+
+  .drilldown-panel__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color var(--transition-fast), background-color var(--transition-fast);
+    flex-shrink: 0;
+  }
+
+  .drilldown-panel__close:hover {
+    color: var(--color-text);
+    background-color: var(--color-surface-2);
+  }
+
+  .drilldown-panel__close svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* --- Panel body --- */
+  .drilldown-panel__body {
+    padding: var(--space-5);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  /* --- Sections within panel --- */
+  .drilldown-section__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-3);
+  }
+
+  /* Description */
+  .drilldown-description {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    line-height: 1.7;
+  }
+
+  /* Stack chips */
+  .drilldown-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  /* Impact bullets */
+  .drilldown-impact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .drilldown-impact__item {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    line-height: 1.6;
+  }
+
+  .drilldown-impact__bullet {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    min-width: 5px;
+    border-radius: var(--radius-full);
+    background-color: var(--color-primary);
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+
+  /* Projects accordion */
+  .drilldown-projects {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .drilldown-project {
+    background-color: var(--color-surface-2);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .drilldown-project__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    min-height: 44px;
+    transition: background-color var(--transition-fast);
+  }
+
+  .drilldown-project__toggle:hover {
+    background-color: var(--color-surface-offset);
+  }
+
+  .drilldown-project__name {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-text);
+    line-height: 1.3;
+  }
+
+  .drilldown-project__chevron {
+    width: 16px;
+    height: 16px;
+    color: var(--color-text-muted);
+    transition: transform var(--transition-fast);
+    flex-shrink: 0;
+  }
+
+  .drilldown-project.is-open .drilldown-project__chevron {
+    transform: rotate(180deg);
+  }
+
+  .drilldown-project__body {
+    display: none;
+    padding: 0 var(--space-4) var(--space-4);
+    border-top: var(--border);
+  }
+
+  .drilldown-project.is-open .drilldown-project__body {
+    display: block;
+  }
+
+  .drilldown-project__description {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.65;
+    padding-top: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .drilldown-project__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin-bottom: var(--space-3);
+  }
+
+  .drilldown-project__outcome {
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    color: var(--color-primary);
+    line-height: 1.5;
+    padding: var(--space-2) var(--space-3);
+    background-color: var(--color-surface);
+    border-left: 2px solid var(--color-primary);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+
+  /* Overlay color tokens */
+  :root {
+    --color-overlay: rgba(0, 0, 0, 0.5);
+  }
+
+  [data-theme="light"] {
+    --color-overlay: rgba(0, 0, 0, 0.3);
+  }
+</style>
+
+<!-- ===================== HTML ===================== -->
+<div class="timeline-section" id="experiencia">
+
+  <!-- Section header -->
+  <div class="timeline-section__header">
+    <h2 class="timeline-section__title" id="timeline-section-title"></h2>
+    <span class="timeline-section__count font-mono" id="timeline-count"></span>
+  </div>
+
+  <!-- Desktop: SVG timeline (D3.js) -->
+  <div class="timeline-svg-wrap" id="timeline-svg-wrap" aria-hidden="true">
+    <!-- SVG injected by D3 -->
+  </div>
+
+  <!-- Mobile: vertical card list -->
+  <ul class="timeline-mobile" id="timeline-mobile" role="list" aria-label="Experiencia laboral"></ul>
+
+</div>
+
+<!-- Tooltip (shared, desktop only) -->
+<div class="timeline-tooltip" id="timeline-tooltip" role="tooltip" aria-hidden="true">
+  <div class="timeline-tooltip__company" id="tt-company"></div>
+  <div class="timeline-tooltip__role" id="tt-role"></div>
+  <div class="timeline-tooltip__duration" id="tt-duration"></div>
+</div>
+
+<!-- DrillDown overlay -->
+<div class="drilldown-overlay" id="drilldown-overlay" aria-hidden="true"></div>
+
+<!-- DrillDown panel -->
+<aside
+  class="drilldown-panel"
+  id="drilldown-panel"
+  role="complementary"
+  aria-label="Detalle de experiencia"
+  aria-hidden="true"
+  tabindex="-1">
+
+  <!-- Header -->
+  <div class="drilldown-panel__header">
+    <div class="drilldown-panel__header-meta">
+      <div class="drilldown-panel__company" id="dd-company"></div>
+      <div class="drilldown-panel__role" id="dd-role"></div>
+      <div class="drilldown-panel__dates" id="dd-dates"></div>
+    </div>
+    <button
+      class="drilldown-panel__close"
+      id="drilldown-close"
+      type="button"
+      aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Body -->
+  <div class="drilldown-panel__body">
+
+    <!-- Description -->
+    <div id="dd-description-wrap">
+      <div class="drilldown-description" id="dd-description"></div>
+    </div>
+
+    <!-- Stack -->
+    <div id="dd-stack-wrap">
+      <div class="drilldown-section__label" id="dd-stack-label"></div>
+      <div class="drilldown-stack" id="dd-stack"></div>
+    </div>
+
+    <!-- Impact -->
+    <div id="dd-impact-wrap">
+      <div class="drilldown-section__label" id="dd-impact-label"></div>
+      <ul class="drilldown-impact" id="dd-impact" role="list"></ul>
+    </div>
+
+    <!-- Projects -->
+    <div id="dd-projects-wrap" style="display:none">
+      <div class="drilldown-section__label" id="dd-projects-label"></div>
+      <div class="drilldown-projects" id="dd-projects"></div>
+    </div>
+
+  </div>
+</aside>
+
+<!-- ===================== SCRIPT ===================== -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  /* ----------------------------------------------------------
+     CONSTANTS & STATE
+  ---------------------------------------------------------- */
+  var EXPERIENCE = CV_DATA.experience;
+  var UI = CV_DATA.ui;
+
+  // Company color palette — maps to CSS vars, cycling through accent colors
+  var COMPANY_COLORS = [
+    "var(--color-primary)",
+    "var(--color-blue)",
+    "var(--color-purple)",
+    "var(--color-orange)",
+    "var(--color-success)",
+    "var(--color-primary)",
+    "var(--color-blue)",
+    "var(--color-purple)",
+    "var(--color-orange)"
+  ];
+
+  var _openExpId = null; // currently open drilldown experience id
+
+  /* ----------------------------------------------------------
+     DATE HELPERS
+  ---------------------------------------------------------- */
+  function parseYearMonth(str) {
+    // "2025-01" → Date at first day of month
+    if (!str) return new Date();
+    var parts = str.split("-");
+    return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, 1);
+  }
+
+  function today() {
+    var d = new Date();
+    return new Date(d.getFullYear(), d.getMonth(), 1);
+  }
+
+  function formatDateRange(exp) {
+    var lang = window.__cvLang || "es";
+    var months = UI.months[lang];
+
+    var startDate = parseYearMonth(exp.start);
+    var endDate = exp.current ? today() : parseYearMonth(exp.end);
+
+    var startStr = months[startDate.getMonth()] + " " + startDate.getFullYear();
+    var endStr = exp.current
+      ? t(UI.timeline.today)
+      : months[endDate.getMonth()] + " " + endDate.getFullYear();
+
+    return startStr + " — " + endStr;
+  }
+
+  function calcDuration(exp) {
+    var lang = window.__cvLang || "es";
+    var startDate = parseYearMonth(exp.start);
+    var endDate = exp.current ? today() : parseYearMonth(exp.end);
+
+    var months = (endDate.getFullYear() - startDate.getFullYear()) * 12
+      + (endDate.getMonth() - startDate.getMonth());
+
+    var years = Math.floor(months / 12);
+    var remainMonths = months % 12;
+
+    var parts = [];
+    if (years > 0) {
+      parts.push(years + " " + t(years === 1 ? UI.timeline.duration_year : UI.timeline.duration_years));
+    }
+    if (remainMonths > 0) {
+      parts.push(remainMonths + " " + t(remainMonths === 1 ? UI.timeline.duration_month : UI.timeline.duration_months));
+    }
+    return parts.join(" ") || "—";
+  }
+
+  /* ----------------------------------------------------------
+     DRILLDOWN PANEL
+  ---------------------------------------------------------- */
+  var panel = document.getElementById("drilldown-panel");
+  var overlay = document.getElementById("drilldown-overlay");
+  var closeBtn = document.getElementById("drilldown-close");
+
+  function openDrilldown(expId) {
+    var exp = EXPERIENCE.find(function (e) { return e.id === expId; });
+    if (!exp) return;
+
+    _openExpId = expId;
+    renderDrilldownContent(exp);
+
+    panel.classList.add("is-open");
+    overlay.classList.add("is-open");
+    panel.setAttribute("aria-hidden", "false");
+    overlay.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+
+    // Hash routing
+    history.replaceState(null, "", "#" + expId);
+
+    // Focus panel for keyboard users
+    setTimeout(function () { panel.focus(); }, 310);
+  }
+
+  function closeDrilldown() {
+    _openExpId = null;
+    panel.classList.remove("is-open");
+    overlay.classList.remove("is-open");
+    panel.setAttribute("aria-hidden", "true");
+    overlay.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+
+    // Clear hash
+    history.replaceState(null, "", window.location.pathname + window.location.search);
+  }
+
+  function renderDrilldownContent(exp) {
+    var lang = window.__cvLang || "es";
+
+    // Close button label
+    closeBtn.setAttribute("aria-label", t(UI.actions.close));
+
+    // Header
+    document.getElementById("dd-company").textContent = exp.company;
+    document.getElementById("dd-role").textContent = t(exp.role);
+    document.getElementById("dd-dates").textContent = formatDateRange(exp) + " · " + calcDuration(exp);
+
+    // Description
+    document.getElementById("dd-description").textContent = t(exp.description);
+
+    // Stack label
+    document.getElementById("dd-stack-label").textContent = t(UI.sections.stack);
+
+    // Stack chips
+    var stackEl = document.getElementById("dd-stack");
+    stackEl.innerHTML = "";
+    exp.stack.forEach(function (tech) {
+      var chip = document.createElement("span");
+      chip.className = "chip";
+      chip.textContent = tech;
+      stackEl.appendChild(chip);
+    });
+
+    // Impact label
+    document.getElementById("dd-impact-label").textContent = t(UI.sections.impact);
+
+    // Impact bullets
+    var impactEl = document.getElementById("dd-impact");
+    impactEl.innerHTML = "";
+    (exp.impact || []).forEach(function (item) {
+      var li = document.createElement("li");
+      li.className = "drilldown-impact__item";
+      li.setAttribute("role", "listitem");
+      var bullet = document.createElement("span");
+      bullet.className = "drilldown-impact__bullet";
+      bullet.setAttribute("aria-hidden", "true");
+      var text = document.createElement("span");
+      text.textContent = t(item);
+      li.appendChild(bullet);
+      li.appendChild(text);
+      impactEl.appendChild(li);
+    });
+
+    // Projects
+    var projectsWrap = document.getElementById("dd-projects-wrap");
+    var projectsEl = document.getElementById("dd-projects");
+    projectsEl.innerHTML = "";
+
+    if (exp.projects && exp.projects.length > 0) {
+      document.getElementById("dd-projects-label").textContent = t(UI.sections.projects);
+      projectsWrap.style.display = "";
+
+      exp.projects.forEach(function (proj, idx) {
+        var article = document.createElement("div");
+        article.className = "drilldown-project";
+        article.setAttribute("data-project-idx", idx);
+
+        // Toggle button
+        var toggleBtn = document.createElement("button");
+        toggleBtn.className = "drilldown-project__toggle";
+        toggleBtn.type = "button";
+        toggleBtn.setAttribute("aria-expanded", "false");
+
+        var nameSpan = document.createElement("span");
+        nameSpan.className = "drilldown-project__name";
+        nameSpan.textContent = t(proj.name);
+
+        // Chevron SVG
+        var chevron = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        chevron.setAttribute("viewBox", "0 0 24 24");
+        chevron.setAttribute("fill", "none");
+        chevron.setAttribute("stroke", "currentColor");
+        chevron.setAttribute("stroke-width", "2");
+        chevron.setAttribute("stroke-linecap", "round");
+        chevron.setAttribute("stroke-linejoin", "round");
+        chevron.setAttribute("aria-hidden", "true");
+        chevron.classList.add("drilldown-project__chevron");
+        var chevPath = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+        chevPath.setAttribute("points", "6 9 12 15 18 9");
+        chevron.appendChild(chevPath);
+
+        toggleBtn.appendChild(nameSpan);
+        toggleBtn.appendChild(chevron);
+
+        // Body
+        var body = document.createElement("div");
+        body.className = "drilldown-project__body";
+
+        var desc = document.createElement("p");
+        desc.className = "drilldown-project__description";
+        desc.textContent = t(proj.description);
+
+        var projStack = document.createElement("div");
+        projStack.className = "drilldown-project__stack";
+        (proj.stack || []).forEach(function (tech) {
+          var chip = document.createElement("span");
+          chip.className = "chip";
+          chip.textContent = tech;
+          projStack.appendChild(chip);
+        });
+
+        var outcome = document.createElement("p");
+        outcome.className = "drilldown-project__outcome";
+        outcome.textContent = t(proj.outcome);
+
+        body.appendChild(desc);
+        body.appendChild(projStack);
+        body.appendChild(outcome);
+
+        article.appendChild(toggleBtn);
+        article.appendChild(body);
+        projectsEl.appendChild(article);
+
+        // Accordion toggle
+        toggleBtn.addEventListener("click", function () {
+          var isOpen = article.classList.contains("is-open");
+          article.classList.toggle("is-open", !isOpen);
+          toggleBtn.setAttribute("aria-expanded", String(!isOpen));
+        });
+      });
+    } else {
+      projectsWrap.style.display = "none";
+    }
+  }
+
+  // Close handlers
+  closeBtn.addEventListener("click", closeDrilldown);
+  overlay.addEventListener("click", closeDrilldown);
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && _openExpId) {
+      closeDrilldown();
+    }
+  });
+
+  /* ----------------------------------------------------------
+     MOBILE CARD LIST
+  ---------------------------------------------------------- */
+  function renderMobileList() {
+    var listEl = document.getElementById("timeline-mobile");
+    listEl.innerHTML = "";
+
+    // Reverse chronological
+    var sorted = EXPERIENCE.slice().sort(function (a, b) {
+      return parseYearMonth(b.start) - parseYearMonth(a.start);
+    });
+
+    sorted.forEach(function (exp, idx) {
+      // Find original index for color
+      var origIdx = EXPERIENCE.indexOf(exp);
+      var color = COMPANY_COLORS[origIdx % COMPANY_COLORS.length];
+
+      var li = document.createElement("li");
+      li.setAttribute("role", "listitem");
+
+      var card = document.createElement("div");
+      card.className = "timeline-card";
+      card.setAttribute("tabindex", "0");
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-label", exp.company + " — " + t(exp.role));
+      card.style.setProperty("--timeline-bar-color", color);
+
+      // Header row
+      var header = document.createElement("div");
+      header.className = "timeline-card__header";
+
+      var company = document.createElement("div");
+      company.className = "timeline-card__company";
+      company.textContent = exp.company;
+
+      header.appendChild(company);
+
+      if (exp.current) {
+        var badge = document.createElement("span");
+        badge.className = "timeline-card__current-badge";
+        badge.textContent = t(UI.timeline.present);
+        header.appendChild(badge);
+      }
+
+      // Role
+      var role = document.createElement("div");
+      role.className = "timeline-card__role";
+      role.textContent = t(exp.role);
+
+      // Dates
+      var dates = document.createElement("div");
+      dates.className = "timeline-card__dates";
+      dates.textContent = formatDateRange(exp) + " · " + calcDuration(exp);
+
+      // Stack chips
+      var stackWrap = document.createElement("div");
+      stackWrap.className = "timeline-card__stack";
+      exp.stack.slice(0, 6).forEach(function (tech) {
+        var chip = document.createElement("span");
+        chip.className = "badge";
+        chip.textContent = tech;
+        stackWrap.appendChild(chip);
+      });
+      if (exp.stack.length > 6) {
+        var more = document.createElement("span");
+        more.className = "badge";
+        more.textContent = "+" + (exp.stack.length - 6);
+        stackWrap.appendChild(more);
+      }
+
+      card.appendChild(header);
+      card.appendChild(role);
+      card.appendChild(dates);
+      card.appendChild(stackWrap);
+      li.appendChild(card);
+      listEl.appendChild(li);
+
+      // Click / keyboard open drilldown
+      function _handleOpen() { openDrilldown(exp.id); }
+      card.addEventListener("click", _handleOpen);
+      card.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          _handleOpen();
+        }
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------
+     DESKTOP D3.JS TIMELINE
+  ---------------------------------------------------------- */
+  function renderD3Timeline() {
+    var wrap = document.getElementById("timeline-svg-wrap");
+    wrap.innerHTML = "";
+
+    var containerWidth = wrap.parentElement
+      ? wrap.parentElement.clientWidth
+      : 900;
+    // Minimum width to avoid tiny bars
+    var totalWidth = Math.max(containerWidth, 700);
+
+    var MARGIN = { top: 16, right: 60, bottom: 44, left: 210 };
+    var ROW_HEIGHT = 40;
+    var ROW_GAP = 8;
+    var LABEL_FONT_SIZE = 12;
+
+    var numRows = EXPERIENCE.length;
+    var innerHeight = numRows * (ROW_HEIGHT + ROW_GAP) - ROW_GAP;
+    var totalHeight = innerHeight + MARGIN.top + MARGIN.bottom;
+    var innerWidth = totalWidth - MARGIN.left - MARGIN.right;
+
+    // Time domain: from earliest start to today
+    var allStarts = EXPERIENCE.map(function (e) { return parseYearMonth(e.start); });
+    var domainStart = d3.min(allStarts);
+    var domainEnd = today();
+    // Add a tiny right padding (1 month)
+    var domainEndPadded = new Date(domainEnd.getFullYear(), domainEnd.getMonth() + 2, 1);
+
+    var xScale = d3.scaleTime()
+      .domain([domainStart, domainEndPadded])
+      .range([0, innerWidth]);
+
+    // SVG
+    var svg = d3.select(wrap)
+      .append("svg")
+      .attr("width", totalWidth)
+      .attr("height", totalHeight)
+      .attr("role", "img")
+      .attr("aria-label", t(UI.nav.experience));
+
+    var g = svg.append("g")
+      .attr("transform", "translate(" + MARGIN.left + "," + MARGIN.top + ")");
+
+    // X Axis — only year ticks
+    var xAxis = d3.axisBottom(xScale)
+      .ticks(d3.timeYear.every(1))
+      .tickFormat(d3.timeFormat("%Y"))
+      .tickSize(4);
+
+    g.append("g")
+      .attr("transform", "translate(0," + innerHeight + ")")
+      .call(xAxis)
+      .call(function (axisG) {
+        axisG.select(".domain").attr("stroke", "var(--color-divider)");
+        axisG.selectAll(".tick line").attr("stroke", "var(--color-divider)");
+        axisG.selectAll(".tick text")
+          .attr("fill", "var(--color-text-muted)")
+          .attr("font-family", "var(--font-mono)")
+          .attr("font-size", LABEL_FONT_SIZE + "px");
+      });
+
+    // Horizontal grid lines
+    EXPERIENCE.forEach(function (exp, i) {
+      var y = i * (ROW_HEIGHT + ROW_GAP) + ROW_HEIGHT / 2;
+      g.append("line")
+        .attr("x1", 0)
+        .attr("x2", innerWidth)
+        .attr("y1", y)
+        .attr("y2", y)
+        .attr("stroke", "var(--color-divider)")
+        .attr("stroke-width", 1)
+        .attr("stroke-dasharray", "2,4");
+    });
+
+    // Today line
+    var todayX = xScale(today());
+
+    g.append("line")
+      .attr("x1", todayX)
+      .attr("x2", todayX)
+      .attr("y1", -MARGIN.top + 4)
+      .attr("y2", innerHeight)
+      .attr("stroke", "var(--color-primary)")
+      .attr("stroke-width", 1.5)
+      .attr("stroke-dasharray", "4,3")
+      .attr("opacity", 0.7);
+
+    // "Hoy" label
+    var todayLabel = t(UI.timeline.today);
+    g.append("text")
+      .attr("x", todayX + 4)
+      .attr("y", -MARGIN.top + 14)
+      .attr("fill", "var(--color-primary)")
+      .attr("font-family", "var(--font-mono)")
+      .attr("font-size", "12px")
+      .text(todayLabel);
+
+    // Tooltip
+    var tooltip = document.getElementById("timeline-tooltip");
+    var ttCompany = document.getElementById("tt-company");
+    var ttRole = document.getElementById("tt-role");
+    var ttDuration = document.getElementById("tt-duration");
+
+    // Bars
+    EXPERIENCE.forEach(function (exp, i) {
+      var color = COMPANY_COLORS[i % COMPANY_COLORS.length];
+      var startX = xScale(parseYearMonth(exp.start));
+      var endDate = exp.current ? today() : parseYearMonth(exp.end);
+      var endX = xScale(endDate);
+      var barWidth = Math.max(endX - startX, 4);
+      var barY = i * (ROW_HEIGHT + ROW_GAP);
+
+      // Label group (company + role) — interactive: same hover/click as the bar
+      var labelGroup = g.append("g")
+        .attr("class", "timeline-label-group")
+        .style("cursor", "pointer");
+
+      // Company label — line 1 (left margin)
+      var companyFull = exp.company;
+      var companyText = companyFull.length > 24 ? companyFull.slice(0, 22) + "…" : companyFull;
+
+      var companyEl = labelGroup.append("text")
+        .attr("x", -8)
+        .attr("y", barY + ROW_HEIGHT / 2 - 5)
+        .attr("text-anchor", "end")
+        .attr("fill", "var(--color-text)")
+        .attr("font-family", "var(--font-display)")
+        .attr("font-weight", "600")
+        .attr("font-size", LABEL_FONT_SIZE + "px")
+        .text(companyText);
+      companyEl.append("title").text(companyFull);
+
+      // Role label — line 2 (left margin, muted)
+      var roleFull = t(exp.role);
+      var roleText = roleFull.length > 28 ? roleFull.slice(0, 26) + "…" : roleFull;
+
+      var roleEl = labelGroup.append("text")
+        .attr("x", -8)
+        .attr("y", barY + ROW_HEIGHT / 2 + 10)
+        .attr("text-anchor", "end")
+        .attr("fill", "var(--color-text-muted)")
+        .attr("font-family", "var(--font-mono)")
+        .attr("font-size", LABEL_FONT_SIZE + "px")
+        .text(roleText);
+      roleEl.append("title").text(roleFull);
+
+      // Transparent hit area for the label group (full margin width, row-tall)
+      labelGroup.append("rect")
+        .attr("x", -MARGIN.left + 4)
+        .attr("y", barY - (44 - ROW_HEIGHT) / 2)
+        .attr("width", MARGIN.left - 12)
+        .attr("height", 44)
+        .attr("fill", "transparent")
+        .attr("data-exp-id", exp.id);
+
+      labelGroup.on("mousemove", function (event) {
+        ttCompany.textContent = exp.company;
+        ttRole.textContent = t(exp.role);
+        ttDuration.textContent = formatDateRange(exp) + " · " + calcDuration(exp);
+        tooltip.classList.add("is-visible");
+        tooltip.setAttribute("aria-hidden", "false");
+        _positionTooltip(event.clientX, event.clientY);
+        companyEl.attr("fill", "var(--color-primary)");
+      });
+
+      labelGroup.on("mouseleave", function () {
+        tooltip.classList.remove("is-visible");
+        tooltip.setAttribute("aria-hidden", "true");
+        companyEl.attr("fill", "var(--color-text)");
+      });
+
+      labelGroup.on("click", function () {
+        tooltip.classList.remove("is-visible");
+        openDrilldown(exp.id);
+      });
+
+      // Bar background (clickable hit area)
+      var barGroup = g.append("g")
+        .attr("class", "timeline-bar-group")
+        .style("cursor", "pointer");
+
+      // Bar rect
+      barGroup.append("rect")
+        .attr("x", startX)
+        .attr("y", barY)
+        .attr("width", barWidth)
+        .attr("height", ROW_HEIGHT)
+        .attr("rx", 4)
+        .attr("fill", color)
+        .attr("opacity", 0.25)
+        .attr("data-exp-id", exp.id);
+
+      // Bar border / accent line (top)
+      barGroup.append("rect")
+        .attr("x", startX)
+        .attr("y", barY)
+        .attr("width", barWidth)
+        .attr("height", 2)
+        .attr("rx", 1)
+        .attr("fill", color)
+        .attr("opacity", 0.85);
+
+      // Transparent hit area — 44px tall, centred over the bar
+      var HIT_HEIGHT = 44;
+      barGroup.append("rect")
+        .attr("x", startX)
+        .attr("y", barY - (HIT_HEIGHT - ROW_HEIGHT) / 2)
+        .attr("width", barWidth)
+        .attr("height", HIT_HEIGHT)
+        .attr("fill", "transparent")
+        .attr("data-exp-id", exp.id);
+
+      // Hover
+      barGroup.on("mousemove", function (event) {
+        ttCompany.textContent = exp.company;
+        ttRole.textContent = t(exp.role);
+        ttDuration.textContent = formatDateRange(exp) + " · " + calcDuration(exp);
+        tooltip.classList.add("is-visible");
+        tooltip.setAttribute("aria-hidden", "false");
+        _positionTooltip(event.clientX, event.clientY);
+      });
+
+      barGroup.on("mouseleave", function () {
+        tooltip.classList.remove("is-visible");
+        tooltip.setAttribute("aria-hidden", "true");
+      });
+
+      barGroup.on("click", function () {
+        tooltip.classList.remove("is-visible");
+        openDrilldown(exp.id);
+      });
+
+      // Keyboard accessibility via foreignObject workaround:
+      // We add a title element for screen reader hint
+      barGroup.append("title")
+        .text(exp.company + " — " + t(exp.role) + " · " + calcDuration(exp));
+    });
+  }
+
+  function _positionTooltip(clientX, clientY) {
+    var tooltip = document.getElementById("timeline-tooltip");
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+    var tw = tooltip.offsetWidth || 240;
+    var th = tooltip.offsetHeight || 80;
+    var offset = 14;
+
+    var left = clientX + offset;
+    var top = clientY + offset;
+
+    if (left + tw > vw - 8) left = clientX - tw - offset;
+    if (top + th > vh - 8) top = clientY - th - offset;
+
+    tooltip.style.left = left + "px";
+    tooltip.style.top = top + "px";
+  }
+
+  /* ----------------------------------------------------------
+     SECTION HEADER
+  ---------------------------------------------------------- */
+  function renderHeader() {
+    var title = document.getElementById("timeline-section-title");
+    var count = document.getElementById("timeline-count");
+    if (title) title.textContent = t(UI.nav.experience);
+    if (count) count.textContent = EXPERIENCE.length;
+  }
+
+  /* ----------------------------------------------------------
+     FULL RENDER
+  ---------------------------------------------------------- */
+  function renderAll() {
+    renderHeader();
+    renderMobileList();
+
+    // D3 only on desktop
+    if (window.innerWidth >= 768 && typeof d3 !== "undefined") {
+      renderD3Timeline();
+    }
+
+    // If there's a matching hash on load, open drilldown
+    var hash = window.location.hash.replace("#", "");
+    if (hash && EXPERIENCE.find(function (e) { return e.id === hash; })) {
+      openDrilldown(hash);
+    }
+  }
+
+  /* ----------------------------------------------------------
+     LANGUAGE CHANGE LISTENER
+  ---------------------------------------------------------- */
+  window.addEventListener("cv:languagechange", function () {
+    renderHeader();
+    renderMobileList();
+    if (window.innerWidth >= 768 && typeof d3 !== "undefined") {
+      renderD3Timeline();
+    }
+    // Re-render drilldown content if one is open
+    if (_openExpId) {
+      var exp = EXPERIENCE.find(function (e) { return e.id === _openExpId; });
+      if (exp) renderDrilldownContent(exp);
+    }
+  });
+
+  /* ----------------------------------------------------------
+     RESIZE HANDLER — re-render D3 on viewport width change
+  ---------------------------------------------------------- */
+  var _resizeTimer;
+  window.addEventListener("resize", function () {
+    clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(function () {
+      if (window.innerWidth >= 768 && typeof d3 !== "undefined") {
+        renderD3Timeline();
+      }
+    }, 200);
+  });
+
+  /* ----------------------------------------------------------
+     INIT
+  ---------------------------------------------------------- */
+  // D3 may not be loaded yet — wait for it
+  function _waitForD3AndRender() {
+    if (typeof d3 !== "undefined") {
+      renderAll();
+    } else {
+      setTimeout(_waitForD3AndRender, 50);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", _waitForD3AndRender);
+  } else {
+    _waitForD3AndRender();
+  }
+
+})();
+</script>

@@ -1,0 +1,430 @@
+/* =============================================================================
+   06-print.css — PrintAgent
+   CSS de impresión — exportar el CV como PDF limpio desde el navegador
+   Solo @media print { ... } — fragmento parcial inyectado por AssemblerAgent
+   Sin <style> tags
+   ============================================================================= */
+
+@media print {
+
+  /* ===========================================================================
+     @PAGE — MÁRGENES Y TAMAÑO
+     =========================================================================== */
+
+  @page {
+    size: A4 portrait;
+    margin: 16mm 18mm 20mm 18mm;
+  }
+
+  @page :first {
+    margin-top: 12mm;
+  }
+
+  /* ===========================================================================
+     FORZAR LIGHT MODE — override variables incluso con [data-theme="dark"]
+     Las CSS custom properties se redefinen aquí para que toda la hoja de
+     impresión use valores de alto contraste sobre blanco.
+     =========================================================================== */
+
+  :root,
+  [data-theme="dark"],
+  [data-theme="light"] {
+    --color-bg:             white;
+    --color-surface:        white;
+    --color-surface-2:      #f0f0f0;
+    --color-surface-offset: #d8d8d8;
+    --color-text:           black;
+    --color-text-muted:     #444444;
+    --color-divider:        #cccccc;
+    --color-primary:        #2a6a73;
+    --color-blue:           #1a5fa8;
+    --color-orange:         #b05c10;
+    --color-success:        #1a7a28;
+    --color-purple:         #6a3ab0;
+    --shadow-sm:            none;
+    --shadow-md:            none;
+    --border:               1px solid var(--color-divider);
+    --font-display:         'Satoshi', sans-serif;
+    --font-mono:            'JetBrains Mono', monospace;
+    --transition-fast:      0ms;
+    --transition-base:      0ms;
+  }
+
+  /* ===========================================================================
+     RESET GLOBAL DE IMPRESIÓN
+     =========================================================================== */
+
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  html {
+    font-size: 11pt;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    font-family: var(--font-display) !important;
+    font-size: 10pt !important;
+    line-height: 1.5 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    min-height: auto !important;
+    -webkit-font-smoothing: auto !important;
+  }
+
+  /* ===========================================================================
+     ELEMENTOS A OCULTAR COMPLETAMENTE
+     =========================================================================== */
+
+  /* Header sticky de navegación */
+  .site-header,
+  .site-header__inner {
+    display: none !important;
+  }
+
+  /* Navegación desktop y mobile */
+  .site-nav,
+  .mobile-nav {
+    display: none !important;
+  }
+
+  /* Botones de acción en header */
+  .btn-icon,
+  .btn-lang,
+  .btn-download,
+  .btn-hamburger,
+  .theme-toggle,
+  #btn-theme,
+  #btn-lang,
+  #btn-download-desktop,
+  #btn-hamburger {
+    display: none !important;
+  }
+
+  /* KPI bar animada (no aporta en impresión) */
+  .kpi-bar {
+    display: none !important;
+  }
+
+  /* Tooltip del timeline D3 */
+  .timeline-tooltip {
+    display: none !important;
+  }
+
+  /* Tooltip de skill dots */
+  .skill-dots__tooltip {
+    display: none !important;
+  }
+
+  /* Drilldown panel y overlay (elemento modal) */
+  .drilldown-overlay,
+  .drilldown-panel {
+    display: none !important;
+  }
+
+  /* SVG timeline D3 — no imprime bien (requiere viewport, escala, interactividad) */
+  .timeline-svg-wrap {
+    display: none !important;
+  }
+
+  /* ===========================================================================
+     LAYOUT DE IMPRESIÓN — UNA COLUMNA, SIN GRIDS COMPLEJOS
+     =========================================================================== */
+
+  #main-content {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #main-content section {
+    scroll-margin-top: 0 !important;
+  }
+
+  /* Grids multi-columna → una columna en impresión */
+  .skills-grid,
+  .projects-grid,
+  .cert-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8pt !important;
+  }
+
+  /* Hero: una columna */
+  .hero {
+    flex-direction: column !important;
+    gap: 8pt !important;
+  }
+
+  .hero__identity {
+    min-width: auto !important;
+    max-width: 100% !important;
+  }
+
+  .hero__aside {
+    min-width: auto !important;
+    align-items: flex-start !important;
+  }
+
+  .hero__contact {
+    align-items: flex-start !important;
+  }
+
+  /* ===========================================================================
+     TIMELINE EN IMPRESIÓN — MOSTRAR LISTA MOBILE, OCULTAR D3
+     =========================================================================== */
+
+  /* La lista mobile (.timeline-mobile) está hidden en desktop (display:none).
+     En impresión la forzamos visible para reemplazar al SVG D3. */
+  .timeline-mobile {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8pt !important;
+  }
+
+  /* Simplificar cards de timeline para impresión */
+  .timeline-card {
+    border: 1pt solid var(--color-divider) !important;
+    border-radius: 4pt !important;
+    padding: 8pt 10pt !important;
+    cursor: default !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    background: white !important;
+  }
+
+  /* Eliminar el pseudo-elemento barra izquierda de color en impresión
+     (depende de CSS custom property inline —timeline-bar-color— y puede
+     no renderizarse correctamente en todos los motores PDF) */
+  .timeline-card::before {
+    display: none !important;
+  }
+
+  /* Quitar pading left extra que compensa la barra */
+  .timeline-section__header {
+    margin-bottom: 8pt !important;
+  }
+
+  /* ===========================================================================
+     SKILL DOTS — SVG VISIBLE EN IMPRESIÓN
+     =========================================================================== */
+
+  /* Asegurar que los círculos SVG impriman con color */
+  .skill-dots svg,
+  .skill-dot-circle {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Contenedor de dots: cursor default */
+  .skill-dots {
+    cursor: default !important;
+  }
+
+  /* Forzar visibilidad de los dots y su contenedor */
+  .skill-dots,
+  .skill-dots svg {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* ===========================================================================
+     SUPERFICIES Y CARDS — SIMPLIFICAR BORDES
+     =========================================================================== */
+
+  .surface,
+  .surface-2,
+  .surface-offset,
+  .skill-category,
+  .timeline-card,
+  .project-card,
+  .edu-card,
+  .cert-card,
+  .honor-card {
+    background: white !important;
+    border: 1pt solid var(--color-divider) !important;
+    box-shadow: none !important;
+  }
+
+  /* Eliminar pseudo-elementos decorativos que no imprimen bien */
+  .kpi-card::before {
+    display: none !important;
+  }
+
+  /* ===========================================================================
+     TIPOGRAFÍA DE IMPRESIÓN
+     =========================================================================== */
+
+  /* Fallback a sistema si las web fonts no cargan */
+  .font-display,
+  .site-logo__name,
+  .site-logo__title,
+  .hero__name,
+  .hero__title,
+  .section-header__title,
+  .timeline-section__title,
+  .skills-section__title,
+  .skill-category__name,
+  .timeline-card__company,
+  .drilldown-panel__company,
+  .project-card__name,
+  .edu-card__institution,
+  .edu-card__degree,
+  .cert-card__name,
+  .honor-card__name {
+    font-family: var(--font-display) !important;
+  }
+
+  .font-mono,
+  .timeline-card__dates,
+  .skill-row__name,
+  .badge,
+  .chip,
+  .edu-card__years,
+  .cert-card__meta,
+  .honor-card__meta,
+  .kpi-card__value,
+  .section-header__count {
+    font-family: var(--font-mono) !important;
+  }
+
+  /* Tamaños de texto en impresión */
+  .hero__name {
+    font-size: 20pt !important;
+    line-height: 1.15 !important;
+  }
+
+  .hero__title {
+    font-size: 11pt !important;
+  }
+
+  .section-header__title,
+  .timeline-section__title,
+  .skills-section__title {
+    font-size: 13pt !important;
+  }
+
+  .skill-row__name,
+  .timeline-card__company,
+  .project-card__name,
+  .edu-card__institution {
+    font-size: 9pt !important;
+  }
+
+  .badge,
+  .chip {
+    font-size: 7pt !important;
+    padding: 1pt 3pt !important;
+  }
+
+  /* Links visibles en impresión */
+  a {
+    color: black !important;
+    text-decoration: none !important;
+  }
+
+  /* Mostrar URL de links de contacto y certificaciones */
+  .hero__contact-link[href^="mailto:"]::after {
+    content: " (" attr(href) ")";
+    font-size: 7pt;
+    color: var(--color-text-muted);
+  }
+
+  .cert-link[href]::after {
+    display: none; /* Las URLs de certificados son largas — omitir */
+  }
+
+  /* ===========================================================================
+     SALTOS DE PÁGINA
+     =========================================================================== */
+
+  /* Evitar que una sección quede partida entre páginas */
+  section {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Educación siempre empieza en nueva página */
+  #educacion {
+    break-before: always !important;
+    page-break-before: always !important;
+  }
+
+  /* Evitar que cards queden partidas */
+  .timeline-card,
+  .skill-category,
+  .project-card,
+  .edu-card,
+  .cert-card,
+  .honor-card,
+  .edu-block {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Evitar heading huérfano al final de página */
+  .section-header,
+  .timeline-section__header,
+  .skills-section__header {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  /* ===========================================================================
+     CONTENIDO TRADUCIDO — NO OCULTAR
+     Los elementos con data-i18n ya tienen su textContent renderizado
+     por applyStaticLabels() antes de abrir el diálogo de impresión.
+     El CSS no fuerza ningún idioma — muestra el contenido activo.
+     =========================================================================== */
+
+  [data-i18n],
+  [data-i18n-aria] {
+    visibility: visible !important;
+    display: revert !important;
+  }
+
+  /* ===========================================================================
+     OVERFLOW Y SCROLL — ELIMINAR
+     =========================================================================== */
+
+  body,
+  #main-content,
+  .timeline-section,
+  .skills-section,
+  #resumen,
+  #proyectos,
+  #educacion {
+    overflow: visible !important;
+    max-width: 100% !important;
+  }
+
+  /* Scrollable wrapper del SVG — ya oculto, pero por si acaso */
+  .timeline-svg-wrap {
+    overflow: visible !important;
+  }
+
+  /* ===========================================================================
+     SCROLL-SPY ACTIVE STATE — LIMPIAR
+     =========================================================================== */
+
+  .site-nav__link.is-active {
+    color: black !important;
+    background-color: transparent !important;
+  }
+
+}
+/* fin @media print */

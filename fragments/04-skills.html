@@ -1,0 +1,468 @@
+<!-- ============================================================
+     04-skills.html — SkillsAgent
+     Skill Matrix: SVG dots animados por categoría
+     Fragmento parcial: sin <html>, <head>, <body>
+     ============================================================ -->
+
+<!-- ===================== STYLES ===================== -->
+<style>
+  /* -------------------------------------------------------
+     SKILLS SECTION — scoped to .skills-section
+     ------------------------------------------------------- */
+
+  .skills-section {
+    padding-block: var(--space-12);
+  }
+
+  /* Section header */
+  .skills-section__header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    margin-bottom: var(--space-8);
+    border-bottom: var(--border);
+    padding-bottom: var(--space-4);
+  }
+
+  .skills-section__title {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    line-height: 1.2;
+  }
+
+  .skills-section__subtitle {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  /* Categories grid: 1 col mobile, 2 col desktop */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .skills-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Category card */
+  .skill-category {
+    background-color: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  /* Category header */
+  .skill-category__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding-bottom: var(--space-3);
+    border-bottom: var(--border);
+  }
+
+  .skill-category__accent {
+    width: 3px;
+    height: 16px;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+  }
+
+  .skill-category__accent--data_engineering { background-color: var(--color-primary); }
+  .skill-category__accent--visualization    { background-color: var(--color-blue); }
+  .skill-category__accent--cloud            { background-color: var(--color-orange); }
+  .skill-category__accent--languages        { background-color: var(--color-success); }
+  .skill-category__accent--tools            { background-color: var(--color-purple); }
+
+  .skill-category__name {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .skill-category__name--data_engineering { color: var(--color-primary); }
+  .skill-category__name--visualization    { color: var(--color-blue); }
+  .skill-category__name--cloud            { color: var(--color-orange); }
+  .skill-category__name--languages        { color: var(--color-success); }
+  .skill-category__name--tools            { color: var(--color-purple); }
+
+  /* Skill list */
+  .skill-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  /* Single skill row */
+  .skill-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    min-height: 44px;
+    padding-block: var(--space-1);
+    position: relative;
+  }
+
+  .skill-row__name {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* SVG dot container */
+  .skill-dots {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    position: relative;
+    cursor: default;
+  }
+
+  /* Individual SVG dot wrapper — used for tooltip target */
+  .skill-dots__dot-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Tooltip */
+  .skill-dots__tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    right: 0;
+    z-index: 20;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-divider);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+    box-shadow: var(--shadow-md);
+  }
+
+  .skill-dots:hover .skill-dots__tooltip,
+  .skill-dots:focus-within .skill-dots__tooltip {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* SVG dots — SVG circles drawn in JS */
+  .skill-dots svg {
+    display: block;
+    overflow: visible;
+  }
+
+  /* Transition for fill animation */
+  .skill-dot-circle {
+    transition: fill 200ms ease-in-out;
+  }
+</style>
+
+<!-- ===================== HTML ===================== -->
+<section id="skills" class="skills-section" aria-label="Skills">
+  <div class="skills-section__header">
+    <h2 class="skills-section__title" data-i18n="nav.skills"></h2>
+    <span class="skills-section__subtitle" aria-hidden="true">skill matrix</span>
+  </div>
+
+  <!-- Grid container — populated by JS -->
+  <div class="skills-grid" id="skills-grid" role="list" aria-label="Skill categories"></div>
+</section>
+
+<!-- ===================== SCRIPT ===================== -->
+<script>
+(function () {
+  "use strict";
+
+  /* -------------------------------------------------------
+     COLOR MAP — categoria → CSS var (per spec)
+     ------------------------------------------------------- */
+  var CATEGORY_COLORS = {
+    data_engineering: "var(--color-primary)",
+    visualization:    "var(--color-blue)",
+    cloud:            "var(--color-orange)",
+    languages:        "var(--color-success)",
+    tools:            "var(--color-purple)"
+  };
+
+  /* -------------------------------------------------------
+     CATEGORY ORDER (deterministic render order)
+     ------------------------------------------------------- */
+  var CATEGORY_ORDER = [
+    "data_engineering",
+    "visualization",
+    "cloud",
+    "languages",
+    "tools"
+  ];
+
+  /* -------------------------------------------------------
+     SVG DOT BUILDER
+     Builds a row of 5 SVG circles. Starts all empty.
+     Returns { svg, circles[] } for later animation.
+     ------------------------------------------------------- */
+  var DOT_R      = 6;   // radius px
+  var DOT_GAP    = 4;   // gap px
+  var DOT_DIAM   = DOT_R * 2;
+  var DOT_STEP   = DOT_DIAM + DOT_GAP;
+  var DOT_TOTAL  = 5;
+  var SVG_W      = DOT_TOTAL * DOT_STEP - DOT_GAP;  // 68px
+  var SVG_H      = DOT_DIAM;                         // 12px
+
+  function _buildDotSVG(level, filledColor) {
+    var ns = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("width", SVG_W);
+    svg.setAttribute("height", SVG_H);
+    svg.setAttribute("viewBox", "0 0 " + SVG_W + " " + SVG_H);
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+
+    var circles = [];
+    for (var i = 0; i < DOT_TOTAL; i++) {
+      var cx = DOT_R + i * DOT_STEP;
+      var cy = DOT_R;
+
+      var circle = document.createElementNS(ns, "circle");
+      circle.setAttribute("cx", cx);
+      circle.setAttribute("cy", cy);
+      circle.setAttribute("r", DOT_R);
+      circle.setAttribute("class", "skill-dot-circle");
+      // All dots start empty — animation fills them
+      circle.setAttribute("fill", "var(--color-surface-2)");
+      circle.setAttribute("stroke", "var(--color-surface-offset)");
+      circle.setAttribute("stroke-width", "1");
+
+      svg.appendChild(circle);
+      circles.push(circle);
+    }
+
+    return { svg: svg, circles: circles, level: level, color: filledColor };
+  }
+
+  /* -------------------------------------------------------
+     TOOLTIP STRING
+     ------------------------------------------------------- */
+  function _buildTooltipText(skill) {
+    var fmt = t(CV_DATA.ui.skills.tooltip_format);
+    return fmt
+      .replace("{years}", skill.years)
+      .replace("{level}", skill.level);
+  }
+
+  /* -------------------------------------------------------
+     RENDER — builds the full grid DOM
+     Returns array of dot records for the IntersectionObserver
+     ------------------------------------------------------- */
+  var _allDotRecords = []; // { circles, level, color, animated }
+
+  function _renderGrid() {
+    var grid = document.getElementById("skills-grid");
+    if (!grid) return;
+
+    grid.innerHTML = "";
+    _allDotRecords = [];
+
+    CATEGORY_ORDER.forEach(function (cat) {
+      var skills = CV_DATA.skills[cat];
+      if (!skills || !skills.length) return;
+
+      var color = CATEGORY_COLORS[cat] || "var(--color-primary)";
+      var categoryLabel = t(CV_DATA.ui.skills.categories[cat]);
+
+      /* --- Category card --- */
+      var card = document.createElement("div");
+      card.className = "skill-category";
+      card.setAttribute("role", "listitem");
+      card.setAttribute("data-category", cat);
+
+      /* --- Category header --- */
+      var header = document.createElement("div");
+      header.className = "skill-category__header";
+
+      var accent = document.createElement("span");
+      accent.className = "skill-category__accent skill-category__accent--" + cat;
+      accent.setAttribute("aria-hidden", "true");
+
+      var nameEl = document.createElement("span");
+      nameEl.className = "skill-category__name skill-category__name--" + cat;
+      nameEl.textContent = categoryLabel;
+      nameEl.setAttribute("data-category-key", cat);
+
+      header.appendChild(accent);
+      header.appendChild(nameEl);
+      card.appendChild(header);
+
+      /* --- Skill list --- */
+      var list = document.createElement("ul");
+      list.className = "skill-list";
+
+      skills.forEach(function (skill) {
+        var li = document.createElement("li");
+        li.className = "skill-row";
+
+        /* Skill name */
+        var nameSpan = document.createElement("span");
+        nameSpan.className = "skill-row__name";
+        nameSpan.textContent = skill.name;
+
+        /* Dots container with tooltip */
+        var dotsWrap = document.createElement("div");
+        dotsWrap.className = "skill-dots";
+        dotsWrap.setAttribute("role", "img");
+        dotsWrap.setAttribute("aria-label", skill.name + " — " + _buildTooltipText(skill));
+        dotsWrap.setAttribute("tabindex", "0");
+        dotsWrap.setAttribute("data-skill-name", skill.name);
+        dotsWrap.setAttribute("data-years", skill.years);
+        dotsWrap.setAttribute("data-level", skill.level);
+
+        /* Tooltip element */
+        var tooltip = document.createElement("span");
+        tooltip.className = "skill-dots__tooltip";
+        tooltip.setAttribute("role", "tooltip");
+        tooltip.setAttribute("aria-hidden", "true");
+        tooltip.textContent = _buildTooltipText(skill);
+        tooltip.setAttribute("data-tooltip-skill", skill.name);
+
+        /* SVG dots */
+        var dotRecord = _buildDotSVG(skill.level, color);
+        _allDotRecords.push({ circles: dotRecord.circles, level: dotRecord.level, color: dotRecord.color, animated: false });
+
+        dotsWrap.appendChild(dotRecord.svg);
+        dotsWrap.appendChild(tooltip);
+
+        li.appendChild(nameSpan);
+        li.appendChild(dotsWrap);
+        list.appendChild(li);
+      });
+
+      card.appendChild(list);
+      grid.appendChild(card);
+    });
+  }
+
+  /* -------------------------------------------------------
+     ANIMATION — fills dots progressively, left to right
+     Only fires once per record (animated flag guard)
+     ------------------------------------------------------- */
+  var DELAYS = [0, 80, 160, 240, 320]; // ms per dot
+
+  function _animateDotRecord(record) {
+    if (record.animated) return;
+    record.animated = true;
+
+    for (var i = 0; i < DOT_TOTAL; i++) {
+      (function (circle, idx, level, color) {
+        setTimeout(function () {
+          if (idx < level) {
+            circle.setAttribute("fill", color);
+            circle.setAttribute("stroke", color);
+          }
+          // dots beyond level keep their empty style — no-op
+        }, DELAYS[idx]);
+      })(record.circles[i], i, record.level, record.color);
+    }
+  }
+
+  /* -------------------------------------------------------
+     INTERSECTION OBSERVER — triggers on viewport entry
+     threshold: 0.3, fires once (disconnect after animation)
+     ------------------------------------------------------- */
+  function _setupObserver() {
+    var grid = document.getElementById("skills-grid");
+    if (!grid) return;
+
+    if (!("IntersectionObserver" in window)) {
+      // Fallback: animate immediately
+      _allDotRecords.forEach(_animateDotRecord);
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          _allDotRecords.forEach(_animateDotRecord);
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+
+    observer.observe(grid);
+  }
+
+  /* -------------------------------------------------------
+     i18n — re-render labels on language change
+     Dot SVGs are NOT re-rendered (color stays, tooltips update)
+     ------------------------------------------------------- */
+  function _refreshLabels() {
+    // Category name labels
+    document.querySelectorAll("[data-category-key]").forEach(function (el) {
+      var cat = el.getAttribute("data-category-key");
+      var label = CV_DATA.ui.skills.categories[cat];
+      if (label) el.textContent = t(label);
+    });
+
+    // Tooltip strings and aria-labels
+    document.querySelectorAll(".skill-dots[data-skill-name]").forEach(function (wrap) {
+      var years = parseInt(wrap.getAttribute("data-years"), 10);
+      var level = parseInt(wrap.getAttribute("data-level"), 10);
+      var name  = wrap.getAttribute("data-skill-name");
+
+      var fmt = t(CV_DATA.ui.skills.tooltip_format);
+      var tooltipText = fmt
+        .replace("{years}", years)
+        .replace("{level}", level);
+
+      wrap.setAttribute("aria-label", name + " — " + tooltipText);
+
+      var tooltipEl = wrap.querySelector(".skill-dots__tooltip");
+      if (tooltipEl) tooltipEl.textContent = tooltipText;
+    });
+  }
+
+  window.addEventListener("cv:languagechange", _refreshLabels);
+
+  /* -------------------------------------------------------
+     INIT
+     ------------------------------------------------------- */
+  function _init() {
+    _renderGrid();
+    _setupObserver();
+  }
+
+  // Run after current paint (grid scaffold already in DOM)
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", _init);
+  } else {
+    _init();
+  }
+
+})();
+</script>

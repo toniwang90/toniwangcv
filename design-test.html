@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design System — CV Dashboard Toni Wang</title>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <style>
+    /* =========================================================================
+       01-design-system.css — inlined
+       ========================================================================= */
+
+    @import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+    /* --- Variables: Dark mode (default) --- */
+    :root {
+      --color-primary:        #4f98a3;
+      --color-bg:             #0d1117;
+      --color-surface:        #161b22;
+      --color-surface-2:      #21262d;
+      --color-surface-offset: #30363d;
+      --color-text:           #e6edf3;
+      --color-text-muted:     #8b949e;
+      --color-divider:        #21262d;
+
+      --color-blue:           #58a6ff;
+      --color-orange:         #f0883e;
+      --color-success:        #3fb950;
+      --color-purple:         #bc8cff;
+
+      --font-display: 'Satoshi', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+
+      --text-xs:   0.75rem;
+      --text-sm:   0.875rem;
+      --text-base: 1rem;
+      --text-lg:   1.125rem;
+      --text-xl:   1.25rem;
+      --text-2xl:  1.5rem;
+      --text-3xl:  1.875rem;
+      --text-4xl:  2.25rem;
+      --text-5xl:  3rem;
+
+      --weight-regular: 400;
+      --weight-medium:  500;
+      --weight-bold:    700;
+      --weight-black:   900;
+
+      --radius-sm:   4px;
+      --radius-md:   8px;
+      --radius-lg:   12px;
+      --radius-full: 9999px;
+
+      --space-1:  0.25rem;
+      --space-2:  0.5rem;
+      --space-3:  0.75rem;
+      --space-4:  1rem;
+      --space-5:  1.25rem;
+      --space-6:  1.5rem;
+      --space-8:  2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+
+      --transition-fast: 120ms ease;
+      --transition-base: 200ms ease;
+
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+      --border-width: 1px;
+      --border: var(--border-width) solid var(--color-divider);
+    }
+
+    /* --- Variables: Light mode override --- */
+    [data-theme="light"] {
+      --color-bg:             #ffffff;
+      --color-surface:        #f6f8fa;
+      --color-surface-2:      #eaeef2;
+      --color-surface-offset: #d0d7de;
+      --color-text:           #1f2328;
+      --color-text-muted:     #656d76;
+      --color-divider:        #d0d7de;
+
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* --- Reset mínimo --- */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-display);
+      font-size: var(--text-base);
+      font-weight: var(--weight-regular);
+      line-height: 1.6;
+      min-height: 100vh;
+      transition: background-color var(--transition-base), color var(--transition-base);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    img, svg { display: block; max-width: 100%; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; font-size: inherit; color: inherit; }
+    a { color: var(--color-primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    ul, ol { list-style: none; }
+
+    /* --- Tipografía --- */
+    .font-mono    { font-family: var(--font-mono); }
+    .font-display { font-family: var(--font-display); }
+    .text-muted   { color: var(--color-text-muted); }
+    .text-primary { color: var(--color-primary); }
+
+    /* --- Superficies --- */
+    .surface {
+      background-color: var(--color-surface);
+      border: var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    .surface-2 {
+      background-color: var(--color-surface-2);
+      border: var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    .surface-offset {
+      background-color: var(--color-surface-offset);
+      border: var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    /* --- Badge --- */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-medium);
+      color: var(--color-text-muted);
+      background-color: var(--color-surface-2);
+      border: var(--border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-1) var(--space-2);
+      line-height: 1.4;
+      white-space: nowrap;
+      transition: color var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .badge:hover {
+      color: var(--color-text);
+      border-color: var(--color-primary);
+    }
+
+    /* --- Chip --- */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-medium);
+      color: var(--color-text-muted);
+      background-color: var(--color-surface-2);
+      border: var(--border);
+      border-radius: var(--radius-full);
+      padding: var(--space-1) var(--space-3);
+      line-height: 1.4;
+      white-space: nowrap;
+      transition: color var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .chip--primary { color: var(--color-primary); border-color: var(--color-primary); }
+    .chip--blue    { color: var(--color-blue);    border-color: var(--color-blue); }
+    .chip--orange  { color: var(--color-orange);  border-color: var(--color-orange); }
+    .chip--success { color: var(--color-success); border-color: var(--color-success); }
+    .chip--purple  { color: var(--color-purple);  border-color: var(--color-purple); }
+
+    /* --- Skill dot --- */
+    .skill-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: var(--radius-full);
+      flex-shrink: 0;
+    }
+
+    .skill-dot--filled {
+      background-color: var(--color-primary);
+    }
+
+    .skill-dot--empty {
+      background-color: transparent;
+      border: var(--border-width) solid var(--color-surface-offset);
+    }
+
+    .skill-dot-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .skill-dot-row__dots {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+    }
+
+    .skill-dot-row__label {
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      min-width: 180px;
+    }
+
+    /* --- KPI card --- */
+    .kpi-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      padding: var(--space-4) var(--space-5);
+      background-color: var(--color-surface);
+      border: var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    .kpi-card__value {
+      font-family: var(--font-mono);
+      font-size: var(--text-4xl);
+      font-weight: var(--weight-bold);
+      color: var(--color-text);
+      line-height: 1.1;
+    }
+
+    .kpi-card__label {
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--color-text-muted);
+    }
+
+    .kpi-card__icon {
+      color: var(--color-primary);
+      margin-bottom: var(--space-1);
+    }
+
+    /* --- Focus visible --- */
+    :focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* =========================================================================
+       ESTILOS PROPIOS DEL DESIGN TEST
+       ========================================================================= */
+
+    /* Header */
+    .dt-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--color-surface);
+      border-bottom: var(--border);
+      padding-block: var(--space-3);
+    }
+
+    .dt-header__inner {
+      max-width: 1100px;
+      margin-inline: auto;
+      padding-inline: var(--space-6);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+
+    .dt-header__title {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    .dt-header__title strong {
+      font-family: var(--font-display);
+      font-size: var(--text-base);
+      font-weight: var(--weight-bold);
+      color: var(--color-primary);
+    }
+
+    /* Toggle dark/light */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      min-width: 44px;
+      min-height: 44px;
+      padding-inline: var(--space-3);
+      background-color: var(--color-surface-2);
+      border: var(--border);
+      border-radius: var(--radius-full);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      transition: color var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .theme-toggle:hover {
+      color: var(--color-text);
+      border-color: var(--color-primary);
+    }
+
+    .theme-toggle__icon {
+      width: 16px;
+      height: 16px;
+      color: var(--color-primary);
+    }
+
+    /* Main layout */
+    .dt-main {
+      max-width: 1100px;
+      margin-inline: auto;
+      padding: var(--space-8) var(--space-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-12);
+    }
+
+    /* Section */
+    .dt-section {}
+
+    .dt-section__header {
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-3);
+      border-bottom: var(--border);
+    }
+
+    .dt-section__number {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-primary);
+      letter-spacing: 0.08em;
+      margin-bottom: var(--space-1);
+    }
+
+    .dt-section__title {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-bold);
+      color: var(--color-text);
+    }
+
+    /* --- 01 Stack de superficies --- */
+    .surface-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .surface-card {
+      padding: var(--space-4) var(--space-5);
+      border-radius: var(--radius-md);
+      border: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+
+    .surface-card--bg {
+      background-color: var(--color-bg);
+    }
+
+    .surface-card--surface {
+      background-color: var(--color-surface);
+    }
+
+    .surface-card--surface-2 {
+      background-color: var(--color-surface-2);
+    }
+
+    .surface-card--offset {
+      background-color: var(--color-surface-offset);
+    }
+
+    .surface-card__var {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--color-primary);
+    }
+
+    .surface-card__label {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    /* --- 02 Escala tipográfica --- */
+    .type-scale {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .type-row {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+
+    .type-row__meta {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      min-width: 80px;
+      flex-shrink: 0;
+    }
+
+    /* --- 03 KPI grid --- */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--space-4);
+    }
+
+    /* --- 04 Skill dot rows --- */
+    .skill-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .skill-row-wrapper {
+      position: relative;
+    }
+
+    /* Tooltip */
+    .skill-tooltip {
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 0;
+      background-color: var(--color-surface-offset);
+      border: var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-2) var(--space-3);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-text);
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+      z-index: 10;
+      box-shadow: var(--shadow-md);
+    }
+
+    .skill-row-wrapper:hover .skill-tooltip {
+      opacity: 1;
+    }
+
+    /* --- 05 Badges / chips --- */
+    .badge-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    /* --- 06 Paleta completa --- */
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-3);
+    }
+
+    .palette-swatch {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: var(--border);
+    }
+
+    .palette-swatch__color {
+      height: 64px;
+    }
+
+    .palette-swatch__info {
+      padding: var(--space-2) var(--space-3);
+      background-color: var(--color-surface);
+    }
+
+    .palette-swatch__name {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-primary);
+      margin-bottom: 2px;
+    }
+
+    .palette-swatch__desc {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .dt-main {
+        padding-inline: var(--space-4);
+      }
+
+      .dt-header__inner {
+        padding-inline: var(--space-4);
+      }
+
+      .kpi-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 375px) {
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .type-row {
+        flex-direction: column;
+        gap: var(--space-1);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header con toggle dark/light -->
+  <header class="dt-header">
+    <div class="dt-header__inner">
+      <div class="dt-header__title">
+        <strong>Design System</strong>
+        <span> — CV Dashboard Toni Wang</span>
+      </div>
+      <button
+        class="theme-toggle"
+        id="themeToggle"
+        aria-label="Toggle dark/light mode"
+        title="Toggle dark/light mode"
+      >
+        <i data-lucide="sun" class="theme-toggle__icon" id="themeIcon"></i>
+        <span id="themeLabel" class="font-mono">Light</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="dt-main">
+
+    <!-- 01 Stack de superficies -->
+    <section class="dt-section">
+      <div class="dt-section__header">
+        <div class="dt-section__number">01 / SURFACES</div>
+        <h2 class="dt-section__title">Stack de superficies</h2>
+      </div>
+
+      <div class="surface-stack">
+        <div class="surface-card surface-card--bg">
+          <div>
+            <div class="surface-card__var">--color-bg</div>
+            <div class="surface-card__label">Fondo base de la página</div>
+          </div>
+          <span class="badge">bg</span>
+        </div>
+        <div class="surface-card surface-card--surface">
+          <div>
+            <div class="surface-card__var">--color-surface</div>
+            <div class="surface-card__label">Cards, paneles primarios</div>
+          </div>
+          <span class="badge">surface</span>
+        </div>
+        <div class="surface-card surface-card--surface-2">
+          <div>
+            <div class="surface-card__var">--color-surface-2</div>
+            <div class="surface-card__label">Elementos secundarios, filas alternas</div>
+          </div>
+          <span class="badge">surface-2</span>
+        </div>
+        <div class="surface-card surface-card--offset">
+          <div>
+            <div class="surface-card__var">--color-surface-offset</div>
+            <div class="surface-card__label">Tooltips, badges, elementos destacados</div>
+          </div>
+          <span class="badge">surface-offset</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 Escala tipográfica -->
+    <section class="dt-section">
+      <div class="dt-section__header">
+        <div class="dt-section__number">02 / TYPOGRAPHY</div>
+        <h2 class="dt-section__title">Escala tipográfica</h2>
+      </div>
+
+      <div class="type-scale">
+        <!-- Satoshi -->
+        <div style="margin-bottom: var(--space-3);">
+          <span class="font-mono text-muted" style="font-size: var(--text-xs); display: block; margin-bottom: var(--space-3);">Satoshi — --font-display</span>
+          <div class="type-row">
+            <span class="type-row__meta">H1 / 5xl</span>
+            <h1 style="font-family: var(--font-display); font-size: var(--text-5xl); font-weight: var(--weight-black); line-height: 1.1;">Lead Data Engineer</h1>
+          </div>
+          <div class="type-row" style="margin-top: var(--space-3);">
+            <span class="type-row__meta">H2 / 3xl</span>
+            <h2 style="font-family: var(--font-display); font-size: var(--text-3xl); font-weight: var(--weight-bold);">Experiencia profesional</h2>
+          </div>
+          <div class="type-row" style="margin-top: var(--space-3);">
+            <span class="type-row__meta">H3 / xl</span>
+            <h3 style="font-family: var(--font-display); font-size: var(--text-xl); font-weight: var(--weight-bold);">Fever — Senior Data Engineer</h3>
+          </div>
+          <div class="type-row" style="margin-top: var(--space-3);">
+            <span class="type-row__meta">body / base</span>
+            <p style="font-family: var(--font-display); font-size: var(--text-base); font-weight: var(--weight-regular); max-width: 480px; color: var(--color-text-muted);">Ingeniero informático apasionado por los datos, con +14 años de experiencia en business intelligence, big data y machine learning.</p>
+          </div>
+          <div class="type-row" style="margin-top: var(--space-3);">
+            <span class="type-row__meta">small / sm</span>
+            <small style="font-family: var(--font-display); font-size: var(--text-sm); color: var(--color-text-muted);">Molina de Segura, Murcia · Madrid, España</small>
+          </div>
+        </div>
+
+        <hr style="border: none; border-top: var(--border); margin-block: var(--space-4);" />
+
+        <!-- JetBrains Mono -->
+        <div>
+          <span class="font-mono text-muted" style="font-size: var(--text-xs); display: block; margin-bottom: var(--space-3);">JetBrains Mono — --font-mono</span>
+          <div class="type-row">
+            <span class="type-row__meta">KPI / 4xl bold</span>
+            <span style="font-family: var(--font-mono); font-size: var(--text-4xl); font-weight: var(--weight-bold); color: var(--color-primary);">14</span>
+          </div>
+          <div class="type-row" style="margin-top: var(--space-3);">
+            <span class="type-row__meta">data / base</span>
+            <span style="font-family: var(--font-mono); font-size: var(--text-base);">Snowflake · Python · dbt · Airflow</span>
+          </div>
+          <div class="type-row" style="margin-top: var(--space-3);">
+            <span class="type-row__meta">label / sm</span>
+            <span style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-text-muted);">2018-09 → 2025-02</span>
+          </div>
+          <div class="type-row" style="margin-top: var(--space-3);">
+            <span class="type-row__meta">badge / xs</span>
+            <span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted);">--color-primary: #4f98a3</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 KPI Cards -->
+    <section class="dt-section">
+      <div class="dt-section__header">
+        <div class="dt-section__number">03 / KPI CARDS</div>
+        <h2 class="dt-section__title">KPI Cards</h2>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-card__icon">
+            <i data-lucide="calendar" style="width: 18px; height: 18px;"></i>
+          </div>
+          <div class="kpi-card__value">14</div>
+          <div class="kpi-card__label">Años de experiencia</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-card__icon">
+            <i data-lucide="building-2" style="width: 18px; height: 18px;"></i>
+          </div>
+          <div class="kpi-card__value">9</div>
+          <div class="kpi-card__label">Empresas</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-card__icon">
+            <i data-lucide="layers" style="width: 18px; height: 18px;"></i>
+          </div>
+          <div class="kpi-card__value">9</div>
+          <div class="kpi-card__label">Proyectos</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-card__icon">
+            <i data-lucide="cpu" style="width: 18px; height: 18px;"></i>
+          </div>
+          <div class="kpi-card__value">32</div>
+          <div class="kpi-card__label">Tecnologías</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 Skill dot rows -->
+    <section class="dt-section">
+      <div class="dt-section__header">
+        <div class="dt-section__number">04 / SKILL DOTS</div>
+        <h2 class="dt-section__title">Skill dot rows</h2>
+      </div>
+
+      <div class="skill-list">
+        <!-- Nivel 5/5 -->
+        <div class="skill-row-wrapper">
+          <div class="skill-dot-row">
+            <span class="skill-dot-row__label">Apache Spark</span>
+            <div class="skill-dot-row__dots">
+              <span class="skill-dot skill-dot--filled"></span>
+              <span class="skill-dot skill-dot--filled"></span>
+              <span class="skill-dot skill-dot--filled"></span>
+              <span class="skill-dot skill-dot--filled"></span>
+              <span class="skill-dot skill-dot--filled"></span>
+            </div>
+            <span class="font-mono text-muted" style="font-size: var(--text-xs);">9 años</span>
+          </div>
+          <div class="skill-tooltip">9 años · Nivel 5/5</div>
+        </div>
+
+        <!-- Nivel 4/5 -->
+        <div class="skill-row-wrapper">
+          <div class="skill-dot-row">
+            <span class="skill-dot-row__label">AWS</span>
+            <div class="skill-dot-row__dots">
+              <span class="skill-dot skill-dot--filled"></span>
+              <span class="skill-dot skill-dot--filled"></span>
+              <span class="skill-dot skill-dot--filled"></span>
+              <span class="skill-dot skill-dot--filled"></span>
+              <span class="skill-dot skill-dot--empty"></span>
+            </div>
+            <span class="font-mono text-muted" style="font-size: var(--text-xs);">7 años</span>
+          </div>
+          <div class="skill-tooltip">7 años · Nivel 4/5</div>
+        </div>
+
+        <!-- Nivel 3/5 -->
+        <div class="skill-row-wrapper">
+          <div class="skill-dot-row">
+            <span class="skill-dot-row__label">Cloudera</span>
+            <div class="skill-dot-row__dots">
+              <span class="skill-dot skill-dot--filled"></span>
+              <span class="skill-dot skill-dot--filled"></span>
+              <span class="skill-dot skill-dot--filled"></span>
+              <span class="skill-dot skill-dot--empty"></span>
+              <span class="skill-dot skill-dot--empty"></span>
+            </div>
+            <span class="font-mono text-muted" style="font-size: var(--text-xs);">2 años</span>
+          </div>
+          <div class="skill-tooltip">2 años · Nivel 3/5</div>
+        </div>
+
+        <!-- Nivel 2/5 -->
+        <div class="skill-row-wrapper">
+          <div class="skill-dot-row">
+            <span class="skill-dot-row__label">JavaScript</span>
+            <div class="skill-dot-row__dots">
+              <span class="skill-dot skill-dot--filled"></span>
+              <span class="skill-dot skill-dot--filled"></span>
+              <span class="skill-dot skill-dot--empty"></span>
+              <span class="skill-dot skill-dot--empty"></span>
+              <span class="skill-dot skill-dot--empty"></span>
+            </div>
+            <span class="font-mono text-muted" style="font-size: var(--text-xs);">2 años</span>
+          </div>
+          <div class="skill-tooltip">2 años · Nivel 2/5</div>
+        </div>
+
+        <!-- Nivel 5/5 — SQL -->
+        <div class="skill-row-wrapper">
+          <div class="skill-dot-row">
+            <span class="skill-dot-row__label">SQL</span>
+            <div class="skill-dot-row__dots">
+              <span class="skill-dot skill-dot--filled"></span>
+              <span class="skill-dot skill-dot--filled"></span>
+              <span class="skill-dot skill-dot--filled"></span>
+              <span class="skill-dot skill-dot--filled"></span>
+              <span class="skill-dot skill-dot--filled"></span>
+            </div>
+            <span class="font-mono text-muted" style="font-size: var(--text-xs);">13 años</span>
+          </div>
+          <div class="skill-tooltip">13 años · Nivel 5/5</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 Stack badges -->
+    <section class="dt-section">
+      <div class="dt-section__header">
+        <div class="dt-section__number">05 / BADGES & CHIPS</div>
+        <h2 class="dt-section__title">Stack badges</h2>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: var(--space-5);">
+
+        <!-- Badges rectangulares -->
+        <div>
+          <p class="text-muted font-mono" style="font-size: var(--text-xs); margin-bottom: var(--space-3);">.badge — rectangular</p>
+          <div class="badge-stack">
+            <span class="badge">Snowflake</span>
+            <span class="badge">Python</span>
+            <span class="badge">Apache Airflow</span>
+            <span class="badge">dbt</span>
+            <span class="badge">AWS</span>
+            <span class="badge">Metabase</span>
+            <span class="badge">Pandas</span>
+            <span class="badge">Apache Spark</span>
+            <span class="badge">Fivetran</span>
+          </div>
+        </div>
+
+        <!-- Chips pill -->
+        <div>
+          <p class="text-muted font-mono" style="font-size: var(--text-xs); margin-bottom: var(--space-3);">.chip — pill · variantes de color por categoría</p>
+          <div class="badge-stack">
+            <span class="chip chip--primary">data_engineering</span>
+            <span class="chip chip--blue">visualization</span>
+            <span class="chip chip--orange">cloud</span>
+            <span class="chip chip--success">languages</span>
+            <span class="chip chip--purple">tools</span>
+          </div>
+        </div>
+
+        <!-- Combinación real -->
+        <div>
+          <p class="text-muted font-mono" style="font-size: var(--text-xs); margin-bottom: var(--space-3);">combinación: categoría chip + badges de tecnología</p>
+          <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+            <div style="display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap;">
+              <span class="chip chip--orange">Cloud</span>
+              <span class="badge">Snowflake</span>
+              <span class="badge">AWS</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap;">
+              <span class="chip chip--success">Languages</span>
+              <span class="badge">SQL</span>
+              <span class="badge">Python</span>
+              <span class="badge">Bash/Shell</span>
+              <span class="badge">PL/SQL</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 Paleta completa -->
+    <section class="dt-section">
+      <div class="dt-section__header">
+        <div class="dt-section__number">06 / COLOR PALETTE</div>
+        <h2 class="dt-section__title">Paleta completa</h2>
+      </div>
+
+      <div class="palette-grid" id="paletteGrid">
+        <!-- Renderizado por JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // =========================================================================
+    // THEME TOGGLE — dark/light con prefers-color-scheme como default
+    // =========================================================================
+
+    (function () {
+      var toggle = document.getElementById('themeToggle');
+      var icon   = document.getElementById('themeIcon');
+      var label  = document.getElementById('themeLabel');
+      var html   = document.documentElement;
+
+      // Detecta preferencia del sistema
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var currentTheme = prefersDark ? 'dark' : 'light';
+
+      function applyTheme(theme) {
+        currentTheme = theme;
+        if (theme === 'light') {
+          html.setAttribute('data-theme', 'light');
+          icon.setAttribute('data-lucide', 'moon');
+          label.textContent = 'Dark';
+        } else {
+          html.removeAttribute('data-theme');
+          icon.setAttribute('data-lucide', 'sun');
+          label.textContent = 'Light';
+        }
+        // Re-renderiza el icono de Lucide
+        if (window.lucide) {
+          lucide.createIcons();
+        }
+      }
+
+      toggle.addEventListener('click', function () {
+        applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+      });
+
+      // Aplica el tema inicial según preferencia del sistema
+      applyTheme(currentTheme);
+    }());
+
+    // =========================================================================
+    // LUCIDE ICONS
+    // =========================================================================
+
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+
+      // =========================================================================
+      // PALETA — renderiza swatches desde CSS variables
+      // =========================================================================
+
+      var swatches = [
+        { name: '--color-primary',        desc: 'Teal accent / data_engineering' },
+        { name: '--color-bg',             desc: 'Background base' },
+        { name: '--color-surface',        desc: 'Cards, primary panels' },
+        { name: '--color-surface-2',      desc: 'Secondary elements, alt rows' },
+        { name: '--color-surface-offset', desc: 'Tooltips, elevated elements' },
+        { name: '--color-text',           desc: 'Primary text' },
+        { name: '--color-text-muted',     desc: 'Secondary text, labels' },
+        { name: '--color-divider',        desc: 'Borders, separators' },
+        { name: '--color-blue',           desc: 'Visualization category' },
+        { name: '--color-orange',         desc: 'Cloud category' },
+        { name: '--color-success',        desc: 'Languages category' },
+        { name: '--color-purple',         desc: 'Tools category' }
+      ];
+
+      var grid  = document.getElementById('paletteGrid');
+      var style = getComputedStyle(document.documentElement);
+
+      swatches.forEach(function (s) {
+        var value = style.getPropertyValue(s.name).trim();
+        var swatch = document.createElement('div');
+        swatch.className = 'palette-swatch';
+
+        var colorDiv = document.createElement('div');
+        colorDiv.className = 'palette-swatch__color';
+        colorDiv.style.backgroundColor = 'var(' + s.name + ')';
+        // Añadimos borde para swatches que coinciden con bg
+        if (s.name === '--color-bg') {
+          colorDiv.style.border = '1px solid var(--color-divider)';
+        }
+
+        var info = document.createElement('div');
+        info.className = 'palette-swatch__info';
+
+        var nameEl = document.createElement('div');
+        nameEl.className = 'palette-swatch__name';
+        nameEl.textContent = s.name;
+
+        var descEl = document.createElement('div');
+        descEl.className = 'palette-swatch__desc';
+        descEl.textContent = s.desc;
+
+        info.appendChild(nameEl);
+        info.appendChild(descEl);
+        swatch.appendChild(colorDiv);
+        swatch.appendChild(info);
+        grid.appendChild(swatch);
+      });
+    });
+  </script>
+
+</body>
+</html>
