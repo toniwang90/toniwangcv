@@ -1089,7 +1089,7 @@
     function _langScore(levelText) {
       var text = (levelText || "").toLowerCase();
       if (text.indexOf("nativo") !== -1 || text.indexOf("native") !== -1) return 5;
-      if (text.indexOf("profesional") !== -1 || text.indexOf("professional") !== -1 || text.indexOf("working") !== -1) return 4;
+      if (text.indexOf("profesional") !== -1 || text.indexOf("professional") !== -1 || text.indexOf("working") !== -1 || text.indexOf("avanzado") !== -1 || text.indexOf("advanced") !== -1) return 4;
       if (text.indexOf("intermedio") !== -1 || text.indexOf("intermediate") !== -1) return 3;
       if (text.indexOf("básico") !== -1 || text.indexOf("basic") !== -1) return 2;
       return 1;

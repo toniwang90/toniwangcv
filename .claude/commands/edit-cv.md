@@ -28,8 +28,14 @@ Invokes the `data-agent` directly to make targeted edits to `fragments/00-cv-dat
    - Respect the i18n shape: if a field is `{ es, en }`, update both unless the user specifies one language
    - Respect plain-string fields: names, dates, URLs, stack arrays, numbers stay as plain strings
    - Never invent data — if the user's instruction is ambiguous, ask before writing
-5. Write the updated file
-6. Report exactly what changed (field path + old value → new value)
+5. **Recalculate KPIs** — after every edit, check if `profile.kpis` needs updating:
+   - `companies` = number of **unique** `company` values in `experience[]` (not entry count)
+   - `projects` = total `projects[]` items across all `experience[]` entries (non-empty) + `personal_projects[]` items with `status === "live"`
+   - `technologies` = total items across all `skills.*` arrays
+   - `years_experience` = manually maintained; only update if the user explicitly asks or if the earliest `start` date changes
+   - If any KPI value changes, include it in the edit and report it
+6. Write the updated file
+7. Report exactly what changed (field path + old value → new value), including any KPI corrections
 
 ## Post-edit guidance
 
