@@ -138,7 +138,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
     color: var(--color-text-muted);
     text-decoration: none;
     min-height: 44px;
@@ -152,8 +152,8 @@
   }
 
   .hero__contact-link svg {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     flex-shrink: 0;
   }
 
@@ -354,13 +354,30 @@
     margin-bottom: var(--space-10);
   }
 
-  /* Subsecciones dentro de #educacion */
-  .edu-block {
-    margin-bottom: var(--space-10);
+  /* Two-column layout for education section */
+  .edu-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
   }
 
-  .edu-block:last-child {
-    margin-bottom: 0;
+  @media (min-width: 1024px) {
+    .edu-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .edu-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  /* Subsecciones dentro de #educacion */
+  .edu-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
   }
 
   /* Education cards */
@@ -431,23 +448,11 @@
     }
   }
 
-  /* Certifications grid */
+  /* Certifications grid — single column inside edu-col to avoid overflow */
   .cert-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-3);
-  }
-
-  @media (min-width: 768px) {
-    .cert-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 1440px) {
-    .cert-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
   }
 
   .cert-card {
@@ -701,30 +706,36 @@
     var contactDiv = document.createElement("div");
     contactDiv.className = "hero__contact";
 
-    if (profile.contact.linkedin) {
-      var liLink = document.createElement("a");
-      liLink.className = "hero__contact-link";
-      liLink.href = profile.contact.linkedin;
-      liLink.target = "_blank";
-      liLink.rel = "noopener noreferrer";
-      liLink.setAttribute("aria-label", "LinkedIn");
-      liLink.appendChild(_makeIcon("linkedin", 16));
-      var liSpan = document.createElement("span");
-      liSpan.textContent = "LinkedIn";
-      liLink.appendChild(liSpan);
-      contactDiv.appendChild(liLink);
+    function _makeContactLink(href, icon, label, extraClass) {
+      var a = document.createElement("a");
+      a.className = "hero__contact-link" + (extraClass ? " " + extraClass : "");
+      a.href = href;
+      if (!href.startsWith("mailto:")) {
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+      }
+      a.setAttribute("aria-label", label);
+      a.appendChild(_makeIcon(icon, 18));
+      var span = document.createElement("span");
+      span.textContent = label;
+      a.appendChild(span);
+      return a;
     }
 
+    if (profile.contact.linkedin) {
+      contactDiv.appendChild(_makeContactLink(profile.contact.linkedin, "linkedin", "LinkedIn"));
+    }
+    if (profile.contact.github) {
+      contactDiv.appendChild(_makeContactLink(profile.contact.github, "github", "GitHub"));
+    }
     if (profile.contact.email) {
-      var mailLink = document.createElement("a");
-      mailLink.className = "hero__contact-link hero__contact-link--email";
-      mailLink.href = "mailto:" + profile.contact.email;
-      mailLink.setAttribute("aria-label", profile.contact.email);
-      mailLink.appendChild(_makeIcon("mail", 16));
-      var mailSpan = document.createElement("span");
-      mailSpan.textContent = profile.contact.email;
-      mailLink.appendChild(mailSpan);
-      contactDiv.appendChild(mailLink);
+      contactDiv.appendChild(_makeContactLink("mailto:" + profile.contact.email, "mail", profile.contact.email, "hero__contact-link--email"));
+    }
+    // Extra links (extensible)
+    if (profile.contact.links && profile.contact.links.length > 0) {
+      profile.contact.links.forEach(function (lnk) {
+        contactDiv.appendChild(_makeContactLink(lnk.url, lnk.icon || "external-link", lnk.label));
+      });
     }
 
     aside.appendChild(contactDiv);
@@ -888,12 +899,20 @@
 
   /* -------------------------------------------------------
      RENDER: EDUCACIÓN + CERTIFICACIONES + IDIOMAS + RECONOCIMIENTOS
+     Two-column layout: left = education + languages, right = certifications + honors
      ------------------------------------------------------- */
   function renderEducacion() {
     var el = document.getElementById("educacion-content");
     if (!el) return;
 
     el.innerHTML = "";
+
+    var grid = document.createElement("div");
+    grid.className = "edu-grid";
+
+    /* ===== LEFT COLUMN: Education + Languages ===== */
+    var leftCol = document.createElement("div");
+    leftCol.className = "edu-col";
 
     /* --- EDUCACIÓN --- */
     var eduBlock = document.createElement("div");
@@ -943,7 +962,36 @@
     });
 
     eduBlock.appendChild(eduList);
-    el.appendChild(eduBlock);
+    leftCol.appendChild(eduBlock);
+
+    /* --- IDIOMAS --- */
+    var langBlock = document.createElement("div");
+    langBlock.className = "edu-block";
+
+    var langHeader = document.createElement("div");
+    langHeader.className = "section-header";
+    var langTitle = document.createElement("h2");
+    langTitle.className = "section-header__title";
+    langTitle.textContent = t(CV_DATA.ui.sections.languages);
+    langHeader.appendChild(langTitle);
+    langBlock.appendChild(langHeader);
+
+    var langChips = document.createElement("div");
+    langChips.className = "lang-chips";
+
+    CV_DATA.languages.forEach(function (lang) {
+      var chip = document.createElement("span");
+      chip.className = "chip";
+      chip.textContent = t(lang.name) + " · " + t(lang.level);
+      langChips.appendChild(chip);
+    });
+
+    langBlock.appendChild(langChips);
+    leftCol.appendChild(langBlock);
+
+    /* ===== RIGHT COLUMN: Certifications + Honors ===== */
+    var rightCol = document.createElement("div");
+    rightCol.className = "edu-col";
 
     /* --- CERTIFICACIONES --- */
     var certBlock = document.createElement("div");
@@ -1000,32 +1048,7 @@
     });
 
     certBlock.appendChild(certGrid);
-    el.appendChild(certBlock);
-
-    /* --- IDIOMAS --- */
-    var langBlock = document.createElement("div");
-    langBlock.className = "edu-block";
-
-    var langHeader = document.createElement("div");
-    langHeader.className = "section-header";
-    var langTitle = document.createElement("h2");
-    langTitle.className = "section-header__title";
-    langTitle.textContent = t(CV_DATA.ui.sections.languages);
-    langHeader.appendChild(langTitle);
-    langBlock.appendChild(langHeader);
-
-    var langChips = document.createElement("div");
-    langChips.className = "lang-chips";
-
-    CV_DATA.languages.forEach(function (lang) {
-      var chip = document.createElement("span");
-      chip.className = "chip";
-      chip.textContent = t(lang.name) + " · " + t(lang.level);
-      langChips.appendChild(chip);
-    });
-
-    langBlock.appendChild(langChips);
-    el.appendChild(langBlock);
+    rightCol.appendChild(certBlock);
 
     /* --- RECONOCIMIENTOS --- */
     if (CV_DATA.honors && CV_DATA.honors.length > 0) {
@@ -1070,8 +1093,12 @@
       });
 
       honorsBlock.appendChild(honorsList);
-      el.appendChild(honorsBlock);
+      rightCol.appendChild(honorsBlock);
     }
+
+    grid.appendChild(leftCol);
+    grid.appendChild(rightCol);
+    el.appendChild(grid);
   }
 
   /* -------------------------------------------------------
