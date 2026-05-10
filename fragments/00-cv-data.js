@@ -24,9 +24,9 @@ const CV_DATA = {
     },
     kpis: {
       years_experience: 14,
-      companies: 9,
-      projects: 9,
-      technologies: 32
+      companies: 7,
+      projects: 8,
+      technologies: 31
     }
   },
   experience: [
@@ -113,7 +113,7 @@ const CV_DATA = {
       company: "Fever",
       role: "Senior Data Engineer",
       start: "2018-09",
-      end: "2025-02",
+      end: "2025-01",
       current: false,
       description: {
         es: "Análisis y desarrollo de un data warehouse desde cero (ingesta, modelado, transformaciones, capa de presentación y visualización), integrando múltiples fuentes de datos de marketing y producto.",
@@ -213,17 +213,18 @@ const CV_DATA = {
     },
     {
       id: "exp-004",
-      company: "Tempe (Grupo Inditex)",
+      company: "Capgemini",
+      client: "Tempe (Grupo Inditex)",
       role: {
-        es: "Analista de Datos / Técnico BI",
-        en: "Data Analyst / BI Technician"
+        es: "Consultor BI / Analista de Datos",
+        en: "BI Consultant / Data Analyst"
       },
       start: "2016-06",
       end: "2017-02",
       current: false,
       description: {
-        es: "Análisis inteligente de datos para la obtención de conocimiento accionable, resolución de incidencias en reporting y desarrollo de nuevos informes.",
-        en: "Intelligent data analysis to extract actionable knowledge, reporting incident resolution and development of new reports."
+        es: "Consultor BI en Capgemini, destinado en el cliente Tempe (Grupo Inditex). Análisis inteligente de datos para la obtención de conocimiento accionable, resolución de incidencias en reporting y desarrollo de nuevos informes.",
+        en: "BI Consultant at Capgemini, assigned to client Tempe (Grupo Inditex). Intelligent data analysis to extract actionable knowledge, reporting incident resolution and development of new reports."
       },
       impact: [
         {
@@ -241,13 +242,14 @@ const CV_DATA = {
     {
       id: "exp-005",
       company: "Capgemini",
+      client: "Gas Natural Fenosa",
       role: "BI Consultant",
       start: "2015-10",
-      end: "2017-02",
+      end: "2016-06",
       current: false,
       description: {
-        es: "Consultor Business Intelligence en el Centro de Excelencia BI de Murcia. Cliente principal: Gas Natural Fenosa.",
-        en: "Business Intelligence consultant at the Murcia BI Center of Excellence. Main client: Gas Natural Fenosa."
+        es: "Consultor Business Intelligence en el Centro de Excelencia BI de Capgemini en Murcia, destinado en el cliente Gas Natural Fenosa.",
+        en: "Business Intelligence consultant at Capgemini's Murcia BI Centre of Excellence, assigned to client Gas Natural Fenosa."
       },
       impact: [
         {
@@ -380,10 +382,10 @@ const CV_DATA = {
     {
       name: "CV Dashboard Builder",
       description: {
-        es: "CV interactivo en formato analytical dashboard. Fichero HTML estático único con tema oscuro/claro, bilingüe ES/EN, timeline D3.js, skill matrix animada y exportación JSON. Desplegado en GitHub Pages.",
-        en: "Interactive CV in analytical dashboard format. Single static HTML file with dark/light theme, bilingual ES/EN, D3.js timeline, animated skill matrix and JSON export. Deployed on GitHub Pages."
+        es: "CV interactivo en formato analytical dashboard, construido íntegramente con IA mediante programación agéntica con Claude Code. Fichero HTML estático único con tema oscuro/claro, bilingüe ES/EN, timeline D3.js, skill matrix animada y exportación JSON. Desplegado en GitHub Pages.",
+        en: "Interactive CV in analytical dashboard format, built entirely with AI using agentic programming with Claude Code. Single static HTML file with dark/light theme, bilingual ES/EN, D3.js timeline, animated skill matrix and JSON export. Deployed on GitHub Pages."
       },
-      stack: ["HTML", "CSS", "Vanilla JS", "D3.js", "Claude Code"],
+      stack: ["HTML", "CSS", "Vanilla JS", "D3.js", "Claude Code", "Agentic AI"],
       url: "https://github.com/toniwang90/toniwangcv",
       year: "2026",
       status: "live"
@@ -505,24 +507,20 @@ const CV_DATA = {
       level: { es: "Nativo", en: "Native" }
     },
     {
-      name: { es: "Chino mandarín (Wenzhou Wu)", en: "Mandarin Chinese (Wenzhou Wu)" },
-      level: { es: "Nativo", en: "Native" }
-    },
-    {
-      name: { es: "Chino mandarín (Qingtianhua)", en: "Mandarin Chinese (Qingtianhua)" },
-      level: { es: "Nativo", en: "Native" }
-    },
-    {
       name: { es: "Inglés", en: "English" },
       level: { es: "Profesional (Working)", en: "Professional (Working)" }
     },
     {
-      name: { es: "Chino mandarín (estándar)", en: "Mandarin Chinese (Standard)" },
+      name: { es: "Chino mandarín", en: "Mandarin Chinese" },
       level: { es: "Elemental", en: "Elementary" }
     },
     {
-      name: { es: "Francés", en: "French" },
-      level: { es: "Elemental", en: "Elementary" }
+      name: { es: "Wēnzhōuhuà (dialecto)", en: "Wēnzhōuhuà (dialect)" },
+      level: { es: "Avanzado", en: "Advanced" }
+    },
+    {
+      name: { es: "Qīngtianhuà (dialecto)", en: "Qīngtianhuà (dialect)" },
+      level: { es: "Avanzado", en: "Advanced" }
     }
   ],
   ui: {

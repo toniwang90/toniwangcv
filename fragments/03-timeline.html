@@ -705,7 +705,7 @@
     closeBtn.setAttribute("aria-label", t(UI.actions.close));
 
     // Header
-    document.getElementById("dd-company").textContent = exp.company;
+    document.getElementById("dd-company").textContent = exp.client ? exp.company + " › " + exp.client : exp.company;
     document.getElementById("dd-role").textContent = t(exp.role);
     document.getElementById("dd-dates").textContent = formatDateRange(exp) + " · " + calcDuration(exp);
 
@@ -913,7 +913,7 @@
       // Role
       var role = document.createElement("div");
       role.className = "timeline-card__role";
-      role.textContent = t(exp.role);
+      role.textContent = t(exp.role) + (exp.client && isMulti ? " · " + exp.client : "");
 
       // Dates
       var dates = document.createElement("div");
@@ -969,7 +969,7 @@
     // Minimum width to avoid tiny bars
     var totalWidth = Math.max(containerWidth, 700);
 
-    var MARGIN = { top: 16, right: 60, bottom: 44, left: 210 };
+    var MARGIN = { top: 16, right: 60, bottom: 44, left: 240 };
     var ROW_HEIGHT = 40;
     var ROW_GAP = 8;
     var LABEL_FONT_SIZE = 12;
@@ -1118,7 +1118,7 @@
 
         // Company name above the first bar
         var companyFull = exp.company;
-        var companyText = companyFull.length > 24 ? companyFull.slice(0, 22) + "…" : companyFull;
+        var companyText = companyFull.length > 28 ? companyFull.slice(0, 26) + "…" : companyFull;
         var companyHeader = g.append("text")
           .attr("x", -8)
           .attr("y", barY - HEADER_HEIGHT / 2 + 4)
@@ -1149,22 +1149,38 @@
       var companyEl = null;
 
       if (row.multiRole) {
-        // Only the role name, centered in the bar row
+        // Role + optional client on second line
         var roleFull = t(exp.role);
-        var roleText = roleFull.length > 28 ? roleFull.slice(0, 26) + "…" : roleFull;
+        var roleText = roleFull.length > 32 ? roleFull.slice(0, 30) + "…" : roleFull;
+        var hasClient = exp.client;
+        var roleY = hasClient ? barY + ROW_HEIGHT / 2 - 5 : barY + ROW_HEIGHT / 2 + 4;
         labelGroup.append("text")
           .attr("x", -8)
-          .attr("y", barY + ROW_HEIGHT / 2 + 4)
+          .attr("y", roleY)
           .attr("text-anchor", "end")
           .attr("fill", "var(--color-text-muted)")
           .attr("font-family", "var(--font-mono)")
           .attr("font-size", (LABEL_FONT_SIZE - 1) + "px")
           .text(roleText)
           .append("title").text(roleFull);
+        if (hasClient) {
+          var clientFull = exp.client;
+          var clientText = clientFull.length > 32 ? clientFull.slice(0, 30) + "…" : clientFull;
+          labelGroup.append("text")
+            .attr("x", -8)
+            .attr("y", barY + ROW_HEIGHT / 2 + 10)
+            .attr("text-anchor", "end")
+            .attr("fill", "var(--color-primary)")
+            .attr("font-family", "var(--font-display)")
+            .attr("font-size", (LABEL_FONT_SIZE - 2) + "px")
+            .attr("opacity", "0.75")
+            .text(clientText)
+            .append("title").text(clientFull);
+        }
       } else {
         // Single-role: company (bold) + role (muted) stacked
         var companyFull = exp.company;
-        var companyText = companyFull.length > 24 ? companyFull.slice(0, 22) + "…" : companyFull;
+        var companyText = companyFull.length > 28 ? companyFull.slice(0, 26) + "…" : companyFull;
         companyEl = labelGroup.append("text")
           .attr("x", -8)
           .attr("y", barY + ROW_HEIGHT / 2 - 5)
@@ -1177,7 +1193,7 @@
         companyEl.append("title").text(companyFull);
 
         var roleFull = t(exp.role);
-        var roleText = roleFull.length > 28 ? roleFull.slice(0, 26) + "…" : roleFull;
+        var roleText = roleFull.length > 32 ? roleFull.slice(0, 30) + "…" : roleFull;
         labelGroup.append("text")
           .attr("x", -8)
           .attr("y", barY + ROW_HEIGHT / 2 + 10)
@@ -1197,7 +1213,7 @@
         .attr("fill", "transparent");
 
       labelGroup.on("mousemove", function (event) {
-        ttCompany.textContent = exp.company;
+        ttCompany.textContent = exp.client ? exp.company + " › " + exp.client : exp.company;
         ttRole.textContent = t(exp.role);
         ttDuration.textContent = formatDateRange(exp) + " · " + calcDuration(exp);
         tooltip.classList.add("is-visible");

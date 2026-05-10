@@ -857,6 +857,16 @@
     if (_kpiAnimated) return;
     _kpiAnimated = true;
 
+    // Sync data-kpi-value from CV_DATA so the HTML never goes stale
+    if (typeof CV_DATA !== "undefined" && CV_DATA.profile && CV_DATA.profile.kpis) {
+      document.querySelectorAll(".kpi-card[data-kpi]").forEach(function (card) {
+        var key = card.dataset.kpi;
+        if (CV_DATA.profile.kpis[key] !== undefined) {
+          card.dataset.kpiValue = CV_DATA.profile.kpis[key];
+        }
+      });
+    }
+
     var cards = document.querySelectorAll(".kpi-card[data-kpi-value]");
     cards.forEach(function (card, index) {
       var target = parseInt(card.dataset.kpiValue, 10);
