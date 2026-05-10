@@ -40,7 +40,7 @@ After the subagent completes:
 
 ### Auto-preview (after every step)
 
-After each subagent finishes (and after guardian/advisor reports if applicable), automatically open the just-built artefact in the browser so the user can iterate visually. This is mandatory — do NOT skip it, even if the subagent reports success.
+After each subagent finishes (and after guardian/advisor reports if applicable), automatically rebuild a **best-effort `index.html`** with whatever fragments exist so far and open it in the browser. The user always sees the cumulative CV exactly as it would be assembled at that moment, with pending sections marked clearly. This is mandatory — do NOT skip it.
 
 **Server**: a single long-lived `python3 -m http.server` instance serves the project root. Reuse it across steps; only start it once per session.
 
@@ -50,25 +50,34 @@ After each subagent finishes (and after guardian/advisor reports if applicable),
    ```
    (try 8766, 8767 if 8765 is busy; remember the chosen port for the rest of the session)
 
-2. **Every subsequent step**: do NOT relaunch the server. Just `open` the relevant URL at the existing port.
+2. **After every step (including step 0)**: rebuild and open the cumulative preview:
+   ```bash
+   node scripts/assemble.mjs --partial
+   open http://localhost:<port>/index.html
+   ```
+   `--partial` is the best-effort mode:
+   - Never fails if some fragments are missing or steps are not yet `validated`
+   - Renders `Pending — not yet built` placeholders for missing sections
+   - Wraps each fragment script in `try/catch` so a single broken section does not blank the whole page
+   - Shows an orange banner at the top listing what is still pending
+   - Does **NOT** modify `_state.json` (only the strict mode at step 7 advances state)
 
-3. **What to open** depends on the step that just finished:
+3. **Special cases**:
+   - **Step 0** (`data-agent`): the partial preview will mostly be empty (no layout yet) but it confirms `CV_DATA` parses — that alone is useful.
+   - **Step 1** (`design-system-agent`): also open `design-test.html` (the design system proof) so the user can validate the palette/typography in isolation:
+     ```bash
+     open http://localhost:<port>/design-test.html
+     ```
+   - **Step 7** (`assembler-agent`): use **strict mode** (`node scripts/assemble.mjs`, no `--partial`) — this is the canonical build that updates `_state.json`.
+   - **Step 8** (`qa-agent`): no rebuild needed; just re-open `index.html`.
 
-   | Step | URL to open |
-   |------|-------------|
-   | 0 (`data-agent`) | skip — no visual artefact (just confirm the JS parses) |
-   | 1 (`design-system-agent`) | `http://localhost:<port>/design-test.html` |
-   | 2 (`layout-agent`) | `http://localhost:<port>/fragments/02-layout.html` |
-   | 3 (`timeline-agent`) | `http://localhost:<port>/fragments/03-timeline.html` |
-   | 4 (`skills-agent`) | `http://localhost:<port>/fragments/04-skills.html` |
-   | 5 (`content-agent`) | `http://localhost:<port>/fragments/05-content.html` |
-   | 6 (`print-agent`) | `http://localhost:<port>/index.html` if it exists, else skip (print CSS is only meaningful on the full CV) |
-   | 7 (`assembler-agent`) | `http://localhost:<port>/index.html` |
-   | 8 (`qa-agent`) | `http://localhost:<port>/index.html` |
+4. Always tell the user the URL(s) explicitly so they can re-open them manually if the browser tab was closed.
 
-4. Open via `open <url>` (macOS). Tell the user the URL explicitly so they can re-open it manually.
-
-5. **Important caveat**: fragment HTML files (steps 2–5) are partials — no `<html>`/`<head>`/`<body>`. They will render with the design tokens missing (no `01-design-system.css`) and look unstyled. That is fine for iterating on structure/markup; full polished styling appears at step 7. If the user says the preview "looks broken" before step 7, remind them this is expected for partial fragments.
+5. **What the user will see in partial previews**:
+   - The orange `PREVIEW (partial) — pending: …` banner at the top
+   - Built sections rendered with full styling (design system + their own CSS)
+   - Pending sections rendered as a dashed-border box with the section name
+   - Console may log `[preview] X script failed: …` if a fragment depends on data that does not exist yet — this is expected, not a bug to fix
 
 ### Possible states
 
