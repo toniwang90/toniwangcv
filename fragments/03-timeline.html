@@ -25,7 +25,7 @@
 
   .timeline-section__title {
     font-family: var(--font-display);
-    font-size: var(--text-xl);
+    font-size: var(--text-2xl);
     font-weight: var(--weight-bold);
     color: var(--color-text);
     line-height: 1.2;
@@ -145,6 +145,28 @@
   .timeline-card:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
+  }
+
+  /* Company header card for multi-role groups (mobile) */
+  .timeline-card--company-header {
+    cursor: default;
+    background-color: var(--color-surface-2);
+    margin-bottom: calc(var(--space-2) * -1);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+  }
+  .timeline-card--company-header:hover {
+    border-color: var(--color-divider);
+    box-shadow: none;
+  }
+
+  /* Sub-role cards sit below the company header */
+  .timeline-card--sub-role {
+    border-radius: 0;
+    border-top: none;
+  }
+  .timeline-card--sub-role:last-of-type,
+  li:last-child .timeline-card--sub-role {
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
   }
 
   .timeline-card__header {
@@ -822,21 +844,48 @@
     var listEl = document.getElementById("timeline-mobile");
     listEl.innerHTML = "";
 
-    // Reverse chronological
-    var sorted = EXPERIENCE.slice().sort(function (a, b) {
-      return parseYearMonth(b.start) - parseYearMonth(a.start);
+    // Group consecutive same-company entries (preserve order, reverse chrono within)
+    var mobileGroups = [];
+    EXPERIENCE.forEach(function (exp) {
+      var last = mobileGroups[mobileGroups.length - 1];
+      if (last && last.company === exp.company) {
+        last.entries.push(exp);
+      } else {
+        mobileGroups.push({ company: exp.company, entries: [exp] });
+      }
+    });
+    mobileGroups.forEach(function (g, gi) {
+      g.color = COMPANY_COLORS[gi % COMPANY_COLORS.length];
     });
 
-    sorted.forEach(function (exp, idx) {
+    mobileGroups.forEach(function (group, gi) {
+      var isMulti = group.entries.length > 1;
+
+      /* Company header for multi-role groups */
+      if (isMulti) {
+        var headerLi = document.createElement("li");
+        headerLi.setAttribute("role", "listitem");
+        var headerDiv = document.createElement("div");
+        headerDiv.className = "timeline-card timeline-card--company-header";
+        headerDiv.style.setProperty("--timeline-bar-color", group.color);
+        var headerName = document.createElement("div");
+        headerName.className = "timeline-card__company";
+        headerName.textContent = group.company;
+        headerDiv.appendChild(headerName);
+        headerLi.appendChild(headerDiv);
+        listEl.appendChild(headerLi);
+      }
+
+      group.entries.forEach(function (exp, idx) {
       // Find original index for color
       var origIdx = EXPERIENCE.indexOf(exp);
-      var color = COMPANY_COLORS[origIdx % COMPANY_COLORS.length];
+      var color = group.color;
 
       var li = document.createElement("li");
       li.setAttribute("role", "listitem");
 
       var card = document.createElement("div");
-      card.className = "timeline-card";
+      card.className = "timeline-card" + (isMulti ? " timeline-card--sub-role" : "");
       card.setAttribute("tabindex", "0");
       card.setAttribute("role", "button");
       card.setAttribute("aria-label", exp.company + " — " + t(exp.role));
@@ -846,11 +895,13 @@
       var header = document.createElement("div");
       header.className = "timeline-card__header";
 
-      var company = document.createElement("div");
-      company.className = "timeline-card__company";
-      company.textContent = exp.company;
-
-      header.appendChild(company);
+      /* Only show company name if not already shown in group header */
+      if (!isMulti) {
+        var company = document.createElement("div");
+        company.className = "timeline-card__company";
+        company.textContent = exp.company;
+        header.appendChild(company);
+      }
 
       if (exp.current) {
         var badge = document.createElement("span");
@@ -901,7 +952,8 @@
           _handleOpen();
         }
       });
-    });
+      }); // end group.entries.forEach
+    }); // end mobileGroups.forEach
   }
 
   /* ----------------------------------------------------------
@@ -922,8 +974,46 @@
     var ROW_GAP = 8;
     var LABEL_FONT_SIZE = 12;
 
-    var numRows = EXPERIENCE.length;
-    var innerHeight = numRows * (ROW_HEIGHT + ROW_GAP) - ROW_GAP;
+    // Group consecutive same-company entries
+    var rowGroups = [];
+    EXPERIENCE.forEach(function (exp) {
+      var last = rowGroups[rowGroups.length - 1];
+      if (last && last.company === exp.company) {
+        last.entries.push(exp);
+      } else {
+        rowGroups.push({ company: exp.company, entries: [exp] });
+      }
+    });
+    rowGroups.forEach(function (group, gi) {
+      group.color = COMPANY_COLORS[gi % COMPANY_COLORS.length];
+    });
+
+    // Flatten to visual rows
+    var flatRows = [];
+    rowGroups.forEach(function (group) {
+      group.entries.forEach(function (exp, ei) {
+        flatRows.push({
+          exp: exp,
+          group: group,
+          isFirst: ei === 0,
+          isLast: ei === group.entries.length - 1,
+          multiRole: group.entries.length > 1
+        });
+      });
+    });
+
+    // y offsets — multi-role groups get a company header row above their bars
+    var GROUP_GAP = 14;
+    var HEADER_HEIGHT = 22;
+    var yOffsets = [];
+    var cumY = 0;
+    flatRows.forEach(function (row, ri) {
+      if (row.isFirst && ri > 0) cumY += GROUP_GAP;
+      if (row.isFirst && row.multiRole) cumY += HEADER_HEIGHT;
+      yOffsets.push(cumY);
+      cumY += ROW_HEIGHT + ROW_GAP;
+    });
+    var innerHeight = cumY - ROW_GAP;
     var totalHeight = innerHeight + MARGIN.top + MARGIN.bottom;
     var innerWidth = totalWidth - MARGIN.left - MARGIN.right;
 
@@ -931,7 +1021,6 @@
     var allStarts = EXPERIENCE.map(function (e) { return parseYearMonth(e.start); });
     var domainStart = d3.min(allStarts);
     var domainEnd = today();
-    // Add a tiny right padding (1 month)
     var domainEndPadded = new Date(domainEnd.getFullYear(), domainEnd.getMonth() + 2, 1);
 
     var xScale = d3.scaleTime()
@@ -968,8 +1057,8 @@
       });
 
     // Horizontal grid lines
-    EXPERIENCE.forEach(function (exp, i) {
-      var y = i * (ROW_HEIGHT + ROW_GAP) + ROW_HEIGHT / 2;
+    flatRows.forEach(function (row, ri) {
+      var y = yOffsets[ri] + ROW_HEIGHT / 2;
       g.append("line")
         .attr("x1", 0)
         .attr("x2", innerWidth)
@@ -1009,57 +1098,103 @@
     var ttRole = document.getElementById("tt-role");
     var ttDuration = document.getElementById("tt-duration");
 
-    // Bars
-    EXPERIENCE.forEach(function (exp, i) {
-      var color = COMPANY_COLORS[i % COMPANY_COLORS.length];
+    // Bars + labels (grouped by company)
+    flatRows.forEach(function (row, ri) {
+      var exp = row.exp;
+      var group = row.group;
+      var color = group.color;
+      var barY = yOffsets[ri];
+
       var startX = xScale(parseYearMonth(exp.start));
       var endDate = exp.current ? today() : parseYearMonth(exp.end);
       var endX = xScale(endDate);
       var barWidth = Math.max(endX - startX, 4);
-      var barY = i * (ROW_HEIGHT + ROW_GAP);
 
-      // Label group (company + role) — interactive: same hover/click as the bar
+      /* ---- Company header label + bracket (drawn once, above first bar) ---- */
+      if (row.isFirst && row.multiRole) {
+        var lastGroupRowIdx = ri + group.entries.length - 1;
+        var bracketTop = yOffsets[ri];
+        var bracketBot = yOffsets[lastGroupRowIdx] + ROW_HEIGHT;
+
+        // Company name above the first bar
+        var companyFull = exp.company;
+        var companyText = companyFull.length > 24 ? companyFull.slice(0, 22) + "…" : companyFull;
+        var companyHeader = g.append("text")
+          .attr("x", -8)
+          .attr("y", barY - HEADER_HEIGHT / 2 + 4)
+          .attr("text-anchor", "end")
+          .attr("fill", "var(--color-text)")
+          .attr("font-family", "var(--font-display)")
+          .attr("font-weight", "600")
+          .attr("font-size", LABEL_FONT_SIZE + "px")
+          .text(companyText);
+        companyHeader.append("title").text(companyFull);
+
+        // Vertical bracket spanning all role bars
+        g.append("rect")
+          .attr("x", -MARGIN.left + 6)
+          .attr("y", bracketTop)
+          .attr("width", 3)
+          .attr("height", bracketBot - bracketTop)
+          .attr("rx", 1.5)
+          .attr("fill", color)
+          .attr("opacity", 0.7);
+      }
+
+      /* ---- Role label + hit area ---- */
       var labelGroup = g.append("g")
         .attr("class", "timeline-label-group")
         .style("cursor", "pointer");
 
-      // Company label — line 1 (left margin)
-      var companyFull = exp.company;
-      var companyText = companyFull.length > 24 ? companyFull.slice(0, 22) + "…" : companyFull;
+      var companyEl = null;
 
-      var companyEl = labelGroup.append("text")
-        .attr("x", -8)
-        .attr("y", barY + ROW_HEIGHT / 2 - 5)
-        .attr("text-anchor", "end")
-        .attr("fill", "var(--color-text)")
-        .attr("font-family", "var(--font-display)")
-        .attr("font-weight", "600")
-        .attr("font-size", LABEL_FONT_SIZE + "px")
-        .text(companyText);
-      companyEl.append("title").text(companyFull);
+      if (row.multiRole) {
+        // Only the role name, centered in the bar row
+        var roleFull = t(exp.role);
+        var roleText = roleFull.length > 28 ? roleFull.slice(0, 26) + "…" : roleFull;
+        labelGroup.append("text")
+          .attr("x", -8)
+          .attr("y", barY + ROW_HEIGHT / 2 + 4)
+          .attr("text-anchor", "end")
+          .attr("fill", "var(--color-text-muted)")
+          .attr("font-family", "var(--font-mono)")
+          .attr("font-size", (LABEL_FONT_SIZE - 1) + "px")
+          .text(roleText)
+          .append("title").text(roleFull);
+      } else {
+        // Single-role: company (bold) + role (muted) stacked
+        var companyFull = exp.company;
+        var companyText = companyFull.length > 24 ? companyFull.slice(0, 22) + "…" : companyFull;
+        companyEl = labelGroup.append("text")
+          .attr("x", -8)
+          .attr("y", barY + ROW_HEIGHT / 2 - 5)
+          .attr("text-anchor", "end")
+          .attr("fill", "var(--color-text)")
+          .attr("font-family", "var(--font-display)")
+          .attr("font-weight", "600")
+          .attr("font-size", LABEL_FONT_SIZE + "px")
+          .text(companyText);
+        companyEl.append("title").text(companyFull);
 
-      // Role label — line 2 (left margin, muted)
-      var roleFull = t(exp.role);
-      var roleText = roleFull.length > 28 ? roleFull.slice(0, 26) + "…" : roleFull;
+        var roleFull = t(exp.role);
+        var roleText = roleFull.length > 28 ? roleFull.slice(0, 26) + "…" : roleFull;
+        labelGroup.append("text")
+          .attr("x", -8)
+          .attr("y", barY + ROW_HEIGHT / 2 + 10)
+          .attr("text-anchor", "end")
+          .attr("fill", "var(--color-text-muted)")
+          .attr("font-family", "var(--font-mono)")
+          .attr("font-size", LABEL_FONT_SIZE + "px")
+          .text(roleText)
+          .append("title").text(roleFull);
+      }
 
-      var roleEl = labelGroup.append("text")
-        .attr("x", -8)
-        .attr("y", barY + ROW_HEIGHT / 2 + 10)
-        .attr("text-anchor", "end")
-        .attr("fill", "var(--color-text-muted)")
-        .attr("font-family", "var(--font-mono)")
-        .attr("font-size", LABEL_FONT_SIZE + "px")
-        .text(roleText);
-      roleEl.append("title").text(roleFull);
-
-      // Transparent hit area for the label group (full margin width, row-tall)
       labelGroup.append("rect")
         .attr("x", -MARGIN.left + 4)
         .attr("y", barY - (44 - ROW_HEIGHT) / 2)
         .attr("width", MARGIN.left - 12)
         .attr("height", 44)
-        .attr("fill", "transparent")
-        .attr("data-exp-id", exp.id);
+        .attr("fill", "transparent");
 
       labelGroup.on("mousemove", function (event) {
         ttCompany.textContent = exp.company;
@@ -1068,26 +1203,23 @@
         tooltip.classList.add("is-visible");
         tooltip.setAttribute("aria-hidden", "false");
         _positionTooltip(event.clientX, event.clientY);
-        companyEl.attr("fill", "var(--color-primary)");
+        if (companyEl) companyEl.attr("fill", "var(--color-primary)");
       });
-
       labelGroup.on("mouseleave", function () {
         tooltip.classList.remove("is-visible");
         tooltip.setAttribute("aria-hidden", "true");
-        companyEl.attr("fill", "var(--color-text)");
+        if (companyEl) companyEl.attr("fill", "var(--color-text)");
       });
-
       labelGroup.on("click", function () {
         tooltip.classList.remove("is-visible");
         openDrilldown(exp.id);
       });
 
-      // Bar background (clickable hit area)
+      /* ---- Bar ---- */
       var barGroup = g.append("g")
         .attr("class", "timeline-bar-group")
         .style("cursor", "pointer");
 
-      // Bar rect
       barGroup.append("rect")
         .attr("x", startX)
         .attr("y", barY)
@@ -1095,10 +1227,8 @@
         .attr("height", ROW_HEIGHT)
         .attr("rx", 4)
         .attr("fill", color)
-        .attr("opacity", 0.25)
-        .attr("data-exp-id", exp.id);
+        .attr("opacity", 0.25);
 
-      // Bar border / accent line (top)
       barGroup.append("rect")
         .attr("x", startX)
         .attr("y", barY)
@@ -1108,17 +1238,14 @@
         .attr("fill", color)
         .attr("opacity", 0.85);
 
-      // Transparent hit area — 44px tall, centred over the bar
       var HIT_HEIGHT = 44;
       barGroup.append("rect")
         .attr("x", startX)
         .attr("y", barY - (HIT_HEIGHT - ROW_HEIGHT) / 2)
         .attr("width", barWidth)
         .attr("height", HIT_HEIGHT)
-        .attr("fill", "transparent")
-        .attr("data-exp-id", exp.id);
+        .attr("fill", "transparent");
 
-      // Hover
       barGroup.on("mousemove", function (event) {
         ttCompany.textContent = exp.company;
         ttRole.textContent = t(exp.role);
@@ -1127,19 +1254,15 @@
         tooltip.setAttribute("aria-hidden", "false");
         _positionTooltip(event.clientX, event.clientY);
       });
-
       barGroup.on("mouseleave", function () {
         tooltip.classList.remove("is-visible");
         tooltip.setAttribute("aria-hidden", "true");
       });
-
       barGroup.on("click", function () {
         tooltip.classList.remove("is-visible");
         openDrilldown(exp.id);
       });
 
-      // Keyboard accessibility via foreignObject workaround:
-      // We add a title element for screen reader hint
       barGroup.append("title")
         .text(exp.company + " — " + t(exp.role) + " · " + calcDuration(exp));
     });
