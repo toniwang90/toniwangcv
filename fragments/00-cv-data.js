@@ -372,6 +372,41 @@ const CV_DATA = {
       projects: []
     }
   ],
+  personal_projects: [
+    {
+      name: "CV Dashboard Builder",
+      description: {
+        es: "CV interactivo en formato analytical dashboard. Fichero HTML estático único con tema oscuro/claro, bilingüe ES/EN, timeline D3.js, skill matrix animada y exportación JSON. Desplegado en GitHub Pages.",
+        en: "Interactive CV in analytical dashboard format. Single static HTML file with dark/light theme, bilingual ES/EN, D3.js timeline, animated skill matrix and JSON export. Deployed on GitHub Pages."
+      },
+      stack: ["HTML", "CSS", "Vanilla JS", "D3.js", "Claude Code"],
+      url: "https://github.com/toniwang90/toniwangcv",
+      year: "2025",
+      status: "live"
+    },
+    {
+      name: "[TODO]",
+      description: {
+        es: "[TODO] Descripción del proyecto",
+        en: "[TODO] Project description"
+      },
+      stack: [],
+      url: null,
+      year: "[TODO]",
+      status: null
+    },
+    {
+      name: "[TODO]",
+      description: {
+        es: "[TODO] Descripción del proyecto",
+        en: "[TODO] Project description"
+      },
+      stack: [],
+      url: null,
+      year: "[TODO]",
+      status: null
+    }
+  ],
   skills: {
     data_engineering: [
       { name: "Apache Spark", level: 5, years: 9, category: "data_engineering" },
@@ -501,13 +536,16 @@ const CV_DATA = {
       technologies:     { es: "Tecnologías",         en: "Technologies" }
     },
     actions: {
-      download:        { es: "Descargar CV",  en: "Download CV" },
+      download:        { es: "Descargar JSON",  en: "Download JSON" },
       close:           { es: "Cerrar",        en: "Close" },
       toggle_theme:    { es: "Cambiar tema",  en: "Toggle theme" },
       toggle_language: { es: "EN",            en: "ES" },
       menu_open:       { es: "Abrir menú",    en: "Open menu" },
       menu_close:      { es: "Cerrar menú",   en: "Close menu" },
-      view_in_experience: { es: "Ver en experiencia →", en: "View in experience →" }
+      view_in_experience: { es: "Ver en experiencia →", en: "View in experience →" },
+      show_more:          { es: "Ver más",              en: "Show more" },
+      show_less:          { es: "Ver menos",            en: "Show less" },
+      view_project:       { es: "Ver proyecto →",       en: "View project →" }
     },
     timeline: {
       today:    { es: "Hoy",    en: "Today" },

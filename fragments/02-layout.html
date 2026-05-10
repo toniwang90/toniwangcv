@@ -441,7 +441,7 @@
         class="btn-download"
         id="btn-download-desktop"
         type="button"
-        onclick="window.print()">
+        onclick="downloadCV()">
         <!-- Lucide download icon injected by JS -->
         <span data-i18n="actions.download"></span>
       </button>
@@ -476,7 +476,7 @@
   <button
     class="mobile-nav__download"
     type="button"
-    onclick="window.print()">
+    onclick="downloadCV()">
     <!-- icon injected by JS -->
     <span data-i18n="actions.download"></span>
   </button>
@@ -702,7 +702,24 @@
   }
 
   /* -------------------------------------------------------
-     8. HAMBURGER MENU
+     8. DOWNLOAD CV AS JSON
+     ------------------------------------------------------- */
+  function downloadCV() {
+    var json = JSON.stringify(CV_DATA, null, 2);
+    var blob = new Blob([json], { type: "application/json" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "cv-toni-wang.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+  window.downloadCV = downloadCV;
+
+  /* -------------------------------------------------------
+     9. HAMBURGER MENU
      ------------------------------------------------------- */
   var _menuOpen = false;
   var btnHamburger = document.getElementById("btn-hamburger");

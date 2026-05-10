@@ -311,6 +311,40 @@
     text-decoration: none;
   }
 
+  /* Status badges */
+  .badge--live {
+    background-color: color-mix(in srgb, var(--color-success) 15%, transparent);
+    color: var(--color-success);
+    border: 1px solid color-mix(in srgb, var(--color-success) 35%, transparent);
+  }
+
+  .badge--wip {
+    background-color: color-mix(in srgb, var(--color-orange) 15%, transparent);
+    color: var(--color-orange);
+    border: 1px solid color-mix(in srgb, var(--color-orange) 35%, transparent);
+  }
+
+  /* Show more / Show less toggle */
+  .projects-toggle {
+    display: block;
+    margin: var(--space-5) auto 0;
+    background: none;
+    border: var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-5);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+    min-height: 44px;
+  }
+
+  .projects-toggle:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+  }
+
   /* ============================================================
      SECCIÓN EDUCACIÓN (+ CERTS + IDIOMAS + RECONOCIMIENTOS)
      ============================================================ */
@@ -707,26 +741,20 @@
   }
 
   /* -------------------------------------------------------
-     RENDER: PROYECTOS
-     --- Selecciona los 3 primeros proyectos de la experience
-         (los más recientes / relevantes)
+     RENDER: PROYECTOS PERSONALES
+     Reads from CV_DATA.personal_projects.
+     Shows first PAGE_SIZE cards; "Show more" reveals the rest.
      ------------------------------------------------------- */
+  var PAGE_SIZE = 6;
+
   function renderProyectos() {
     var el = document.getElementById("proyectos-content");
     if (!el) return;
 
-    // Collect all projects from experience with reference to parent experience
-    var allProjects = [];
-    CV_DATA.experience.forEach(function (exp) {
-      if (exp.projects && exp.projects.length > 0) {
-        exp.projects.forEach(function (proj) {
-          allProjects.push({ project: proj, exp: exp });
-        });
-      }
-    });
-
-    // Take the first 3 (Fever Lead DE projects — most recent, most relevant)
-    var featured = allProjects.slice(0, 3);
+    var projects = (CV_DATA.personal_projects || []);
+    var total    = projects.length;
+    var visible  = Math.min(PAGE_SIZE, total);
+    var expanded = false;
 
     // Header
     var header = document.createElement("div");
@@ -737,21 +765,19 @@
     header.appendChild(sectionTitle);
     var countSpan = document.createElement("span");
     countSpan.className = "section-header__count";
-    countSpan.textContent = featured.length;
+    countSpan.textContent = total;
     header.appendChild(countSpan);
 
     // Grid
     var grid = document.createElement("div");
     grid.className = "projects-grid";
+    grid.id = "projects-grid";
 
-    featured.forEach(function (item) {
-      var proj = item.project;
-      var exp = item.exp;
-
+    function _buildCard(proj) {
       var card = document.createElement("div");
       card.className = "project-card";
 
-      // Header row
+      // Header row: name + year + status badge
       var cardHeader = document.createElement("div");
       cardHeader.className = "project-card__header";
 
@@ -760,11 +786,31 @@
       nameEl.textContent = t(proj.name);
       cardHeader.appendChild(nameEl);
 
-      var companyEl = document.createElement("span");
-      companyEl.className = "project-card__company";
-      companyEl.textContent = exp.company;
-      cardHeader.appendChild(companyEl);
+      var metaRow = document.createElement("div");
+      metaRow.style.display = "flex";
+      metaRow.style.alignItems = "center";
+      metaRow.style.gap = "var(--space-2)";
 
+      if (proj.year) {
+        var yearEl = document.createElement("span");
+        yearEl.className = "project-card__company";
+        yearEl.textContent = proj.year;
+        metaRow.appendChild(yearEl);
+      }
+
+      if (proj.status === "live") {
+        var statusBadge = document.createElement("span");
+        statusBadge.className = "badge badge--live";
+        statusBadge.textContent = "live";
+        metaRow.appendChild(statusBadge);
+      } else if (proj.status === "wip") {
+        var wipBadge = document.createElement("span");
+        wipBadge.className = "badge badge--wip";
+        wipBadge.textContent = "wip";
+        metaRow.appendChild(wipBadge);
+      }
+
+      cardHeader.appendChild(metaRow);
       card.appendChild(cardHeader);
 
       // Description
@@ -772,14 +818,6 @@
       descEl.className = "project-card__description";
       descEl.textContent = t(proj.description);
       card.appendChild(descEl);
-
-      // Outcome
-      if (proj.outcome) {
-        var outcomeEl = document.createElement("div");
-        outcomeEl.className = "project-card__outcome";
-        outcomeEl.textContent = t(proj.outcome);
-        card.appendChild(outcomeEl);
-      }
 
       // Stack badges
       if (proj.stack && proj.stack.length > 0) {
@@ -794,19 +832,58 @@
         card.appendChild(stackDiv);
       }
 
-      // Link to experience section
-      var linkEl = document.createElement("a");
-      linkEl.className = "project-card__link";
-      linkEl.href = "#experiencia";
-      linkEl.textContent = t(CV_DATA.ui.actions.view_in_experience);
-      card.appendChild(linkEl);
+      // External link
+      if (proj.url) {
+        var linkEl = document.createElement("a");
+        linkEl.className = "project-card__link";
+        linkEl.href = proj.url;
+        linkEl.target = "_blank";
+        linkEl.rel = "noopener noreferrer";
+        linkEl.setAttribute("data-i18n-link", "view_project");
+        linkEl.textContent = t(CV_DATA.ui.actions.view_project);
+        card.appendChild(linkEl);
+      }
 
-      grid.appendChild(card);
-    });
+      return card;
+    }
+
+    function _renderCards(count) {
+      grid.innerHTML = "";
+      projects.slice(0, count).forEach(function (proj) {
+        grid.appendChild(_buildCard(proj));
+      });
+    }
+
+    _renderCards(visible);
+
+    // "Show more / Show less" button — only if there are more than PAGE_SIZE
+    var toggleBtn = null;
+    if (total > PAGE_SIZE) {
+      toggleBtn = document.createElement("button");
+      toggleBtn.className = "projects-toggle";
+      toggleBtn.id = "projects-toggle";
+      _updateToggleBtn(toggleBtn, expanded, total);
+
+      toggleBtn.addEventListener("click", function () {
+        expanded = !expanded;
+        _renderCards(expanded ? total : PAGE_SIZE);
+        _updateToggleBtn(toggleBtn, expanded, total);
+      });
+    }
 
     el.innerHTML = "";
     el.appendChild(header);
     el.appendChild(grid);
+    if (toggleBtn) el.appendChild(toggleBtn);
+  }
+
+  function _updateToggleBtn(btn, isExpanded, total) {
+    if (isExpanded) {
+      btn.textContent = t(CV_DATA.ui.actions.show_less);
+    } else {
+      var hidden = total - PAGE_SIZE;
+      btn.textContent = t(CV_DATA.ui.actions.show_more) + " (" + hidden + ")";
+    }
   }
 
   /* -------------------------------------------------------
