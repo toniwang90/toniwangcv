@@ -66,6 +66,7 @@ The Orchestrator (`/build`) manages `_state.json` and invokes the subagent for t
 |---------|-------------|
 | `/build` | Main orchestrator — manages the full pipeline |
 | `/edit-cv <change>` | Edit CV data in natural language without running the full pipeline |
+| `/fix-step [N] "problem"` | Fix a specific step in-place — reset + targeted subagent edit + re-validate |
 | `/preview` | Serves the most advanced artefact on a local server and opens it in the browser |
 | `/validate-step [N]` | Re-runs DesignGuardian and/or UX Advisor on step N without advancing the pipeline |
 | `/reset-step [N]` | Resets step N status (and optionally dependents with `cascade`) |
@@ -86,6 +87,7 @@ toniwangcv/
 │   ├── commands/
 │   │   ├── build.md              ← /build slash command (Orchestrator)
 │   │   ├── edit-cv.md            ← /edit-cv (targeted CV data edits)
+│   │   ├── fix-step.md           ← /fix-step (targeted step fix without full rebuild)
 │   │   ├── preview.md            ← /preview
 │   │   ├── validate-step.md      ← /validate-step
 │   │   └── reset-step.md         ← /reset-step
