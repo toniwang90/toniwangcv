@@ -6,65 +6,56 @@ tools: Read, Write, Edit
 
 # PrintAgent — Print Stylesheet
 
-You create the print stylesheet that lets users export a clean PDF CV from the browser.
-
 ## Strict scope
 - **Writes**: `fragments/06-print.css`
-- **Reads**: fragments `02–05` (to identify selectors), `CLAUDE.md`
-- **Does not touch**: any other fragment
+- **Reads**: selectors from fragments 02–05 (via Grep, not full Read)
 
 ## Output contract
 
-`fragments/06-print.css` — plain CSS only. No `<style>` tags. Everything inside `@media print { ... }`.
+Plain CSS only. No `<style>` tags. Everything inside `@media print { ... }`.
 
 ## Specifications
 
-### Elements to hide
 ```css
 @media print {
+  /* Hide interactive UI */
   .site-header, .kpi-bar, .theme-toggle, .download-btn,
   .hamburger, .drilldown-panel, .timeline-controls,
   .skill-filter, nav { display: none !important; }
-}
-```
 
-### Print layout
-- `body`: white background, black text
-- Single column, no complex grids/flex
-- `max-width: 100%`, no overflow
-- Fonts with fallback: Satoshi/JetBrains Mono → `sans-serif`/`monospace`
+  /* Layout */
+  body { background: white; color: black; max-width: 100%; }
 
-### Timeline in print
-- Hide the D3.js SVG
-- Show a printable alternative list (`.timeline-print-list`) — if it does not exist, generate an instruction for TimelineAgent to include it
+  /* Hide D3 SVG; show printable list if timeline-agent included one */
+  .timeline-svg { display: none; }
+  .timeline-print-list { display: block; }
 
-### Skill dots in print
-- SVG circles visible
-- `-webkit-print-color-adjust: exact; print-color-adjust: exact`
+  /* SVG skill dots: preserve colour */
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 
-### Page breaks
-```css
-@media print {
+  /* Page breaks */
   section { page-break-inside: avoid; }
   #education { page-break-before: always; }
+
+  /* Force light mode variables */
+  :root, [data-theme="dark"] {
+    --color-bg: #ffffff; --color-surface: #f6f8fa;
+    --color-text: #1f2328; --color-text-muted: #656d76;
+    /* etc. — mirror 01-design-system.css light mode values */
+  }
 }
 ```
 
-### Force light mode in print
-- Override variables to light mode values even if `[data-theme="dark"]`
-
-### i18n in print
-The generated PDF reflects the **language active at the time of printing** (no language is forced). The AssemblerAgent calls `applyStaticLabels()` before any initialisation to ensure `data-i18n` elements are rendered before the browser opens the print dialog.
+The PDF reflects the **language active at the time of printing** — no language is forced.
 
 ## Instructions
 
-1. Use targeted `Grep` to extract the selectors you need — do NOT read the full fragment files (they are 50–200 KB each):
+1. Use targeted Grep to find class names — do NOT read full fragment files:
    ```bash
-   grep -o 'class="[^"]*"' fragments/02-layout.html | sort -u | head -40
-   grep -o 'class="[^"]*"' fragments/03-timeline.html | grep -i 'print\|timeline\|drill' | sort -u
-   grep -n 'timeline-print-list\|\.skills-section\|\.drilldown' fragments/03-timeline.html fragments/04-skills.html
+   grep -ohP 'class="[^"]*"' fragments/02-layout.html | sort -u | head -40
+   grep -n 'timeline-print-list\|\.drilldown\|\.skills-section' fragments/03-timeline.html fragments/04-skills.html
    ```
-   Focus on: nav selectors, KPI bar, drilldown panel, skill filter, timeline SVG, and any existing `.timeline-print-list`.
-2. Create `fragments/06-print.css` with all rules
+2. Create `fragments/06-print.css`
 3. Update `fragments/_state.json`: set step 6 to `in_progress`
-4. Notify the user that validation will happen after assembly (Cmd+P on `index.html`)
+4. Notify the user that print validation happens after assembly (Cmd+P on `index.html`)

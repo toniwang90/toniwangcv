@@ -6,81 +6,58 @@ tools: Read, Write, Edit
 
 # TimelineAgent — D3.js Timeline and DrillDown Panel
 
-You build the work experience section: interactive D3.js timeline + lateral drill-down panel.
-
 ## Strict scope
 - **Writes**: `fragments/03-timeline.html`
 - **Reads**: `fragments/00-cv-data.js`, `fragments/01-design-system.css`, `CLAUDE.md`
-- **Does not touch**: any other fragment
 
 ## i18n
-
-All text you render goes through `t()`:
-- `t(experience.role)` (may be `{es,en}` or plain string)
-- `t(experience.description)`, `t(experience.impact[i])`
-- `t(project.name)`, `t(project.description)`, `t(project.outcome)`
-- UI labels: `t(CV_DATA.ui.timeline.today)`, `t(CV_DATA.ui.sections.stack)`, etc.
-- Month format: `CV_DATA.ui.months[window.__cvLang][monthIndex]`
-
-**Re-render on language change**: your `<script>` must listen:
+All rendered text goes through `t()`. Re-render on language change:
 ```js
-window.addEventListener("cv:languagechange", () => {
-  // re-render timeline SVG, mobile list, open drilldown if any
-});
+window.addEventListener("cv:languagechange", () => { /* re-render SVG, list, open drilldown */ });
 ```
+Month format: `CV_DATA.ui.months[window.__cvLang][monthIndex]`
 
-## Timeline specifications
-
-### Desktop (≥ 768px) — SVG with D3.js
-- X axis = years from `experience[0].start` to today
-- Each company = an SVG rectangle spanning its date range
-- Distinct colours per company (from the design system palette)
-- Dotted vertical line at current date with "Today" label
-- **Hover**: tooltip with `company · role · duration`. When `exp.client` is set, the company line reads `"Company › Client"` (consulting roles, e.g. `Capgemini › Tempe`)
-- **Click**: opens DrillDown Panel + updates hash URL (`#exp-001`)
+## Timeline — Desktop (≥ 768px) — D3.js SVG
+- X axis = years from earliest `experience[].start` to today
+- Each entry = SVG rect spanning its date range, distinct colour per company (from design system palette)
+- Dotted vertical line at today with `t(CV_DATA.ui.timeline.today)` label
+- **Hover**: tooltip `company · role · duration`. When `exp.client` set: `"Company › Client"`
+- **Click**: opens DrillDown + sets hash URL (`#exp-001`)
 
 ### Multi-role grouping
-Consecutive experience entries with the **same `company`** but different `client` and/or `role` (e.g. Capgemini split across Tempe + Gas Natural Fenosa) are visually grouped:
-- One company header above the first bar of the group
-- Each bar shows `role` on the first line and `client` on a second line (smaller, in `var(--color-primary)` at ~75% opacity, `var(--font-display)`)
-- Single-role entries keep the original layout: `company` (bold) + `role` (muted) stacked
+Consecutive entries with the same `company` (e.g. Capgemini split across two clients):
+- One company header above the group's first bar
+- Each bar: `role` line + `client` line (smaller, `var(--color-primary)` ~75% opacity, `var(--font-display)`)
 
 ### Left-margin labels
-- `MARGIN.left = 240px` (generous so company/role/client labels fit without truncation)
-- Truncation thresholds: company at 28 chars, role/client at 32 chars (with `…` suffix)
-- When a label is truncated, always append an SVG `<title>` child with the **full untruncated string** (native tooltip + screen-reader readable)
-- Labels are interactive: `cursor: pointer`, hover (rich custom tooltip + colour change), click (open drilldown). A 44px transparent hit-rect over the label group keeps it touch-friendly
+- `MARGIN.left = 240px`. Truncation: company at 28 chars, role/client at 32 chars, with `…` suffix
+- Truncated labels always have an SVG `<title>` child with the full string
+- Labels: `cursor: pointer`, 44px transparent hit-rect for touch. Hover/click behaviour matches bars
 
-### Mobile (< 768px) — Vertical list
-- Companies as vertical cards in reverse chronological order
-- Each card: company, role (`"role · client"` when the entry is multi-role and `exp.client` is set), dates, stack chips
-- Click on card: opens DrillDown Panel
+## Timeline — Mobile (< 768px) — vertical card list
+Reverse chronological. Each card: company · role (+ `· client` when set) · dates · stack chips. Click → DrillDown.
 
-### DrillDown Panel
-- Position: right lateral panel, 400px wide (mobile: full-width bottom sheet)
-- Animation: `transform: translateX(100%)` → `translateX(0)` in 300ms ease-out
-- **Header**: `company` (or `"company › client"` when `exp.client` is set) + role + formatted date range
-- **Stack**: chip per tech in `experience[n].stack`
-  - Simple Icons CDN for logos where they exist
-  - Fallback: generic badge
+## DrillDown Panel
+- Desktop: right lateral panel 400px wide · Mobile: full-width bottom sheet
+- Animation: `transform: translateX(100%)` → `translateX(0)`, 300ms ease-out
+- **Header**: company (or `"company › client"`) · role · formatted date range
+- **Stack**: chip per tech, Simple Icons CDN logo or fallback badge
 - **Impact**: bullet list from `experience[n].impact`
-- **Projects**: collapsible sub-cards (accordion) with name, description, stack, outcome
-- **Close**: X button (44px), click outside, Escape key
+- **Projects**: collapsible accordion (name · description · stack · outcome)
+- **Close**: X button (44px) · click outside · Escape key
 
 ### Hash routing
-- On drilldown open: `window.location.hash = '#exp-001'`
-- On page load with hash: open the corresponding drilldown
-- On close: clear hash with `history.replaceState`
+- Open: `window.location.hash = '#exp-001'`
+- On page load with hash: open matching drilldown
+- Close: `history.replaceState(null, '', location.pathname)`
 
 ## CSS
-
-Scoped to `.timeline-section`, `.drilldown-panel` and their children. No hardcoded hex — only `var(--color-*)`.
+Scoped to `.timeline-section`, `.drilldown-panel`. No hardcoded hex — only `var(--color-*)`.
 
 ## Instructions
-
 1. Read `fragments/00-cv-data.js` to get `experience[]`
 2. Create `fragments/03-timeline.html`
-3. Verify drilldown opens/closes and hash updates correctly
+3. Verify drilldown opens/closes and hash updates
 4. Verify no horizontal overflow at 375px in the vertical list
 5. Update `fragments/_state.json`: set step 3 to `in_progress`
 6. Notify that `design-guardian` must be invoked before validating

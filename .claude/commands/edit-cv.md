@@ -1,86 +1,50 @@
 # /edit-cv — CV Data Editor
 
-Invokes the `data-agent` directly to make targeted edits to `fragments/00-cv-data.js` without running the full build pipeline.
+Invokes the `data-agent` to make targeted edits to `fragments/00-cv-data.js` without running the full pipeline.
 
 ## Usage
-
-```
-/edit-cv <natural language description of the change>
-```
-
-### Examples
 
 ```
 /edit-cv cambia el título de exp-001 a "Senior Data Engineer"
 /edit-cv añade un nuevo skill: Apache Kafka, nivel 4, 2 años, categoría data_engineering
 /edit-cv actualiza el summary en inglés con: "..."
 /edit-cv el proyecto "Data Warehouse Migration" en exp-002 tuvo un outcome de reducir costes un 40%
-/edit-cv actualiza kpis: years_experience a 15, technologies a 35
 ```
 
 ## Behaviour
 
-1. Read `fragments/00-cv-data.js` — **always read first**, never overwrite without loading current state
-2. Parse the user's requested change from the command arguments
-3. Identify the exact field(s) to update in `CV_DATA`
-4. Apply the edit:
-   - Preserve **all** existing data — only change the requested fields
-   - Respect the i18n shape: if a field is `{ es, en }`, update both unless the user specifies one language
-   - Respect plain-string fields: names, dates, URLs, stack arrays, numbers stay as plain strings
-   - Never invent data — if the user's instruction is ambiguous, ask before writing
-5. **Recalculate KPIs** — after every edit, check if `profile.kpis` needs updating:
-   - `companies` = count of **unique** `experience[].company` values (consulting clients in `client` do NOT add)
-   - `projects` = `personal_projects.length` + sum of `experience[i].projects.length`
-   - `technologies` = count of **unique** skill names across all `skills.*` groups **excluding `soft_skills`**
-   - `years_experience` = current year − earliest `experience[].start` year; only update if start dates change
-   - If any KPI value changes, include it in the edit and report it
-6. Write the updated file
-7. Report exactly what changed (field path + old value → new value), including any KPI corrections
+1. Read `fragments/00-cv-data.js` — always read first
+2. Apply the change with `Edit` (not `Write`) — only change the requested fields
+3. Respect i18n shape: `{ es, en }` fields → update both unless user specifies one
+4. Recompute KPIs if the change affects experience / projects / skills:
+   - `years_experience` = current year − min(`experience[].start` year)
+   - `companies` = unique `experience[].company` values (`client` does NOT count)
+   - `projects` = `personal_projects.length` + Σ `experience[i].projects.length`
+   - `technologies` = unique skill names across all groups **excluding `soft_skills`**
+5. Report exactly what changed (field path + old → new), including any KPI corrections
 
-## Post-edit guidance
+## Post-edit — minimal rebuild
 
-After the edit, apply the **minimal rebuild** — never cascade unless a parent step truly changed.
+**Text/numbers changed only** (summary, impact, descriptions, contact, KPI values):
+→ `node scripts/assemble.mjs` — no agent re-run needed
 
-### Decision tree
+**Skills structure changed** (new category, skill added/removed):
+→ Re-run `skills-agent` → `node scripts/assemble.mjs`
 
-**Did only text/numbers change** (summary, impact bullets, project descriptions, outcome, KPI values, contact info, education text)?
-→ Just reassemble: `node scripts/assemble.mjs`
-→ No agent re-run needed. `00-cv-data.js` is the first `<script>` in the assembled file — updating it is enough.
+**Experience changed** (new job, stack, project):
+→ Re-run `timeline-agent` + `content-agent` → `node scripts/assemble.mjs`
 
-**Did skill structure change** (new category, renamed category, skill added/removed)?
-→ Re-run skills-agent to regenerate `fragments/04-skills.html`, then reassemble.
-→ Mark step 4 `validated` in `_state.json` before assembling.
+**Profile/KPIs changed** (name, title, KPI values):
+→ Re-run `layout-agent` → `node scripts/assemble.mjs`
 
-**Did experience entries change** (new job, stack change, new project)?
-→ Re-run timeline-agent (`fragments/03-timeline.html`) + content-agent (`fragments/05-content.html`), then reassemble.
-→ Mark steps 3 and 5 `validated` before assembling.
+**Design tokens changed** (`01-design-system.css`):
+→ Full rebuild — `/reset-step 1 cascade`
 
-**Did profile/KPIs change** (name, title, KPI bar numbers)?
-→ Re-run layout-agent (`fragments/02-layout.html`), then reassemble.
-→ Mark step 2 `validated` before assembling.
-
-**Did `ui` labels change** (nav, section headings, button text)?
-→ Re-run layout-agent only (it owns `applyStaticLabels`), then reassemble.
-
-**Did design tokens change** (`01-design-system.css`)?
-→ This is a full rebuild — `/reset-step 1 cascade` and re-run from step 1.
-
-### Minimal reassemble command
-```bash
-node scripts/assemble.mjs
-```
-
-### Quick agent re-run (without full pipeline)
-Invoke the relevant agent directly via the Agent tool with a targeted prompt, then `node scripts/assemble.mjs`. No need for `/reset-step` unless the fragment is structurally broken.
-
-### When NOT to use `/build`
-`/build` runs all agents from the current step forward — use it only when multiple fragments need regeneration or the pipeline state is unknown. For isolated CV data edits, the direct approach above is always faster.
+Before reassembling, set the affected steps to `validated` in `_state.json`. Use the Agent tool to invoke the relevant agent directly — no need for `/reset-step` unless the fragment is structurally broken.
 
 ## Rules
-
-- **Never** touch any file other than `fragments/00-cv-data.js`
-- **Never** remove existing fields unless explicitly asked
-- **Never** change `CV_DATA.meta` (languages, default_language) unless explicitly asked
-- **Preserve** the `t()` helper function at the end of the file — do not modify it
-- If `fragments/00-cv-data.js` does not exist, tell the user to run `/build` first to initialise the pipeline
-- Do **not** modify `fragments/_state.json` — this command is data-only and pipeline-state-agnostic
+- Never touch any file other than `fragments/00-cv-data.js`
+- Never remove existing fields unless explicitly asked
+- Preserve the `t()` helper — do not modify it
+- Do not modify `fragments/_state.json`
+- If `00-cv-data.js` doesn't exist, tell the user to run `/build` first
