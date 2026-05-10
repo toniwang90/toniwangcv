@@ -17,7 +17,7 @@ const CV_DATA = {
     contact: {
       linkedin: "https://www.linkedin.com/in/tonywangchen",
       email: "tony.wang@um.es",
-      github: "https://github.com/tonywang90",
+      github: "https://github.com/toniwang90",
       links: [
         /* Add extra links here: { icon: "globe"|"twitter"|"portfolio"|..., label: "...", url: "..." } */
       ]
@@ -26,7 +26,7 @@ const CV_DATA = {
       years_experience: 14,
       companies: 7,
       projects: 8,
-      technologies: 31
+      technologies: 36
     }
   },
   experience: [
@@ -59,51 +59,51 @@ const CV_DATA = {
           en: "Collection and prioritisation of stakeholder requirements to build data-driven products"
         }
       ],
-      stack: ["Snowflake", "Python", "Airflow", "dbt", "AWS", "Metabase", "Pandas", "Spark", "Fivetran"],
+      stack: ["Snowflake", "BigQuery", "Python", "Airflow", "dbt", "AWS", "Metabase", "Fivetran", "funnel.io", "Kubernetes", "Docker", "Datadog", "Claude Code", "Cursor", "CDC"],
       projects: [
         {
           name: {
-            es: "Evolución de la plataforma de datos corporativa",
-            en: "Evolution of the corporate data platform"
+            es: "Partner Reporting: dashboards, reportes y APIs de datos",
+            en: "Partner Reporting: dashboards, reports and data APIs"
           },
           description: {
-            es: "Liderazgo de la evolución continua del data warehouse y la plataforma de datos de Fever, sirviendo a Marketing, Finanzas y Operaciones como única fuente de verdad.",
-            en: "Leadership of the continuous evolution of Fever's data warehouse and data platform, serving Marketing, Finance and Operations as the single source of truth."
+            es: "Diseño y entrega de dashboards, reportes automatizados y APIs para que los partners de Fever accedan y exploten su propio dato directamente.",
+            en: "Design and delivery of dashboards, automated reports and APIs so that Fever's partners can access and exploit their own data directly."
           },
-          stack: ["Snowflake", "Python", "Airflow", "dbt", "AWS"],
+          stack: ["Snowflake", "BigQuery", "dbt", "Python", "Metabase"],
           outcome: {
-            es: "Plataforma consolidada como única fuente de verdad para los departamentos clave de la compañía",
-            en: "Platform consolidated as the single source of truth for the company's key departments"
+            es: "Servicio de datos self-service para partners de Fever a escala",
+            en: "Self-service data service for Fever's partners at scale"
           }
         },
         {
           name: {
-            es: "Modernización del stack de datos",
-            en: "Data stack modernisation"
+            es: "Plataforma de IA para datos: capa semántica y bases de conocimiento",
+            en: "AI-powered data platform: semantic layer and knowledge bases"
           },
           description: {
-            es: "Modernización progresiva del stack: introducción de nuevas tecnologías de orquestación, transformación y calidad de datos para escalar el equipo y los casos de uso.",
-            en: "Progressive stack modernisation: introduction of new orchestration, transformation and data quality technologies to scale the team and use cases."
+            es: "Aplicación de IA generativa para construir una capa semántica sobre el data warehouse, bases de conocimiento internas y aplicaciones data-driven con programación agéntica.",
+            en: "Application of generative AI to build a semantic layer over the data warehouse, internal knowledge bases and data-driven applications using agentic programming."
           },
-          stack: ["dbt", "Airflow", "Fivetran", "Snowflake"],
+          stack: ["Python", "Claude Code", "Cursor", "Snowflake", "dbt"],
           outcome: {
-            es: "Stack actualizado para soportar el crecimiento del equipo y la complejidad creciente de los casos de uso",
-            en: "Updated stack to support team growth and the increasing complexity of use cases"
+            es: "Incremento de productividad del equipo y nuevos productos de datos impulsados por IA",
+            en: "Team productivity increase and new AI-driven data products"
           }
         },
         {
           name: {
-            es: "Productos de datos para stakeholders",
-            en: "Data products for stakeholders"
+            es: "Optimización de costes: integraciones in-house y Snowflake",
+            en: "Cost optimisation: in-house integrations and Snowflake"
           },
           description: {
-            es: "Construcción de productos data-driven para Marketing, Finanzas y Operaciones: dashboards estratégicos, modelos de attribution y métricas de negocio en producción.",
-            en: "Building data-driven products for Marketing, Finance and Operations: strategic dashboards, attribution models and production-grade business metrics."
+            es: "Migración de integraciones de terceros a desarrollos propios y optimización del cómputo en Snowflake asistida por IA para reducir costes operativos.",
+            en: "Migration from third-party integrations to in-house builds and AI-assisted Snowflake compute optimisation to reduce operational costs."
           },
-          stack: ["Snowflake", "Metabase", "Python"],
+          stack: ["Snowflake", "Python", "Airflow", "Datadog"],
           outcome: {
-            es: "Reporting estratégico productivo que sirve como base de decisión a Partner Reporting y Finanzas",
-            en: "Production strategic reporting that serves as the decision basis for Partner Reporting and Finance"
+            es: "Reducción de costes operativos y mayor control sobre las integraciones de datos",
+            en: "Reduction of operational costs and greater control over data integrations"
           }
         }
       ]
@@ -137,36 +137,51 @@ const CV_DATA = {
           en: "Integration of key sources: Google Analytics, Facebook, Mixpanel, Adwords, funnel.io"
         }
       ],
-      stack: ["Snowflake", "Python", "Pandas", "Spark", "Airflow", "Fivetran", "Metabase", "Microstrategy", "PostgreSQL", "AWS", "JQL", "funnel.io"],
+      stack: ["Snowflake", "AWS Aurora", "Python", "Pandas", "Spark", "Airflow", "dbt", "Fivetran", "funnel.io", "Metabase", "Microstrategy", "PostgreSQL", "AWS", "CDC"],
       projects: [
         {
           name: {
-            es: "Data Warehouse corporativo en Snowflake",
-            en: "Corporate Data Warehouse on Snowflake"
+            es: "Construcción del Data Warehouse desde cero: Aurora → Snowflake",
+            en: "Data Warehouse built from scratch: Aurora → Snowflake"
           },
           description: {
-            es: "Diseño, construcción y mantenimiento del data warehouse central de la compañía sobre Snowflake, sirviendo a Marketing, Producto y Finanzas.",
-            en: "Design, build and maintenance of the company's central data warehouse on Snowflake, serving Marketing, Product and Finance."
+            es: "Diseño e implementación de un data warehouse corporativo sobre AWS Aurora, con posterior migración completa a Snowflake. Arquitectura medallion (bronze/silver/gold) para ingesta, transformación y servicio del dato. 50+ fuentes integradas: marketing (Google Analytics, Facebook, Mixpanel, Adwords), pagos (Stripe, Adyen, Braintree, Square), producto (JIRA, YouTube) y más.",
+            en: "Design and implementation of a corporate data warehouse on AWS Aurora, with full subsequent migration to Snowflake. Medallion architecture (bronze/silver/gold) for ingestion, transformation and data serving. 50+ integrated sources: marketing (Google Analytics, Facebook, Mixpanel, Adwords), payments (Stripe, Adyen, Braintree, Square), product (JIRA, YouTube) and more."
           },
-          stack: ["Snowflake", "Python", "Airflow", "Fivetran"],
+          stack: ["Snowflake", "AWS Aurora", "Python", "Airflow", "Fivetran", "funnel.io", "dbt"],
           outcome: {
-            es: "+1.000 tablas productivas; soporte al crecimiento del departamento de 2 a 30+ ingenieros de datos",
-            en: "1,000+ production tables; support for the department's growth from 2 to 30+ data engineers"
+            es: "+1.000 tablas productivas; equipo de datos de 2 a 30+ personas",
+            en: "1,000+ production tables; data team grew from 2 to 30+ people"
           }
         },
         {
           name: {
-            es: "Integración multi-fuente de marketing",
-            en: "Multi-source marketing integration"
+            es: "Modelos de atribución y funnel de compras",
+            en: "Attribution models and purchase funnel"
           },
           description: {
-            es: "Ingesta y normalización de datos de plataformas (Google Analytics, Facebook, Mixpanel, Adwords) para análisis unificado de adquisición y conversión.",
-            en: "Ingestion and normalisation of platform data (Google Analytics, Facebook, Mixpanel, Adwords) for unified acquisition and conversion analysis."
+            es: "Construcción de modelos de atribución de compras y análisis del funnel de conversión end-to-end, unificando fuentes de marketing, producto y pagos para entender el recorrido del usuario.",
+            en: "Building purchase attribution models and end-to-end conversion funnel analysis, unifying marketing, product and payment sources to understand the user journey."
           },
-          stack: ["funnel.io", "Fivetran", "Python", "Airflow"],
+          stack: ["Snowflake", "Python", "dbt", "Metabase"],
           outcome: {
-            es: "+50 fuentes integradas en el data warehouse para análisis cross-canal",
-            en: "50+ sources integrated into the data warehouse for cross-channel analysis"
+            es: "Visibilidad completa del funnel de compra para Marketing y Producto",
+            en: "Full purchase funnel visibility for Marketing and Product"
+          }
+        },
+        {
+          name: {
+            es: "Optimización de marketing y cuadre financiero",
+            en: "Marketing optimisation and financial reconciliation"
+          },
+          description: {
+            es: "Modelos de datos para optimización del gasto en marketing y cuadre financiero automatizado, integrando pasarelas de pago (Stripe, Adyen, Braintree, Square) con el data warehouse.",
+            en: "Data models for marketing spend optimisation and automated financial reconciliation, integrating payment gateways (Stripe, Adyen, Braintree, Square) with the data warehouse."
+          },
+          stack: ["Snowflake", "Python", "dbt", "Airflow", "Fivetran"],
+          outcome: {
+            es: "Automatización del cuadre financiero y reporting de marketing unificado",
+            en: "Automated financial reconciliation and unified marketing reporting"
           }
         }
       ]
@@ -184,29 +199,33 @@ const CV_DATA = {
       },
       impact: [
         {
-          es: "Diseño e implementación de un stack Big Data sobre Cloudera (HDFS, Spark, Hive, Sqoop, Flume)",
-          en: "Design and implementation of a Big Data stack on Cloudera (HDFS, Spark, Hive, Sqoop, Flume)"
+          es: "Construcción desde cero de la primera plataforma de datos de la empresa sobre Cloudera (HDFS, Spark, Hive, Sqoop, Flume)",
+          en: "Built the company's first data platform from scratch on Cloudera (HDFS, Spark, Hive, Sqoop, Flume)"
         },
         {
-          es: "Integración API de fuentes externas: Google Analytics, Facebook, Shopify",
-          en: "API integration of external sources: Google Analytics, Facebook, Shopify"
+          es: "Integración API de fuentes externas: Google Analytics, Facebook Ads, Google Adwords, Shopify",
+          en: "API integration of external sources: Google Analytics, Facebook Ads, Google Adwords, Shopify"
+        },
+        {
+          es: "Habilitación de métricas de negocio clave (ROAS, CAC) cruzando datos de múltiples plataformas por primera vez",
+          en: "Enabled key business metrics (ROAS, CAC) by cross-referencing data from multiple platforms for the first time"
         }
       ],
-      stack: ["Apache Hadoop", "HDFS", "Spark", "Hive", "Sqoop", "Flume", "Cloudera", "PostgreSQL", "Scala", "Shell", "Pentaho", "Microstrategy"],
+      stack: ["Apache Hadoop", "HDFS", "Spark", "Hive", "Sqoop", "Flume", "Cloudera", "Scala", "Shell", "PostgreSQL", "Pentaho", "Microstrategy"],
       projects: [
         {
           name: {
-            es: "Plataforma BI Big Data e-commerce",
-            en: "Big Data BI platform for e-commerce"
+            es: "Primera plataforma de datos de Hawkers: BI e-commerce desde cero",
+            en: "Hawkers' first data platform: e-commerce BI from scratch"
           },
           description: {
-            es: "Construcción de un sistema de BI sobre stack Cloudera para alimentar reporting de e-commerce.",
-            en: "Building a BI system on a Cloudera stack to feed e-commerce reporting."
+            es: "Diseño y construcción íntegra del primer sistema de datos de Hawkers sobre stack Cloudera, programado en Scala. Integración de Google Analytics, Facebook Ads, Adwords y Shopify para alimentar reporting interno de management: forecasting, análisis de ventas, atribución y métricas de marketing (ROAS, CAC).",
+            en: "Full design and build of Hawkers' first data system on a Cloudera stack, programmed in Scala. Integration of Google Analytics, Facebook Ads, Adwords and Shopify to feed management's internal reporting: forecasting, sales analysis, attribution and marketing metrics (ROAS, CAC)."
           },
-          stack: ["Hadoop", "Spark", "Hive", "Microstrategy"],
+          stack: ["Cloudera", "Spark", "Hive", "Scala", "Microstrategy"],
           outcome: {
-            es: "Visión unificada de las distintas fuentes de venta online en un único data warehouse",
-            en: "Unified view of the different online sales sources in a single data warehouse"
+            es: "Primera fuente de verdad única para management, permitiendo decisiones basadas en dato cross-canal",
+            en: "Company's first single source of truth for management, enabling cross-channel data-driven decisions"
           }
         }
       ]
@@ -228,16 +247,36 @@ const CV_DATA = {
       },
       impact: [
         {
-          es: "Resolución de incidencias y mantenimiento del reporting corporativo",
-          en: "Incident resolution and maintenance of corporate reporting"
+          es: "Análisis de correlaciones entre productos para generar recomendaciones de compra cruzada en la web",
+          en: "Analysis of product purchase correlations to generate cross-sell recommendations on the website"
         },
         {
-          es: "Desarrollo de nuevos informes y modelos analíticos",
-          en: "Development of new reports and analytical models"
+          es: "Creación de cubos OLAP y reporting de ventas para el área comercial",
+          en: "Creation of OLAP cubes and sales reporting for the commercial area"
+        },
+        {
+          es: "Mantenimiento y evolución del reporting corporativo de Tempe (Grupo Inditex)",
+          en: "Maintenance and evolution of Tempe's (Grupo Inditex) corporate reporting"
         }
       ],
-      stack: ["Microsoft SQL Server", "RStudio", "Microsoft Analysis Services", "Microsoft Reporting Services"],
-      projects: []
+      stack: ["Microsoft SQL Server", "Microsoft Analysis Services", "Microsoft Reporting Services", "RStudio", "Excel"],
+      projects: [
+        {
+          name: {
+            es: "Análisis de correlaciones de compra para recomendaciones de producto",
+            en: "Purchase correlation analysis for product recommendations"
+          },
+          description: {
+            es: "Análisis estadístico de patrones de compra para detectar correlaciones entre prendas y generar recomendaciones de venta cruzada en la web de Tempe.",
+            en: "Statistical analysis of purchase patterns to detect correlations between garments and generate cross-sell recommendations on the Tempe website."
+          },
+          stack: ["RStudio", "Microsoft SQL Server"],
+          outcome: {
+            es: "Identificación de patrones de compra cruzada para su aplicación en la web de e-commerce",
+            en: "Cross-purchase pattern identification for application on the e-commerce website"
+          }
+        }
+      ]
     },
     {
       id: "exp-005",
@@ -253,33 +292,29 @@ const CV_DATA = {
       },
       impact: [
         {
-          es: "Soporte y desarrollo de datamarts para Gas Natural Fenosa",
-          en: "Support and development of datamarts for Gas Natural Fenosa"
+          es: "Desarrollo end-to-end de un datamart nuevo desde cero: extracción, transformación con el sistema ETL in-house y modelado completo en Microstrategy",
+          en: "End-to-end development of a new datamart from scratch: extraction, transformation with the in-house ETL system and full modelling in Microstrategy"
         },
         {
-          es: "Resolución de incidencias y mantenimiento evolutivo",
-          en: "Incident resolution and evolutionary maintenance"
-        },
-        {
-          es: "Desarrollo de proyectos ETL end-to-end hasta capa de reporting",
-          en: "End-to-end ETL project development through to the reporting layer"
+          es: "Mantenimiento evolutivo y resolución de incidencias en los datamarts existentes del cliente",
+          en: "Evolutionary maintenance and incident resolution on the client's existing datamarts"
         }
       ],
-      stack: ["PL/SQL", "Microstrategy", "Oracle SQL Developer"],
+      stack: ["Oracle Database", "PL/SQL", "Oracle SQL Developer", "Microstrategy", "Excel"],
       projects: [
         {
           name: {
-            es: "Mantenimiento y evolución de datamarts — Gas Natural Fenosa",
-            en: "Datamart maintenance and evolution — Gas Natural Fenosa"
+            es: "Nuevo datamart end-to-end — Gas Natural Fenosa",
+            en: "New end-to-end datamart — Gas Natural Fenosa"
           },
           description: {
-            es: "Diseño técnico y funcional de nuevos datamarts y desarrollo de proyectos ETL completos hasta reporting en Microstrategy.",
-            en: "Technical and functional design of new datamarts and development of complete ETL projects through to Microstrategy reporting."
+            es: "Diseño y construcción completa de un datamart inexistente: extracción del dato de origen, transformaciones SQL mediante el sistema ETL in-house de Capgemini, modelado dimensional en Oracle y capa de reporting íntegra en Microstrategy.",
+            en: "Full design and build of a previously non-existent datamart: source data extraction, SQL transformations via Capgemini's in-house ETL system, dimensional modelling in Oracle and full reporting layer in Microstrategy."
           },
-          stack: ["PL/SQL", "Oracle SQL Developer", "Microstrategy"],
+          stack: ["Oracle Database", "PL/SQL", "Microstrategy"],
           outcome: {
-            es: "Continuidad operativa de los datamarts del cliente y entrega de nuevos desarrollos end-to-end",
-            en: "Operational continuity of the client's datamarts and delivery of new end-to-end developments"
+            es: "Datamart nuevo en producción, entregado end-to-end desde la ingesta hasta el reporting",
+            en: "New datamart in production, delivered end-to-end from ingestion to reporting"
           }
         }
       ]
@@ -297,12 +332,32 @@ const CV_DATA = {
       },
       impact: [
         {
-          es: "Aplicación de técnicas de minería de datos para extracción de conocimiento de grandes volúmenes",
-          en: "Application of data mining techniques to extract knowledge from large volumes"
+          es: "Análisis del comportamiento de usuarios en web: rutas de navegación, clicks y mapas de calor para optimización del funnel de ventas",
+          en: "Web user behaviour analysis: navigation paths, clicks and heatmaps for sales funnel optimisation"
+        },
+        {
+          es: "Desarrollo de un algoritmo propio de análisis de correlaciones y caminos de usuario, antes de que existieran herramientas comerciales para ello",
+          en: "Development of a custom user path and correlation algorithm, before commercial tools existed for this purpose"
         }
       ],
-      stack: ["RStudio", "Weka", "Microsoft SQL Management Studio", "Kettle"],
-      projects: []
+      stack: ["RStudio", "Weka", "Microsoft SQL Server", "Kettle"],
+      projects: [
+        {
+          name: {
+            es: "Algoritmo de análisis de funnel y rutas de usuario",
+            en: "User funnel and path analysis algorithm"
+          },
+          description: {
+            es: "Construcción de un algoritmo propio para detectar correlaciones y rutas habituales de navegación en e-commerce, con visualización de mapas de calor. La extracción se realizaba con Kettle, el modelado con R y Weka.",
+            en: "Building a custom algorithm to detect correlations and common navigation paths in e-commerce, with heatmap visualisation. Data extraction via Kettle, modelling with R and Weka."
+          },
+          stack: ["RStudio", "Weka", "Kettle", "Microsoft SQL Server"],
+          outcome: {
+            es: "Identificación de rutas de conversión y puntos de abandono del funnel para el equipo de marketing",
+            en: "Identification of conversion paths and funnel drop-off points for the marketing team"
+          }
+        }
+      ]
     },
     {
       id: "exp-007",
@@ -320,12 +375,43 @@ const CV_DATA = {
       },
       impact: [
         {
-          es: "Entrega de proyectos a medida combinando frontend, backend y automatización",
-          en: "Delivery of bespoke projects combining frontend, backend and automation"
+          es: "Entrega de webs corporativas y software a medida para clientes locales",
+          en: "Delivery of corporate websites and bespoke software for local clients"
         }
       ],
-      stack: ["Java", "JavaScript", "PHP", "HTML", "CSS"],
-      projects: []
+      stack: ["Java", "Joomla", "PHP", "JavaScript", "HTML", "CSS"],
+      projects: [
+        {
+          name: {
+            es: "Software de registro de paquetes entre tiendas",
+            en: "Inter-store package tracking software"
+          },
+          description: {
+            es: "Aplicación de escritorio en Java para un negocio local: permitía escanear paquetes en una tienda y confirmar la recepción en otra, manteniendo concordancia del inventario en tránsito entre locales.",
+            en: "Java desktop application for a local business: allowed scanning packages at one store and confirming receipt at another, keeping track of inventory in transit between locations."
+          },
+          stack: ["Java"],
+          outcome: {
+            es: "Eliminación del seguimiento manual de paquetes entre tiendas del cliente",
+            en: "Elimination of manual package tracking between the client's stores"
+          }
+        },
+        {
+          name: {
+            es: "Webs corporativas: AMPA IES Juan Carlos I y Congreso SESBE 2015",
+            en: "Corporate websites: AMPA IES Juan Carlos I and SESBE 2015 Congress"
+          },
+          description: {
+            es: "Desarrollo de la web del AMPA del IES Juan Carlos I de Murcia y del sitio web oficial del Congreso SESBE 2015, ambas sobre Joomla.",
+            en: "Development of the AMPA website for IES Juan Carlos I (Murcia) and the official website for the SESBE 2015 Congress, both on Joomla."
+          },
+          stack: ["Joomla", "PHP", "HTML", "CSS", "JavaScript"],
+          outcome: {
+            es: "Presencia web operativa para ambas organizaciones",
+            en: "Operational web presence for both organisations"
+          }
+        }
+      ]
     },
     {
       id: "exp-008",
@@ -343,12 +429,47 @@ const CV_DATA = {
       },
       impact: [
         {
-          es: "Diseño y desarrollo de la aplicación STEL Corner",
-          en: "Design and development of the STEL Corner application"
+          es: "Colaboración en el desarrollo de STEL Corner, gestor de inventario para PYMES",
+          en: "Contributed to the development of STEL Corner, an inventory management tool for SMEs"
+        },
+        {
+          es: "Desarrollo autónomo de webs corporativas para clientes locales (Dulceplus, Dominios del Aire, Pimentón El Águila)",
+          en: "Autonomous development of corporate websites for local clients (Dulceplus, Dominios del Aire, Pimentón El Águila)"
         }
       ],
       stack: ["HTML", "PHP", "CSS", "JavaScript", "Joomla", "Prestashop"],
-      projects: []
+      projects: [
+        {
+          name: {
+            es: "STEL Corner — gestor de inventario para PYMES",
+            en: "STEL Corner — SME inventory manager"
+          },
+          description: {
+            es: "Colaboración en el desarrollo de STEL Corner, una aplicación web de gestión de inventario orientada a pequeñas y medianas empresas.",
+            en: "Contributed to the development of STEL Corner, a web-based inventory management application aimed at small and medium-sized businesses."
+          },
+          stack: ["PHP", "JavaScript", "HTML", "CSS"],
+          outcome: {
+            es: "Producto de gestión de inventario web en producción para PYMES",
+            en: "Web-based inventory management product in production for SMEs"
+          }
+        },
+        {
+          name: {
+            es: "Webs corporativas para clientes locales",
+            en: "Corporate websites for local clients"
+          },
+          description: {
+            es: "Desarrollo independiente de webs sencillas sobre Joomla para clientes locales: Dulceplus, Dominios del Aire y Pimentón El Águila.",
+            en: "Independent development of simple Joomla-based websites for local clients: Dulceplus, Dominios del Aire and Pimentón El Águila."
+          },
+          stack: ["Joomla", "PHP", "HTML", "CSS"],
+          outcome: {
+            es: "Presencia web operativa para tres negocios locales",
+            en: "Operational web presence for three local businesses"
+          }
+        }
+      ]
     },
     {
       id: "exp-009",
@@ -366,15 +487,15 @@ const CV_DATA = {
       },
       impact: [
         {
-          es: "Desarrollo de macros en VBA",
-          en: "Development of VBA macros"
+          es: "Desarrollo de macros VBA sobre Excel para automatizar reporting interno de la empresa",
+          en: "Development of VBA macros on Excel to automate the company's internal reporting"
         },
         {
-          es: "Generación de plantillas con JasperReport",
-          en: "Generation of templates with JasperReport"
+          es: "Generación de plantillas de informes con JasperReport",
+          en: "Generation of report templates with JasperReport"
         }
       ],
-      stack: ["VBA", "C#", "Java", "JasperReport"],
+      stack: ["VBA", "Excel", "JasperReport", "PL/SQL", "Java", "C#"],
       projects: []
     }
   ],
@@ -415,45 +536,65 @@ const CV_DATA = {
   ],
   skills: {
     data_engineering: [
-      { name: "Apache Spark", level: 5, years: 9, category: "data_engineering" },
-      { name: "Apache Airflow", level: 5, years: 6, category: "data_engineering" },
-      { name: "Pandas", level: 5, years: 7, category: "data_engineering" },
-      { name: "Apache Hadoop (HDFS/Hive/Sqoop)", level: 4, years: 2, category: "data_engineering" },
-      { name: "Fivetran", level: 4, years: 5, category: "data_engineering" },
-      { name: "Cloudera", level: 3, years: 2, category: "data_engineering" },
-      { name: "Pentaho Data Integration", level: 3, years: 2, category: "data_engineering" }
+      { name: "funnel.io",                 level: 5, years: 5, category: "data_engineering" },
+      { name: "Apache Airflow",            level: 4, years: 6, category: "data_engineering" },
+      { name: "dbt",                       level: 4, years: 4, category: "data_engineering" },
+      { name: "Fivetran",                  level: 4, years: 5, category: "data_engineering" },
+      { name: "CDC (Change Data Capture)", level: 4, years: 4, category: "data_engineering" },
+      { name: "Pandas",                    level: 3, years: 7, category: "data_engineering" },
+      { name: "Apache Spark",              level: 2, years: 4, category: "data_engineering" },
+      { name: "Apache Hadoop (HDFS/Hive)", level: 2, years: 2, category: "data_engineering" },
+      { name: "Cloudera",                  level: 2, years: 2, category: "data_engineering" }
     ],
-    visualization: [
-      { name: "Microstrategy", level: 5, years: 9, category: "visualization" },
-      { name: "Metabase", level: 5, years: 7, category: "visualization" },
-      { name: "Pentaho", level: 3, years: 2, category: "visualization" },
-      { name: "MS Reporting Services", level: 3, years: 1, category: "visualization" },
-      { name: "MS Analysis Services", level: 3, years: 1, category: "visualization" }
-    ],
-    cloud: [
-      { name: "Snowflake", level: 5, years: 7, category: "cloud" },
-      { name: "AWS", level: 4, years: 7, category: "cloud" }
+    sql_databases: [
+      { name: "Snowflake",            level: 5, years: 7, category: "sql_databases" },
+      { name: "PostgreSQL",           level: 5, years: 9, category: "sql_databases" },
+      { name: "PL/SQL",               level: 4, years: 7, category: "sql_databases" },
+      { name: "BigQuery",             level: 3, years: 1, category: "sql_databases" },
+      { name: "Oracle SQL Developer", level: 3, years: 3, category: "sql_databases" },
+      { name: "Microsoft SQL Server", level: 3, years: 1, category: "sql_databases" }
     ],
     languages: [
-      { name: "SQL", level: 5, years: 13, category: "languages" },
-      { name: "PL/SQL", level: 4, years: 7, category: "languages" },
-      { name: "Python", level: 5, years: 7, category: "languages" },
+      { name: "Python",     level: 4, years: 7, category: "languages" },
       { name: "Bash/Shell", level: 4, years: 9, category: "languages" },
-      { name: "Java", level: 3, years: 4, category: "languages" },
-      { name: "Scala", level: 3, years: 2, category: "languages" },
-      { name: "JQL", level: 4, years: 5, category: "languages" },
-      { name: "R", level: 3, years: 1, category: "languages" },
-      { name: "JavaScript", level: 2, years: 2, category: "languages" }
+      { name: "Scala",      level: 3, years: 2, category: "languages" },
+      { name: "R",          level: 3, years: 1, category: "languages" },
+      { name: "Java",       level: 2, years: 4, category: "languages" }
     ],
-    tools: [
-      { name: "PostgreSQL", level: 5, years: 9, category: "tools" },
-      { name: "Oracle SQL Developer", level: 4, years: 3, category: "tools" },
-      { name: "Microsoft SQL Server", level: 3, years: 1, category: "tools" },
-      { name: "Git/GitHub", level: 5, years: 11, category: "tools" },
-      { name: "funnel.io", level: 4, years: 5, category: "tools" },
-      { name: "RStudio", level: 3, years: 1, category: "tools" },
-      { name: "Weka", level: 2, years: 1, category: "tools" },
-      { name: "JIRA", level: 4, years: 7, category: "tools" }
+    visualization: [
+      { name: "Metabase",      level: 4, years: 7, category: "visualization" },
+      { name: "Microstrategy", level: 3, years: 4, category: "visualization" }
+    ],
+    devops: [
+      { name: "Atlassian (JIRA/Confluence)", level: 5, years: 7,  category: "devops" },
+      { name: "Excel",                       level: 5, years: 9,  category: "devops" },
+      { name: "PyCharm",                     level: 4, years: 5,  category: "devops" },
+      { name: "Git/GitHub",                  level: 3, years: 11, category: "devops" },
+      { name: "AWS",                         level: 3, years: 7,  category: "devops" },
+      { name: "Docker",                      level: 3, years: 2,  category: "devops" },
+      { name: "CI/CD",                       level: 3, years: 3,  category: "devops" },
+      { name: "Jenkins",                     level: 3, years: 2,  category: "devops" },
+      { name: "Datadog",                     level: 3, years: 2,  category: "devops" },
+      { name: "RStudio",                     level: 3, years: 1,  category: "devops" },
+      { name: "Kubernetes",                  level: 2, years: 1,  category: "devops" }
+    ],
+    ai_agentic: [
+      { name: "Claude Code",         level: 4, years: 1, category: "ai_agentic" },
+      { name: "Cursor",              level: 4, years: 1, category: "ai_agentic" },
+      { name: "Agentic Programming", level: 3, years: 1, category: "ai_agentic" }
+    ],
+    soft_skills: [
+      { name: { es: "Proactividad",            en: "Proactivity" },         level: 5, category: "soft_skills" },
+      { name: { es: "Organización",            en: "Organisation" },        level: 5, category: "soft_skills" },
+      { name: { es: "Trabajo en equipo",       en: "Teamwork" },            level: 5, category: "soft_skills" },
+      { name: { es: "Asertividad",             en: "Assertiveness" },       level: 5, category: "soft_skills" },
+      { name: { es: "Liderazgo",               en: "Leadership" },          level: 4, category: "soft_skills" },
+      { name: { es: "Comunicación",            en: "Communication" },       level: 4, category: "soft_skills" },
+      { name: { es: "Resolución de problemas", en: "Problem solving" },     level: 4, category: "soft_skills" },
+      { name: { es: "Metodologías Ágiles",     en: "Agile Methodologies" }, level: 4, category: "soft_skills" },
+      { name: { es: "Resiliencia",             en: "Resilience" },          level: 4, category: "soft_skills" },
+      { name: { es: "Gestión del estrés",      en: "Stress management" },   level: 4, category: "soft_skills" },
+      { name: { es: "Adaptabilidad",           en: "Adaptability" },        level: 3, category: "soft_skills" }
     ]
   },
   education: [
@@ -560,15 +701,21 @@ const CV_DATA = {
     },
     skills: {
       categories: {
-        data_engineering: { es: "Ingeniería de datos", en: "Data Engineering" },
-        visualization:    { es: "Visualización",       en: "Visualization" },
-        cloud:            { es: "Cloud",               en: "Cloud" },
-        languages:        { es: "Lenguajes",           en: "Languages" },
-        tools:            { es: "Herramientas",        en: "Tools" }
+        data_engineering: { es: "Ingeniería de datos",  en: "Data Engineering" },
+        sql_databases:    { es: "SQL & Bases de datos", en: "SQL & Databases" },
+        languages:        { es: "Lenguajes",            en: "Languages" },
+        visualization:    { es: "BI & Visualización",   en: "BI & Visualization" },
+        devops:           { es: "DevOps & Tools",       en: "DevOps & Tools" },
+        ai_agentic:       { es: "AI & Agéntica",        en: "AI & Agentic" },
+        soft_skills:      { es: "Soft skills",          en: "Soft skills" }
       },
       tooltip_format: {
         es: "{years} años · Nivel {level}/5",
         en: "{years} years · Level {level}/5"
+      },
+      tooltip_format_soft: {
+        es: "Nivel {level}/5",
+        en: "Level {level}/5"
       }
     },
     sections: {

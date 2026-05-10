@@ -106,11 +106,22 @@ const CV_DATA = {
   ],
 
   skills: {
-    data_engineering: [{ name, level: 1-5, years, category: "data_engineering" }],
-    visualization:    [{ name, level, years, category: "visualization" }],
-    cloud:            [{ name, level, years, category: "cloud" }],
-    languages:        [{ name, level, years, category: "languages" }],
-    tools:            [{ name, level, years, category: "tools" }]
+    // Groups are DYNAMIC — infer them from the user's CV profile.
+    // Create as many or as few groups as make sense for that person.
+    // The order of keys defines the tab order in the UI (Object.keys order).
+    // Each group key must also appear in CV_DATA.ui.skills.categories as { es, en }.
+    //
+    // Typical groups for a data engineer (adapt freely):
+    //   data_engineering, sql_databases, languages, visualization, devops, ai_agentic, soft_skills
+    // Typical groups for a frontend developer:
+    //   languages, frameworks, styling, tooling, soft_skills
+    //
+    // Soft skills (if present) must be last and use { es, en } for `name` (no `years` field).
+    // All other skills: name is a plain string, years is a number.
+    //
+    // Example:
+    group_name: [{ name: "SkillName", level: 1-5, years: N, category: "group_name" }],
+    soft_skills: [{ name: { es: "...", en: "..." }, level: 1-5, category: "soft_skills" }]
   },
 
   education: [
@@ -166,8 +177,13 @@ const CV_DATA = {
     },
     timeline: { today, present, duration_year, duration_years, duration_month, duration_months },
     skills: {
-      categories: { data_engineering, visualization, cloud, languages, tools },
-      tooltip_format: { es: "{years} años · Nivel {level}/5", en: "{years} years · Level {level}/5" }
+      // One entry per group key in skills{} above — must stay in sync.
+      categories: {
+        group_name: { es: "Nombre del grupo", en: "Group name" }
+        // ... one per group
+      },
+      tooltip_format:      { es: "{years} años · Nivel {level}/5", en: "{years} years · Level {level}/5" },
+      tooltip_format_soft: { es: "Nivel {level}/5",                en: "Level {level}/5" }  // for soft_skills (no years)
     },
     sections: { stack, impact, projects, certifications, languages, honors, contact },
     months:   { es: [12 names], en: [12 names] }
@@ -182,7 +198,7 @@ When updating `experience[]`, `personal_projects[]`, or `skills.*`, **always rec
 - `years_experience` = current year − earliest `experience[].start` year
 - `companies` = count of **unique** `experience[].company` values (consulting clients in `client` do NOT add)
 - `projects` = `personal_projects.length` + sum of `experience[i].projects.length`
-- `technologies` = count of unique skill names across `skills.data_engineering ∪ visualization ∪ cloud ∪ languages ∪ tools`
+- `technologies` = count of unique skill names across all `skills.*` groups **excluding `soft_skills`**
 
 The KPI bar reads these values at runtime (owned by `layout-agent`) so they must be accurate.
 
@@ -208,10 +224,69 @@ If `fragments/00-cv-data.js` **already exists**:
 4. Recompute `profile.kpis.*` if the change affects experience / projects / skills
 5. Update `fragments/_state.json`: set step 0 to `in_progress`
 
-If `fragments/00-cv-data.js` **does not exist**:
-1. Create it with the full structure above
-2. Use `[TODO]` placeholders only for fields the user must fill in (never invent data)
-3. Show the user the list of `[TODO]` fields still needing real values
-4. Update `fragments/_state.json`: set step 0 to `in_progress`
+If `fragments/00-cv-data.js` **does not exist** — run the interactive onboarding flow:
+
+### Phase 1 — Parse the CV document
+The user will provide their CV as a file, paste, or URL. Extract everything you can automatically:
+- Profile: name, title, location, contact details, summary
+- All experience entries: company, role, dates, description, stack, projects, impact
+- Education, certifications, honours, spoken languages
+
+Write a first complete version of `00-cv-data.js` from this extraction. Use `[TODO]` only for fields that are genuinely absent from the CV. Do not ask the user for anything yet.
+
+Then show a **structured summary** of what was extracted, grouped by section:
+```
+✓ Profile — Toni Wang, Lead Data Engineer, Madrid
+✓ Experience — 9 entries (Fever, Hawkers, Capgemini x2, ...)
+✓ Education — 2 entries
+✓ Skills — inferred X technologies from stack mentions
+⚠ Missing: GitHub URL, project details for exp-004, exp-006, exp-009
+```
+
+### Phase 2 — Experience enrichment (one job at a time, most recent first)
+For each experience, show the user what was extracted from the CV and ask only for what's missing or shallow. Frame each question as enrichment, not from scratch:
+
+> **Fever · Lead Data Engineer (2025 – present)**
+> Extracted: [current description + stack]
+> 
+> - ¿Qué proyectos concretos estás haciendo ahora?
+> - ¿Alguna tecnología que falte en el stack?
+> - ¿Algún resultado cuantificable?
+
+After each answer: update the entry immediately, then move to the next.
+For very thin entries (internships, short stints) it's fine to ask fewer questions.
+
+### Phase 3 — Skill inference & grouping
+Once all experiences are enriched:
+
+1. **Infer all skills** from the union of all `experience[].stack` arrays. Deduplicate.
+2. **Infer expertise level (1–5)** per skill:
+   - Recency: used in last 1–2 years → higher baseline
+   - Duration: total years across experiences
+   - Depth: built things with it vs. peripheral use
+   - Skills not used in 5+ years → cap at 3 by default
+3. **Propose skill groups** suited to this person's profile. Present a table with proposed levels:
+   ```
+   Group        | Skill          | Level | Note
+   -------------|----------------|-------|------
+   Data Eng.    | Apache Airflow | 4/5   | 6 yrs, current
+   ```
+4. Iterate: adjust groups, move skills, remove, adjust levels — until the user confirms.
+5. Ask: "¿Quieres añadir soft skills?" — if yes, collect name + level.
+
+### Phase 4 — Final write
+1. Write the complete agreed `skills{}` block (key order = tab order).
+2. Write `ui.skills.categories` labels (es + en) for each group.
+3. Recompute all `profile.kpis.*`.
+4. Show remaining `[TODO]` fields.
+5. Update `fragments/_state.json`: set step 0 to `in_progress`.
+
+### Rules
+- Parse first, ask later — never ask for data that's already in the CV.
+- Show what was extracted before asking each question — never make the user repeat themselves.
+- Save after each experience enrichment — don't batch writes to the end.
+- Never invent data; use `[TODO]` for anything genuinely missing.
+- Inferred skill levels are proposals — the user always has the final word.
+- Soft skills go last, use `{ es, en }` for `name`, no `years` field.
 
 In both cases the Orchestrator waits for explicit user confirmation before marking the step `validated`.

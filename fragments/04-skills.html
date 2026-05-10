@@ -1,6 +1,8 @@
 <!-- ============================================================
      04-skills.html — SkillsAgent
      Skill Matrix: Category tabs + compact SVG dots grid
+     7 categories: languages, sql_databases, data_engineering,
+                   visualization, devops, ai_agentic, soft_skills
      Fragmento parcial: sin <html>, <head>, <body>
      ============================================================ -->
 
@@ -86,25 +88,33 @@
   }
 
   /* Active indicator color per category */
-  .skills-tab[aria-selected="true"][data-cat="data_engineering"] {
+  .skills-tab[aria-selected="true"][data-cat="languages"] {
+    border-bottom-color: var(--color-success);
+    color: var(--color-success);
+  }
+  .skills-tab[aria-selected="true"][data-cat="sql_databases"] {
     border-bottom-color: var(--color-primary);
     color: var(--color-primary);
+  }
+  .skills-tab[aria-selected="true"][data-cat="data_engineering"] {
+    border-bottom-color: var(--color-orange);
+    color: var(--color-orange);
   }
   .skills-tab[aria-selected="true"][data-cat="visualization"] {
     border-bottom-color: var(--color-blue);
     color: var(--color-blue);
   }
-  .skills-tab[aria-selected="true"][data-cat="cloud"] {
-    border-bottom-color: var(--color-orange);
-    color: var(--color-orange);
-  }
-  .skills-tab[aria-selected="true"][data-cat="languages"] {
-    border-bottom-color: var(--color-success);
-    color: var(--color-success);
-  }
-  .skills-tab[aria-selected="true"][data-cat="tools"] {
+  .skills-tab[aria-selected="true"][data-cat="devops"] {
     border-bottom-color: var(--color-purple);
     color: var(--color-purple);
+  }
+  .skills-tab[aria-selected="true"][data-cat="ai_agentic"] {
+    border-bottom-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+  .skills-tab[aria-selected="true"][data-cat="soft_skills"] {
+    border-bottom-color: var(--color-text-muted);
+    color: var(--color-text-muted);
   }
 
   /* Skill count badge */
@@ -247,28 +257,24 @@
   /* -------------------------------------------------------
      CONSTANTS
      ------------------------------------------------------- */
-  var CATEGORY_ORDER = [
-    "data_engineering",
-    "visualization",
-    "cloud",
-    "languages",
-    "tools"
-  ];
+  var CATEGORY_ORDER = Object.keys(CV_DATA.skills);
 
   var CATEGORY_COLORS = {
-    data_engineering: "var(--color-primary)",
-    visualization:    "var(--color-blue)",
-    cloud:            "var(--color-orange)",
     languages:        "var(--color-success)",
-    tools:            "var(--color-purple)"
+    sql_databases:    "var(--color-primary)",
+    data_engineering: "var(--color-orange)",
+    visualization:    "var(--color-blue)",
+    devops:           "var(--color-purple)",
+    ai_agentic:       "var(--color-primary)",
+    soft_skills:      "var(--color-text-muted)"
   };
 
-  var DEFAULT_TAB = "data_engineering";
+  var DEFAULT_TAB = "languages";
 
   // Dot geometry — radius 4px, gap 3px → 5 dots = 5*8 + 4*3 = 52px wide, 8px tall
   var DOT_R     = 4;
   var DOT_GAP   = 3;
-  var DOT_DIAM  = DOT_R * 2;         // 8
+  var DOT_DIAM  = DOT_R * 2;          // 8
   var DOT_STEP  = DOT_DIAM + DOT_GAP; // 11
   var DOT_TOTAL = 5;
   var SVG_W     = DOT_TOTAL * DOT_STEP - DOT_GAP; // 52
@@ -279,17 +285,21 @@
   /* -------------------------------------------------------
      STATE — tracks which categories have been animated
      ------------------------------------------------------- */
-  var _animated = {}; // cat → true once animated
-  // Records per category: { cat, circles:[], level, color, animated }
-  var _dotRecords = {}; // cat → [ record, ... ]
+  var _animated    = {}; // cat → true once animated
+  var _dotRecords  = {}; // cat → [ { circles, level, color }, ... ]
+  var _skillMeta   = {}; // cat → [ { years, level, isSoft, nameEl, tooltipEl }, ... ]
 
-  var _activeTab = null;
+  var _activeTab     = null;
   var _observerFired = false;
 
   /* -------------------------------------------------------
      TOOLTIP TEXT
      ------------------------------------------------------- */
-  function _tooltipText(years, level) {
+  function _tooltipText(years, level, isSoft) {
+    if (isSoft) {
+      var fmtSoft = t(CV_DATA.ui.skills.tooltip_format_soft);
+      return fmtSoft.replace("{level}", level);
+    }
     var fmt = t(CV_DATA.ui.skills.tooltip_format);
     return fmt
       .replace("{years}", years)
@@ -301,13 +311,13 @@
      All dots start empty; animation fills them later.
      ------------------------------------------------------- */
   function _buildDotSVG(level, filledColor) {
-    var ns = "http://www.w3.org/2000/svg";
+    var ns  = "http://www.w3.org/2000/svg";
     var svg = document.createElementNS(ns, "svg");
-    svg.setAttribute("width", SVG_W);
-    svg.setAttribute("height", SVG_H);
+    svg.setAttribute("width",   SVG_W);
+    svg.setAttribute("height",  SVG_H);
     svg.setAttribute("viewBox", "0 0 " + SVG_W + " " + SVG_H);
     svg.setAttribute("aria-hidden", "true");
-    svg.setAttribute("focusable", "false");
+    svg.setAttribute("focusable",   "false");
 
     var circles = [];
     for (var i = 0; i < DOT_TOTAL; i++) {
@@ -317,11 +327,10 @@
       var circle = document.createElementNS(ns, "circle");
       circle.setAttribute("cx", cx);
       circle.setAttribute("cy", cy);
-      circle.setAttribute("r", DOT_R);
-      circle.setAttribute("rx", "var(--radius-full)");
+      circle.setAttribute("r",  DOT_R);
       circle.setAttribute("class", "skill-dot-circle");
-      circle.setAttribute("fill", "var(--color-surface-2)");
-      circle.setAttribute("stroke", "var(--color-surface-offset)");
+      circle.setAttribute("fill",         "var(--color-surface-2)");
+      circle.setAttribute("stroke",       "var(--color-surface-offset)");
       circle.setAttribute("stroke-width", "1");
 
       svg.appendChild(circle);
@@ -344,7 +353,7 @@
         (function (circle, idx, level, color) {
           setTimeout(function () {
             if (idx < level) {
-              circle.setAttribute("fill", color);
+              circle.setAttribute("fill",   color);
               circle.setAttribute("stroke", color);
             }
           }, ANIM_DELAYS[idx]);
@@ -360,48 +369,61 @@
     var skills = CV_DATA.skills[cat];
     if (!skills || !skills.length) return null;
 
-    var color = CATEGORY_COLORS[cat] || "var(--color-primary)";
+    var color  = CATEGORY_COLORS[cat] || "var(--color-primary)";
+    var isSoft = (cat === "soft_skills");
 
     var panel = document.createElement("div");
     panel.className = "skills-panel";
-    panel.setAttribute("role", "tabpanel");
-    panel.setAttribute("id", "skills-panel-" + cat);
-    panel.setAttribute("aria-labelledby", "skills-tab-" + cat);
-    panel.setAttribute("data-cat", cat);
+    panel.setAttribute("role",             "tabpanel");
+    panel.setAttribute("id",               "skills-panel-" + cat);
+    panel.setAttribute("aria-labelledby",  "skills-tab-" + cat);
+    panel.setAttribute("data-cat",         cat);
 
     var grid = document.createElement("ul");
-    grid.className = "skills-panel__grid";
+    grid.className       = "skills-panel__grid";
     grid.style.listStyle = "none";
-    grid.style.margin = "0";
-    grid.style.padding = "0";
+    grid.style.margin    = "0";
+    grid.style.padding   = "0";
 
     _dotRecords[cat] = [];
+    _skillMeta[cat]  = [];
 
     skills.forEach(function (skill) {
       var li = document.createElement("li");
       li.className = "skill-row";
 
-      // Skill name
+      // Skill name — may be plain string or {es, en}
       var nameSpan = document.createElement("span");
-      nameSpan.className = "skill-row__name";
-      nameSpan.textContent = skill.name;
+      nameSpan.className   = "skill-row__name";
+      nameSpan.textContent = t(skill.name);
+      if (isSoft) {
+        // store reference for i18n refresh
+        nameSpan.setAttribute("data-soft-name-key", JSON.stringify(skill.name));
+      }
 
       // Dots wrapper
       var dotsWrap = document.createElement("div");
       dotsWrap.className = "skill-dots";
       dotsWrap.setAttribute("role", "img");
-      dotsWrap.setAttribute("aria-label", skill.name + " — " + _tooltipText(skill.years, skill.level));
-      dotsWrap.setAttribute("data-years", skill.years);
       dotsWrap.setAttribute("data-level", skill.level);
-      dotsWrap.setAttribute("data-skill-name", skill.name);
-      dotsWrap.setAttribute("data-cat", cat);
+      dotsWrap.setAttribute("data-cat",   cat);
+      if (!isSoft) {
+        dotsWrap.setAttribute("data-years",      skill.years);
+        dotsWrap.setAttribute("data-skill-name", t(skill.name));
+      } else {
+        dotsWrap.setAttribute("data-is-soft", "true");
+        dotsWrap.setAttribute("data-skill-name", JSON.stringify(skill.name));
+      }
+
+      var ttText = _tooltipText(skill.years, skill.level, isSoft);
+      dotsWrap.setAttribute("aria-label", t(skill.name) + " — " + ttText);
 
       // Tooltip
       var tooltip = document.createElement("span");
       tooltip.className = "skill-dots__tooltip";
-      tooltip.setAttribute("role", "tooltip");
-      tooltip.setAttribute("aria-hidden", "true");
-      tooltip.textContent = _tooltipText(skill.years, skill.level);
+      tooltip.setAttribute("role",       "tooltip");
+      tooltip.setAttribute("aria-hidden","true");
+      tooltip.textContent = ttText;
 
       // SVG
       var dotResult = _buildDotSVG(skill.level, color);
@@ -409,6 +431,15 @@
         circles: dotResult.circles,
         level:   dotResult.level,
         color:   dotResult.color
+      });
+      _skillMeta[cat].push({
+        years:      skill.years,
+        level:      skill.level,
+        isSoft:     isSoft,
+        nameRef:    skill.name,
+        nameEl:     nameSpan,
+        tooltipEl:  tooltip,
+        dotsWrap:   dotsWrap
       });
 
       dotsWrap.appendChild(dotResult.svg);
@@ -434,6 +465,7 @@
     tabsEl.innerHTML   = "";
     panelsEl.innerHTML = "";
     _dotRecords = {};
+    _skillMeta  = {};
     _animated   = {};
     _activeTab  = null;
 
@@ -447,19 +479,19 @@
       // Tab button
       var tab = document.createElement("button");
       tab.className = "skills-tab";
-      tab.setAttribute("role", "tab");
-      tab.setAttribute("id", "skills-tab-" + cat);
+      tab.setAttribute("role",          "tab");
+      tab.setAttribute("id",            "skills-tab-" + cat);
       tab.setAttribute("aria-controls", "skills-panel-" + cat);
       tab.setAttribute("aria-selected", "false");
-      tab.setAttribute("data-cat", cat);
-      tab.setAttribute("tabindex", cat === DEFAULT_TAB ? "0" : "-1");
+      tab.setAttribute("data-cat",      cat);
+      tab.setAttribute("tabindex",      cat === DEFAULT_TAB ? "0" : "-1");
 
       var labelSpan = document.createElement("span");
       labelSpan.setAttribute("data-tab-label", cat);
       labelSpan.textContent = label;
 
       var badgeSpan = document.createElement("span");
-      badgeSpan.className = "skills-tab__badge";
+      badgeSpan.className   = "skills-tab__badge";
       badgeSpan.textContent = "(" + count + ")";
 
       tab.appendChild(labelSpan);
@@ -507,9 +539,9 @@
     if (!tabsEl) return;
 
     // Deactivate all
-    tabsEl.querySelectorAll(".skills-tab").forEach(function (t) {
-      t.setAttribute("aria-selected", "false");
-      t.setAttribute("tabindex", "-1");
+    tabsEl.querySelectorAll(".skills-tab").forEach(function (btn) {
+      btn.setAttribute("aria-selected", "false");
+      btn.setAttribute("tabindex", "-1");
     });
     document.querySelectorAll(".skills-panel").forEach(function (p) {
       p.classList.remove("skills-panel--active");
@@ -561,27 +593,35 @@
   }
 
   /* -------------------------------------------------------
-     i18n REFRESH — tab labels + tooltips
-     Dots are NOT re-rendered on language change.
+     i18n REFRESH — tab labels + skill names + tooltips
+     Dots SVG are NOT re-rendered on language change.
      ------------------------------------------------------- */
   function _refreshLabels() {
     // Tab labels
     document.querySelectorAll("[data-tab-label]").forEach(function (el) {
-      var cat = el.getAttribute("data-tab-label");
+      var cat   = el.getAttribute("data-tab-label");
       var label = CV_DATA.ui.skills.categories[cat];
       if (label) el.textContent = t(label);
     });
 
-    // Tooltip strings and aria-labels
-    document.querySelectorAll(".skill-dots[data-skill-name]").forEach(function (wrap) {
-      var years = parseInt(wrap.getAttribute("data-years"), 10);
-      var level = parseInt(wrap.getAttribute("data-level"), 10);
-      var name  = wrap.getAttribute("data-skill-name");
-      var tt    = _tooltipText(years, level);
+    // Soft skill names (they are {es,en} objects)
+    document.querySelectorAll("[data-soft-name-key]").forEach(function (el) {
+      try {
+        var nameObj = JSON.parse(el.getAttribute("data-soft-name-key"));
+        el.textContent = t(nameObj);
+      } catch (e) { /* ignore */ }
+    });
 
-      wrap.setAttribute("aria-label", name + " — " + tt);
-      var tooltipEl = wrap.querySelector(".skill-dots__tooltip");
-      if (tooltipEl) tooltipEl.textContent = tt;
+    // Tooltip strings and aria-labels
+    CATEGORY_ORDER.forEach(function (cat) {
+      var metas = _skillMeta[cat] || [];
+      metas.forEach(function (meta) {
+        var ttText = _tooltipText(meta.years, meta.level, meta.isSoft);
+        var name   = t(meta.nameRef);
+
+        meta.dotsWrap.setAttribute("aria-label", name + " — " + ttText);
+        if (meta.tooltipEl) meta.tooltipEl.textContent = ttText;
+      });
     });
   }
 

@@ -31,7 +31,7 @@ Invokes the `data-agent` directly to make targeted edits to `fragments/00-cv-dat
 5. **Recalculate KPIs** — after every edit, check if `profile.kpis` needs updating:
    - `companies` = number of **unique** `company` values in `experience[]` (not entry count)
    - `projects` = total `projects[]` items across all `experience[]` entries (non-empty) + `personal_projects[]` items with `status === "live"`
-   - `technologies` = total items across all `skills.*` arrays
+   - `technologies` = total items across all `skills.*` arrays **excluding `soft_skills`**
    - `years_experience` = manually maintained; only update if the user explicitly asks or if the earliest `start` date changes
    - If any KPI value changes, include it in the edit and report it
 6. Write the updated file
@@ -39,19 +39,42 @@ Invokes the `data-agent` directly to make targeted edits to `fragments/00-cv-dat
 
 ## Post-edit guidance
 
-After the edit, remind the user which pipeline steps are affected and suggest the minimal reset needed:
+After the edit, apply the **minimal rebuild** — never cascade unless a parent step truly changed.
 
-| Changed section | Suggested reset |
-|-----------------|----------------|
-| `profile` (name, title, location, summary, contact) | `/reset-step 2 cascade` |
-| `profile.kpis` | `/reset-step 2` (KPI bar is in layout) |
-| `experience` | `/reset-step 3 cascade` |
-| `skills` | `/reset-step 4 cascade` |
-| `education`, `certifications`, `languages` | `/reset-step 5 cascade` |
-| `ui` labels | `/reset-step 2 cascade` |
-| Multiple sections | `/reset-step 1 cascade` |
+### Decision tree
 
-If `index.html` already exists (pipeline was completed), also note that **a full rebuild is needed** for changes to appear in the deployed file.
+**Did only text/numbers change** (summary, impact bullets, project descriptions, outcome, KPI values, contact info, education text)?
+→ Just reassemble: `node scripts/assemble.mjs`
+→ No agent re-run needed. `00-cv-data.js` is the first `<script>` in the assembled file — updating it is enough.
+
+**Did skill structure change** (new category, renamed category, skill added/removed)?
+→ Re-run skills-agent to regenerate `fragments/04-skills.html`, then reassemble.
+→ Mark step 4 `validated` in `_state.json` before assembling.
+
+**Did experience entries change** (new job, stack change, new project)?
+→ Re-run timeline-agent (`fragments/03-timeline.html`) + content-agent (`fragments/05-content.html`), then reassemble.
+→ Mark steps 3 and 5 `validated` before assembling.
+
+**Did profile/KPIs change** (name, title, KPI bar numbers)?
+→ Re-run layout-agent (`fragments/02-layout.html`), then reassemble.
+→ Mark step 2 `validated` before assembling.
+
+**Did `ui` labels change** (nav, section headings, button text)?
+→ Re-run layout-agent only (it owns `applyStaticLabels`), then reassemble.
+
+**Did design tokens change** (`01-design-system.css`)?
+→ This is a full rebuild — `/reset-step 1 cascade` and re-run from step 1.
+
+### Minimal reassemble command
+```bash
+node scripts/assemble.mjs
+```
+
+### Quick agent re-run (without full pipeline)
+Invoke the relevant agent directly via the Agent tool with a targeted prompt, then `node scripts/assemble.mjs`. No need for `/reset-step` unless the fragment is structurally broken.
+
+### When NOT to use `/build`
+`/build` runs all agents from the current step forward — use it only when multiple fragments need regeneration or the pipeline state is unknown. For isolated CV data edits, the direct approach above is always faster.
 
 ## Rules
 

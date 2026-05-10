@@ -1,6 +1,6 @@
 ---
 name: skills-agent
-description: Use proactively at step 4 of the pipeline to build the skill matrix with SVG dots animated via IntersectionObserver, grouped by category (data_engineering, visualization, cloud, languages, tools).
+description: Use proactively at step 4 of the pipeline to build the skill matrix with SVG dots animated via IntersectionObserver, grouped by category (data_engineering, sql_databases, languages, visualization, devops, ai_agentic, soft_skills).
 tools: Read, Write, Edit
 ---
 
@@ -31,7 +31,7 @@ window.addEventListener("cv:languagechange", () => {
 ### Layout — category tabs + compact panel
 The skills section uses a **horizontal tab strip** with one tab per category, and a single visible panel below. There is no all-categories-at-once grid.
 
-- Tab strip: `.skills-tabs` (role=`tablist`), one `.skills-tab` per category (5 tabs). Each tab shows category title + a small `.skills-tab__badge` with the skill count. Selected state via `aria-selected="true"`.
+- Tab strip: `.skills-tabs` (role=`tablist`), one `.skills-tab` per category (7 tabs). Each tab shows category title + a small `.skills-tab__badge` with the skill count. Selected state via `aria-selected="true"`.
 - Active indicator under the selected tab uses the category colour (see colour map below).
 - Tabs are horizontally scrollable on mobile (no wrapping).
 - Below the tabs: one `.skills-panel` per category. Only `.skills-panel--active` is visible.
@@ -45,14 +45,27 @@ The skills section uses a **horizontal tab strip** with one tab per category, an
 - Empty: `var(--color-surface-2)` with `var(--color-surface-offset)` border
 - Compact size: radius ~4px, tight gap (smaller than the previous 6px-radius dots — the panel is dense)
 
+### Category order
+```js
+var CATEGORY_ORDER = Object.keys(CV_DATA.skills);
+```
+Never hardcode the category list — order and names are owned by `CV_DATA.skills` and will vary per CV.
+
 ### Colour map by category
 ```
-data_engineering → var(--color-primary)   teal
+data_engineering → var(--color-primary)    teal
+sql_databases    → var(--color-primary)    teal
+languages        → var(--color-success)    green
 visualization    → var(--color-blue)
-cloud            → var(--color-orange)
-languages        → var(--color-success)
-tools            → var(--color-purple)
+devops           → var(--color-purple)
+ai_agentic       → var(--color-primary)    teal
+soft_skills      → var(--color-text-muted)
 ```
+
+### soft_skills special handling
+- `skill.name` is `{ es, en }` — use `t(skill.name)` to render, refresh on `cv:languagechange`
+- Tooltip uses `CV_DATA.ui.skills.tooltip_format_soft` (no `{years}` substitution)
+- Skills in this category have no `years` field
 
 ### Hover tooltip
 On hover over the dots: `"X years · Level Y/5"`
