@@ -33,9 +33,42 @@ When the user confirms, **invoke the corresponding subagent via the Task tool** 
 After the subagent completes:
 1. If the step has `requires_guardian: true`, invoke `design-guardian`
 2. If the step has `requires_ux_advisor: true`, invoke `ux-advisor`
-3. Show the user the validation reports and request human validation
-4. Wait for explicit confirmation ("ok", "done", "approved", "validated")
-5. After validation, update `fragments/_state.json` and display the next step
+3. **Auto-preview the just-built artefact** (see "Auto-preview" below)
+4. Show the user the validation reports + the preview URL, and request human validation
+5. Wait for explicit confirmation ("ok", "done", "approved", "validated")
+6. After validation, update `fragments/_state.json` and display the next step
+
+### Auto-preview (after every step)
+
+After each subagent finishes (and after guardian/advisor reports if applicable), automatically open the just-built artefact in the browser so the user can iterate visually. This is mandatory — do NOT skip it, even if the subagent reports success.
+
+**Server**: a single long-lived `python3 -m http.server` instance serves the project root. Reuse it across steps; only start it once per session.
+
+1. **First step of the session**: launch the server in the background:
+   ```bash
+   python3 -m http.server 8765 --directory /Users/tonywang/Documents/GitHub/toniwangcv
+   ```
+   (try 8766, 8767 if 8765 is busy; remember the chosen port for the rest of the session)
+
+2. **Every subsequent step**: do NOT relaunch the server. Just `open` the relevant URL at the existing port.
+
+3. **What to open** depends on the step that just finished:
+
+   | Step | URL to open |
+   |------|-------------|
+   | 0 (`data-agent`) | skip — no visual artefact (just confirm the JS parses) |
+   | 1 (`design-system-agent`) | `http://localhost:<port>/design-test.html` |
+   | 2 (`layout-agent`) | `http://localhost:<port>/fragments/02-layout.html` |
+   | 3 (`timeline-agent`) | `http://localhost:<port>/fragments/03-timeline.html` |
+   | 4 (`skills-agent`) | `http://localhost:<port>/fragments/04-skills.html` |
+   | 5 (`content-agent`) | `http://localhost:<port>/fragments/05-content.html` |
+   | 6 (`print-agent`) | `http://localhost:<port>/index.html` if it exists, else skip (print CSS is only meaningful on the full CV) |
+   | 7 (`assembler-agent`) | `http://localhost:<port>/index.html` |
+   | 8 (`qa-agent`) | `http://localhost:<port>/index.html` |
+
+4. Open via `open <url>` (macOS). Tell the user the URL explicitly so they can re-open it manually.
+
+5. **Important caveat**: fragment HTML files (steps 2–5) are partials — no `<html>`/`<head>`/`<body>`. They will render with the design tokens missing (no `01-design-system.css`) and look unstyled. That is fine for iterating on structure/markup; full polished styling appears at step 7. If the user says the preview "looks broken" before step 7, remind them this is expected for partial fragments.
 
 ### Possible states
 
