@@ -44,11 +44,13 @@ After each subagent finishes (and after guardian/advisor reports if applicable),
 
 **Server**: a single long-lived `python3 -m http.server` instance serves the project root. Reuse it across steps; only start it once per session.
 
-1. **First step of the session**: launch the server in the background:
+1. **First step of the session**: launch the server in the background and **remember the PID and port** so it can be cleaned up later:
    ```bash
    python3 -m http.server 8765 --directory /Users/tonywang/Documents/GitHub/toniwangcv
    ```
    (try 8766, 8767 if 8765 is busy; remember the chosen port for the rest of the session)
+
+   Capture the background PID immediately after launching so you can offer to kill it at the end of the build (see "Server cleanup" below).
 
 2. **After every step (including step 0)**: rebuild and open the cumulative preview:
    ```bash
@@ -72,6 +74,30 @@ After each subagent finishes (and after guardian/advisor reports if applicable),
    - **Step 8** (`qa-agent`): no rebuild needed; just re-open `index.html`.
 
 4. Always tell the user the URL(s) explicitly so they can re-open them manually if the browser tab was closed.
+
+### Server cleanup (end of build)
+
+When the pipeline reaches a terminal state — step 8 validated, or the user explicitly stops the build — the auto-preview server must NOT be left running silently.
+
+1. If the server PID was captured at launch, ask the user explicitly:
+
+   > "The preview server is still running on `http://localhost:<port>` (PID `<pid>`). Want me to stop it now?"
+
+   - If the user says yes (or any affirmative), kill it:
+     ```bash
+     kill <pid>
+     ```
+     and confirm: `Preview server stopped.`
+   - If the user says no, remind them how to stop it later:
+     `Leaving it running. To stop manually: kill <pid>  (or  lsof -ti:<port> | xargs kill).`
+
+2. If the PID was lost (e.g. session restart), still remind the user at the end:
+
+   > "If the preview server is still running from a previous session, stop it with `lsof -ti:<port> | xargs kill`."
+
+3. The user may also stop the build mid-pipeline ("stop", "cancel", "I'm done"). Treat that as a terminal state too: offer the same cleanup prompt before ending the conversation about the build.
+
+### Preview details
 
 5. **What the user will see in partial previews**:
    - The orange `PREVIEW (partial) — pending: …` banner at the top
