@@ -234,6 +234,15 @@ The user will provide their CV as a file, paste, or URL. Extract everything you 
 
 Write a first complete version of `00-cv-data.js` from this extraction. Use `[TODO]` only for fields that are genuinely absent from the CV. Do not ask the user for anything yet.
 
+#### Summary enrichment rule
+The `profile.summary` that comes from LinkedIn is usually flat and dry. After extracting all experience, projects, and stack data, **rewrite** `profile.summary` (both `es` and `en`) using the full picture:
+- Synthesise the career arc (how they got here, what they've built, team growth, scale)
+- Call out 1–2 signature projects that illustrate impact (e.g. DWH from scratch, team scale)
+- Mention current leadership scope and the use of AI / agentic tooling if present in the stack
+- Tone: first person, human, energetic — not a list of buzzwords. Avoid pure tech jargon.
+- Length: 3–5 sentences max per language. No bullet points.
+The LinkedIn abstract is a starting point; the richer data in `experience[]`, `projects[]`, and `stack[]` is the real source of truth for this field.
+
 Then show a **structured summary** of what was extracted, grouped by section:
 ```
 ✓ Profile — Toni Wang, Lead Data Engineer, Madrid
