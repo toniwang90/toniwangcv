@@ -1,9 +1,9 @@
-# CV Dashboard — Toni Wang
+# CV Dashboard Builder
 
 > **Analytic-dashboard CV generator powered by Claude Code agents.**
 > Feed it a LinkedIn PDF. Get a polished, interactive, single-file CV deployed anywhere in minutes.
 
-**Live CV:** [toniwang90.github.io/toniwangcv](https://toniwang90.github.io/toniwangcv)
+**Live demo (Toni Wang's CV):** [toniwang90.github.io/cv-dashboard-builder](https://toniwang90.github.io/cv-dashboard-builder)
 
 ---
 
@@ -57,22 +57,20 @@ fragments/06-print.css      ← print/PDF stylesheet
 
 ## Getting started
 
-### Option A — Build Toni's CV (data already loaded)
+### Option A — Try the demo (data already loaded)
 
-The `fragments/00-cv-data.js` is pre-populated from LinkedIn. Skip to step 1:
+`fragments/00-cv-data.js` is pre-populated with Toni Wang's profile as a working example. Clone and run `/build` to see the full pipeline in action without adding your own data first.
 
 ```
 /build
 ```
 
-The Orchestrator will show the pipeline state and guide you step by step.
-
-### Option B — Adapt for your own CV
+### Option B — Build your own CV
 
 **1. Fork and clone**
 
 ```bash
-git clone https://github.com/toniwang90/toniwangcv.git my-cv
+git clone https://github.com/toniwang90/cv-dashboard-builder.git my-cv
 cd my-cv
 ```
 
@@ -154,7 +152,7 @@ After ~30 seconds, your CV will be live at:
 https://<your-username>.github.io/<repo-name>/
 ```
 
-For this repo: `https://toniwang90.github.io/toniwangcv/`
+For this repo: `https://toniwang90.github.io/cv-dashboard-builder/`
 
 **Workflow after building:**
 
