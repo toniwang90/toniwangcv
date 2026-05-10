@@ -48,8 +48,9 @@ The skills section uses a **horizontal tab strip** with one tab per category, an
 ### Category order
 ```js
 var CATEGORY_ORDER = Object.keys(CV_DATA.skills);
+var DEFAULT_TAB    = CATEGORY_ORDER[0];   // always the first category — never hardcoded
 ```
-Never hardcode the category list — order and names are owned by `CV_DATA.skills` and will vary per CV.
+Never hardcode the category list or the default tab — both are owned by `CV_DATA.skills` and will vary per CV.
 
 ### Colour map by category
 

@@ -104,7 +104,14 @@ Other agents (timeline, skills, content) **do not duplicate** this logic — the
 - Each label in its `<span data-i18n="kpi.years_experience">…</span>` for auto-update on language change
 - Numbers in `--font-mono`, bold, large size
 - Labels in `--font-display`, `--color-text-muted`
-- **Values are read at runtime from `CV_DATA.profile.kpis`** (not hardcoded). The `data-agent` keeps them computed; the layout simply consumes them. This guarantees they never drift after data edits.
+- **Values are computed dynamically at runtime** from the raw CV_DATA arrays — not from `CV_DATA.profile.kpis`. This guarantees the KPI bar is always accurate regardless of any stale static values in the data file:
+  ```js
+  years_experience = currentYear − min(experience[].start year)
+  companies        = unique experience[].company count
+  projects         = personal_projects.length + Σ experience[i].projects.length
+  technologies     = unique skill names across all groups except soft_skills
+  ```
+  The `data-kpi-value` HTML attributes are overwritten with these computed values in the `_animateKPIs()` function before the count-up runs.
 - **Count-up animation**: on load, numbers rise from 0 to their value over ~1.5s with easing
 - **Scroll-spy**: highlight the active nav link based on `getBoundingClientRect().top` of each section (NOT `offsetTop` — broken for nested elements). Add a bottom-of-page guard so the last section (`#logros`) gets marked active when scrolling to the end.
 

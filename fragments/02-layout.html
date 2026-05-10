@@ -868,13 +868,24 @@
     if (_kpiAnimated) return;
     _kpiAnimated = true;
 
-    // Sync data-kpi-value from CV_DATA so the HTML never goes stale
-    if (typeof CV_DATA !== "undefined" && CV_DATA.profile && CV_DATA.profile.kpis) {
+    // Compute KPIs dynamically from CV_DATA — never rely on the stale static values
+    if (typeof CV_DATA !== "undefined" && CV_DATA.experience && CV_DATA.skills) {
+      var computed = {
+        years_experience: new Date().getFullYear() - Math.min.apply(null,
+          CV_DATA.experience.map(function(e) { return parseInt(e.start); })
+        ),
+        companies: new Set(CV_DATA.experience.map(function(e) { return e.company; })).size,
+        projects: (CV_DATA.personal_projects ? CV_DATA.personal_projects.length : 0) +
+          CV_DATA.experience.reduce(function(sum, e) { return sum + (e.projects ? e.projects.length : 0); }, 0),
+        technologies: new Set(
+          Object.keys(CV_DATA.skills)
+            .filter(function(k) { return k !== "soft_skills"; })
+            .reduce(function(arr, k) { return arr.concat(CV_DATA.skills[k].map(function(s) { return s.name; })); }, [])
+        ).size
+      };
       document.querySelectorAll(".kpi-card[data-kpi]").forEach(function (card) {
         var key = card.dataset.kpi;
-        if (CV_DATA.profile.kpis[key] !== undefined) {
-          card.dataset.kpiValue = CV_DATA.profile.kpis[key];
-        }
+        if (computed[key] !== undefined) card.dataset.kpiValue = computed[key];
       });
     }
 
