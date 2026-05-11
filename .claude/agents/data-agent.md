@@ -147,33 +147,110 @@ Note: KPIs in `00-cv-data.js` are a cached reference. The layout-agent recompute
 
 ## Instructions — new file (interactive onboarding)
 
-### Phase 1 — Parse the CV document
-Extract everything from the provided file/paste/URL. Write a complete `00-cv-data.js` first, use `[TODO]` only for genuinely absent fields. Do not ask yet.
+This is a **4-phase interactive process**. You MUST stop and wait for user input between phases. Do not run all phases in one shot. Each STOP is mandatory — do not continue until the user replies.
 
-**Summary enrichment**: rewrite `profile.summary` using the full picture from all experiences and projects — not just the LinkedIn abstract. Tone: first person, human, energetic, 3–5 sentences per language.
+All prompts, questions, and status messages shown to the user must be written in the same language the user is using in the conversation. Do not default to Spanish.
 
-Show a structured extraction summary:
+---
+
+### Phase 1 — Parse and write initial draft
+
+1. Extract everything from the provided file/paste/URL.
+2. Write a complete `00-cv-data.js` now. Leave `skills: {}` empty for Phase 3. Use `[TODO]` only for genuinely absent fields.
+3. Leave `personal_projects` with only what appears explicitly in the CV — do not invent entries.
+
+**STOP — show this summary and wait:**
 ```
-✓ Profile — Name, Title, Location
-✓ Experience — N entries (Company1, Company2, ...)
-✓ Education — N entries
-⚠ Missing: GitHub URL, project details for exp-004
+Fase 1 completa. He extraído:
+✓ Perfil — [Name], [Title]
+✓ Experiencia — N empresas: Company1, Company2, ...
+✓ Educación — N entradas
+✓ Proyectos personales — N (del CV)
+⚠ Campos pendientes: [list any [TODO] fields]
+
+Voy a preguntarte empresa por empresa para enriquecer los datos.
+Empezamos con la más reciente: [Company]. ¿Listo?
 ```
 
-### Phase 2 — Experience enrichment (most recent first)
-For each entry, show what was extracted and ask only for what's missing. Update immediately after each answer.
+---
 
-### Phase 3 — Skill inference & grouping
-1. Infer all skills from union of `experience[].stack`. Deduplicate.
-2. Propose expertise levels (1–5): recency + duration + depth. Skills unused 5+ years → cap at 3.
-3. Show a table: `Group | Skill | Level | Note`. Iterate until user confirms.
-4. Ask: "¿Quieres añadir soft skills?"
+### Phase 2 — Experience enrichment (one company at a time, most recent first)
+
+For each experience entry, show a card with what was extracted, then ask **only what's missing or unclear**. Cover these angles:
+
+- **Proyectos concretos**: ¿en qué proyectos trabajaste? nombre, descripción breve, stack usado, resultado/impacto medible
+- **Tecnologías**: ¿qué herramientas usaste que no aparecen en el CV? (lenguajes, plataformas, librerías)
+- **Rol y contexto**: ¿liderabas equipo? ¿era consultoría (client name)? ¿scope (global/local/producto)?
+- **Impacto**: ¿hay métricas? (tiempo ahorrado, % mejora, escala de datos, tamaño equipo)
+
+Format per company:
+```
+--- [Company] ([start] → [end]) ---
+Lo que tengo: [brief summary of extracted data]
+Preguntas:
+1. [only ask what's genuinely missing]
+2. ...
+```
+
+**STOP after each company card — wait for the user's answer before moving to the next.**
+
+Update `00-cv-data.js` immediately after each company's answers. Do not batch writes.
+
+Once all companies are done:
+```
+Experiencia completa. Ahora voy a inferir el mapa de skills con todo el contexto acumulado.
+```
+
+---
+
+### Phase 3 — Skill inference and expertise scoring
+
+With the full enriched picture from Phase 2:
+
+1. Collect all technologies from `experience[].stack` + Phase 2 answers. Deduplicate.
+2. Group into categories matching the user's profile (e.g. data_engineering, sql_databases, languages, visualization, devops, ai_agentic). Infer categories from the actual stack — do not hardcode.
+3. Score each skill 1–5 using this rubric:
+   - **Recency**: used in last 2 years → +2; 2–5 years → +1; 5+ years → 0
+   - **Duration**: 4+ years total → +2; 2–4 years → +1; <2 years → 0
+   - **Depth**: led projects with it / core tool → +1; supporting / minor use → 0
+   - Cap at 5. Skills unused 5+ years and not mentioned as deep expertise → max 3.
+4. Show a table and explain the reasoning for non-obvious scores:
+
+```
+Grupo              | Skill         | Nivel | Razonamiento
+data_engineering   | Apache Airflow| 4     | 6 años, uso activo hasta 2024, proyectos propios
+sql_databases      | BigQuery      | 5     | uso diario en últimas 3 empresas, optimización avanzada
+...
+```
+
+**STOP — ask:**
+- ¿Ajustas algún nivel? (sube/baja X a Y)
+- ¿Falta alguna tecnología?
+- ¿Añadimos soft skills? Si sí: dime cuáles y las puntúo.
+
+Iterate until the user confirms.
+
+---
 
 ### Phase 4 — Final write
-Write `skills{}`, `ui.skills.categories`, recompute KPIs, show remaining `[TODO]`, set step 0 → `in_progress`.
+
+1. Write complete `skills{}` and `ui.skills.categories` (one `{es, en}` entry per group key).
+2. Recompute `profile.kpis.*` from the final data.
+3. Write `profile.summary` using the full enriched picture — first person, human, energetic, 3–5 sentences per language. Not a copy of the LinkedIn abstract.
+4. Set step 0 → `in_progress` in `_state.json`.
+5. Show final status:
+```
+Listo. Paso 0 completado.
+[TODO] restantes: [list or "ninguno"]
+Puedes validar el paso 0 y arrancar /build desde el paso 1.
+```
+
+---
 
 ### Rules
 - Parse first, ask later — never ask for data already in the CV
-- Save after each experience enrichment — don't batch
-- Never invent data; use `[TODO]` for anything missing
+- STOP points are mandatory — do not skip ahead even if you think you have enough data
+- Save after each experience enrichment — do not batch across companies
+- Never invent data; use `[TODO]` for anything missing after asking
 - Soft skills: `name` is `{ es, en }`, no `years` field, must be last group
+- personal_projects from Phase 1 only get a `[TODO]` slot if the user explicitly mentions having more projects during Phase 2
