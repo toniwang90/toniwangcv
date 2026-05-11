@@ -1,4 +1,4 @@
-# CV Dashboard — Toni Wang
+# CV Dashboard Builder
 
 Interactive CV in analytic dashboard format. Output: a single static HTML file (`index.html`) deployable on GitHub Pages/Netlify/Vercel with no additional configuration.
 
