@@ -201,23 +201,6 @@ To change any section after the full build is complete:
 
 ---
 
-## Maintenance rules (keep things in sync)
-
-These rules exist because their violations caused real bugs. Follow them whenever editing any project file — especially when vibecoding.
-
-| Rule | What to do | Why |
-|------|-----------|-----|
-| **New command** | Add it to the Commands table above in the same commit | Commands that exist but aren't in the README are invisible to users |
-| **Edit a fragment directly** | Run `/sync-agent <fragment>` to propagate the change to the producer agent's spec | A fresh `/build` would overwrite your fix if the spec doesn't reflect it |
-| **New `Bash(...)` call in an agent or command** | Add `"Bash(command:*)"` to `.claude/settings.json` allow-list | Every unlisted command triggers a permission prompt mid-pipeline |
-| **No hardcoded paths** | Never write `/Users/you/…` in `.claude/` files. Use paths relative to the project root | Breaks for every user who isn't you |
-| **No CV_DATA values hardcoded in fragments** | Use `CATEGORY_ORDER[0]` not `"languages"`, compute KPIs from arrays not from `kpis: { projects: 8 }` | Static values drift the moment the data changes |
-| **`_state.json` before committing** | Reset all steps to `"pending"`, `current_step: 0` | A mid-pipeline state committed to `main` confuses anyone who clones |
-| **Edit `scripts/assemble.mjs`** | Run `node scripts/assemble.mjs --partial` immediately after | Catches syntax errors and broken regex before they reach CI |
-| **Formula in multiple files** | When changing a formula (KPI computation, level mapping…), grep for all copies and update them together | Two files with the same formula that disagree are a silent data bug |
-
----
-
 ## Customising for your own CV
 
 This repo is designed to be forked and personalised:
