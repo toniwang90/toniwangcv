@@ -1129,6 +1129,8 @@
           .attr("font-size", LABEL_FONT_SIZE + "px")
           .text(companyText);
         companyHeader.append("title").text(companyFull);
+        // Store on group so all sub-role rows can highlight it on hover
+        group._headerEl = companyHeader;
 
         // Vertical bracket spanning all role bars
         g.append("rect")
@@ -1220,11 +1222,13 @@
         tooltip.setAttribute("aria-hidden", "false");
         _positionTooltip(event.clientX, event.clientY);
         if (companyEl) companyEl.attr("fill", "var(--color-primary)");
+        if (group._headerEl) group._headerEl.attr("fill", "var(--color-primary)");
       });
       labelGroup.on("mouseleave", function () {
         tooltip.classList.remove("is-visible");
         tooltip.setAttribute("aria-hidden", "true");
         if (companyEl) companyEl.attr("fill", "var(--color-text)");
+        if (group._headerEl) group._headerEl.attr("fill", "var(--color-text)");
       });
       labelGroup.on("click", function () {
         tooltip.classList.remove("is-visible");

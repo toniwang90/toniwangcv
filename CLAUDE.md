@@ -132,7 +132,7 @@ JetBrains:     https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;
 10. **DesignGuardian before validating** — no CSS-producing step can be marked `validated` without passing the guardian
 11. **Deterministic assembly** — step 7 is performed by `scripts/assemble.mjs`. The assembler-agent only invokes it; must never re-emit the final HTML as tokens
 12. **Bilingual ES/EN** — all visible UI text goes through `t()`. Nothing hardcoded in HTML/JS
-13. **HTML → agent sync** — when a fragment is edited directly, update the producer agent's spec in the same change. Use `/sync-agent <fragment>` to surface drift
+13. **HTML → agent sync (CRITICAL)** — ANY direct edit to a `fragments/*.html`, `fragments/*.css`, or `fragments/*.js` file MUST be accompanied, in the same response, by an update to the producer agent's spec in `.claude/agents/<agent>.md` that describes the new behaviour. No exceptions for "small" fixes. Without this, the next regeneration silently reverts the change. Sequence: edit fragment → update agent spec → reassemble. Use `/sync-agent <fragment>` to surface drift
 14. **Token-efficient agents** — read-only agents must prefer `Grep` over `Read`. Generator agents must not re-read sibling fragments to verify
 15. **New command → README** — adding `.claude/commands/*.md` requires updating the Commands table in `README.md` in the same change
 16. **No hardcoded absolute paths** — agent specs and command files must never contain `/Users/…` paths. Use paths relative to the project root
