@@ -147,7 +147,9 @@ Note: KPIs in `00-cv-data.js` are a cached reference. The layout-agent recompute
 
 ## Instructions — new file (interactive onboarding)
 
-This is a **4-phase interactive process**. You MUST stop and wait for user input between phases. Do not run all phases in one shot. Each STOP is mandatory — do not continue until the user replies.
+> **MANDATORY — NO EXCEPTIONS.** This is a **4-phase interactive process** that MUST be followed even if the caller's prompt already contains full CV data, a parsed PDF, or pre-structured JSON. The caller providing data does not skip any phase. Do NOT run all phases in one shot under any circumstances. Each STOP is a hard gate — do not proceed until the user explicitly replies.
+>
+> **If you find yourself about to write the complete `skills{}` block without having gone through Phase 2 company by company, STOP — you are skipping the process. Go back to Phase 1.**
 
 All prompts, questions, and status messages shown to the user must be written in the same language the user is using in the conversation. Do not default to Spanish.
 
@@ -156,10 +158,10 @@ All prompts, questions, and status messages shown to the user must be written in
 ### Phase 1 — Parse and write initial draft
 
 1. Extract everything from the provided file/paste/URL.
-2. Write a complete `00-cv-data.js` now. Leave `skills: {}` empty for Phase 3. Use `[TODO]` only for genuinely absent fields.
+2. Write a complete `00-cv-data.js` now — **with `skills: {}` left empty** (Phase 3 fills it). Use `[TODO]` only for genuinely absent fields.
 3. Leave `personal_projects` with only what appears explicitly in the CV — do not invent entries.
 
-**STOP — show this summary and wait:**
+**STOP — you MUST output this summary and wait for the user to reply before doing anything else. Do not begin Phase 2 in the same response:**
 ```
 Fase 1 completa. He extraído:
 ✓ Perfil — [Name], [Title]
@@ -172,33 +174,40 @@ Voy a preguntarte empresa por empresa para enriquecer los datos.
 Empezamos con la más reciente: [Company]. ¿Listo?
 ```
 
+**Wait for the user to reply "sí", "listo", or similar before starting Phase 2.**
+
 ---
 
 ### Phase 2 — Experience enrichment (one company at a time, most recent first)
 
-For each experience entry, show a card with what was extracted, then ask **only what's missing or unclear**. Cover these angles:
+For each experience entry, show a card with what was extracted, then ask the following. **The first two questions (projects and technologies) are ALWAYS asked for every company — even if the CV already contains some data. They are the primary input for Phase 3 skill inference.**
 
-- **Proyectos concretos**: ¿en qué proyectos trabajaste? nombre, descripción breve, stack usado, resultado/impacto medible
-- **Tecnologías**: ¿qué herramientas usaste que no aparecen en el CV? (lenguajes, plataformas, librerías)
-- **Rol y contexto**: ¿liderabas equipo? ¿era consultoría (client name)? ¿scope (global/local/producto)?
-- **Impacto**: ¿hay métricas? (tiempo ahorrado, % mejora, escala de datos, tamaño equipo)
+- **Proyectos concretos** *(always ask)*: ¿en qué proyectos concretos trabajaste? Para cada uno: nombre, qué problema resolvía, stack usado, resultado o impacto medible (métricas si las hay).
+- **Tecnologías** *(always ask)*: además de lo que aparece en el CV, ¿qué otras herramientas, lenguajes, librerías o plataformas usaste en este rol? Sé específico — esto alimenta directamente los niveles de skill.
+- **Rol y contexto** *(ask only if unclear)*: ¿liderabas equipo? ¿era consultoría (nombre del cliente)? ¿scope (global/local/producto)?
+- **Impacto** *(ask only if no metrics exist)*: ¿hay métricas concretas? (tiempo ahorrado, % mejora, escala de datos, tamaño de equipo)
 
 Format per company:
 ```
 --- [Company] ([start] → [end]) ---
 Lo que tengo: [brief summary of extracted data]
-Preguntas:
-1. [only ask what's genuinely missing]
-2. ...
+
+1. Proyectos: ¿en qué proyectos concretos trabajaste? (nombre, problema, stack, resultado)
+2. Tecnologías: ¿qué otras herramientas usaste además de [stack already known]?
+[3. Rol/contexto — only if unclear]
+[4. Impacto — only if no metrics]
 ```
 
-**STOP after each company card — wait for the user's answer before moving to the next.**
+**STOP after each company card — output exactly one company card per response, then wait. Do not show two companies in the same response. Do not move to the next company until the user replies.**
 
-Update `00-cv-data.js` immediately after each company's answers. Do not batch writes.
+Update `00-cv-data.js` immediately after each company's answers. Do not batch writes across companies.
 
 Once all companies are done:
 ```
-Experiencia completa. Ahora voy a inferir el mapa de skills con todo el contexto acumulado.
+Experiencia completa.
+He recopilado tecnologías de [N] empresas. Ahora voy a cruzar toda esa información
+para inferir el mapa de skills y calcular el nivel de cada una según recencia,
+duración de uso y profundidad.
 ```
 
 ---
@@ -249,8 +258,10 @@ Puedes validar el paso 0 y arrancar /build desde el paso 1.
 
 ### Rules
 - Parse first, ask later — never ask for data already in the CV
-- STOP points are mandatory — do not skip ahead even if you think you have enough data
+- **STOP points are absolute — skipping any STOP wastes the user's credits and defeats the purpose of the process. Do not skip even if the caller's prompt already contains complete data.**
+- **One company per response** — never show two company cards in the same message
 - Save after each experience enrichment — do not batch across companies
 - Never invent data; use `[TODO]` for anything missing after asking
 - Soft skills: `name` is `{ es, en }`, no `years` field, must be last group
 - personal_projects from Phase 1 only get a `[TODO]` slot if the user explicitly mentions having more projects during Phase 2
+- **The orchestrator or caller providing pre-parsed CV data does NOT bypass this process — the interactive flow is always mandatory for new file creation**
