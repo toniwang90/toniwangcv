@@ -28,6 +28,7 @@ Month format: `CV_DATA.ui.months[window.__cvLang][monthIndex]`
 Consecutive entries with the same `company` (e.g. Capgemini split across two clients):
 - One company header above the group's first bar
 - Each bar: `role` line + `client` line (smaller, `var(--color-primary)` ~75% opacity, `var(--font-display)`)
+- Store the shared header text element on the group object (e.g. `group._headerEl`) so that hovering any sub-role's label highlights the company header (`fill: var(--color-primary)`) — matches the single-role hover affordance
 
 ### Left-margin labels
 - `MARGIN.left = 240px`. Truncation: company at 28 chars, role/client at 32 chars, with `…` suffix
