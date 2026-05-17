@@ -82,6 +82,8 @@ const CV_DATA = {
     year: "2026",
     status: "live" | null
   }],
+  // Examples currently populated: "CV Dashboard Builder", "Odportunity" (landing
+  // for odportunity.com — live-betting value alerts via Telegram, Cloudflare Pages).
 
   skills: {
     // Keys are DYNAMIC — infer from the user's profile. Order = tab order in UI.
